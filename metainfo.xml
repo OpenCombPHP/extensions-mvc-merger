@@ -1,15 +1,16 @@
 <Extension>
 
-	<name>{=$sExtName}</name>
-	<version>{=$sExtVersion}</version>
-	<title>{=$sExtTitle}</title>
+	<name>mvc-merger</name>
+	<version>0.1</version>
+	<title>页面融合</title>
 	
-<if $sClassNamespace> 
-	<class>{=$sClassNamespace}.{=$sClassName}</class>
-	<package folder="/class" namespace="{=$sClassNamespace}" />
-</if> 
+	<class>org.opencomb.mvcmerger.MvcMerger</class>
+	<package folder="/class" namespace="org.opencomb.mvcmerger" />
+
 	<template folder="/template" />
 	
 	<publicFolder folder="/public" />
+	
+	<beanFolder folder="/bean" />
 	
 </Extension>
