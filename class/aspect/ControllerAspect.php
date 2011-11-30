@@ -26,7 +26,7 @@ class ControllerAspect
 	 */
 	public function reflectMvc()
 	{
-		if(!$this->params->bool('toolkit_mvcbrowser'))
+		if(!$this->params->bool('mvcmerger_browser'))
 		{
 			return ;
 		}

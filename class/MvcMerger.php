@@ -21,7 +21,7 @@ class MvcMerger extends Extension
 
 	public function active()
 	{
-		if(Request::singleton()->bool('toolkit_mvcbrowser'))
+		if(Request::singleton()->bool('mvcmerger_browser'))
 		{
 			// 为 ui 安装 链接 href属性的过滤器 
 			UILinkHrefFilter::setupUiFilter(UIFactory::singleton()) ;

@@ -9,8 +9,6 @@
 
 	<template folder="/template" />
 	
-	<publicFolder folder="/public" />
-	
 	<beanFolder folder="/bean" />
 	
 </Extension>

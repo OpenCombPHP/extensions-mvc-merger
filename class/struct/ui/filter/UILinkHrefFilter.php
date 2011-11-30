@@ -34,9 +34,9 @@ class UILinkHrefFilter extends Object
 		{
 			$sRetHref.= '?' ;
 		}
-		if( strstr($sRetHref,'toolkit_mvcbrowser')===false )
+		if( strstr($sRetHref,'mvcmerger_browser')===false )
 		{
-			$sRetHref.= '&toolkit_mvcbrowser=1' ;
+			$sRetHref.= '&mvcmerger_browser=1' ;
 		}		
 		
 		return $sRetHref ;

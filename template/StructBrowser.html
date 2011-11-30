@@ -8,22 +8,6 @@
 </style>
 
 <ul id="browser" class="filetree"></ul>
-<button id="add">Add!</button>
- 
-<script>
-(function($) {
-	jQuery("#browser").treeview();
-	jQuery("#add").click(function() {
-		var branches = jQuery("<li><span class='folder'>New Sublist</span><ul>" + 
-			"<li><span class='file'>Item1</span></li>" + 
-			"<li><span class='file'>Item2</span></li>" +
-			"</ul></li>").appendTo("#browser");
-		jQuery("#browser").treeview({
-			add: branches
-		});
-	});
-})(jQuery) ;
-</script>
 
 <script type="text/javascript">
 var structBrowser = {
@@ -126,9 +110,9 @@ structBrowser.location = function(sUrl)
 	{
 		sUrl+= '?' ;
 	}
-	if(sUrl.search('toolkit_mvcbrowser')<0)
+	if(sUrl.search('mvcmerger_browser')<0)
 	{
-		sUrl+= '&toolkit_mvcbrowser=1' ;
+		sUrl+= '&mvcmerger_browser=1' ;
 	}
 	structBrowser.log(sUrl) ;
 	jQuery('#iframe-browser').get(0).contentWindow.location = sUrl ;
@@ -138,4 +122,4 @@ structBrowser.location = function(sUrl)
 <input type="text" id="current_url" value="" style="width:400px" /> 
 <input type="button" value="打开网页" onclick="structBrowser.location()" />
 
-<iframe id="iframe-browser" src="{/*.url.path}?toolkit_mvcbrowser=1" width="100%" height="600px" />
+<iframe id="iframe-browser" src="{/*.url.path}?mvcmerger_browser=1" width="100%" height="600px" />

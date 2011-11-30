@@ -1,0 +1,79 @@
+<lib name='jquery' />
+
+<h3>控制器融合</h3>
+
+<p>
+	在蜂巢系统中，每个网页都是一个独立的控制器，控制器可以包含其它控制器。控制器融合可以将多个独立的控制器包含到指定的目标控制器中。
+</p>
+<p>
+	同时，目标控制器也可以融合到其它控制器中，系统对融合层次没有限制。
+</p>
+<p>
+	完成控制器的融合设置后，可以通过<a href="?c=org.opencomb.mvcmerger.merger.ViewLayerout">视图布局</a>对融合后的网页视图进行布局调整。
+</p>
+
+<script type="text/javascript">
+function browserController()
+{
+	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",self,'modal=yes,width=800px,height=500px'); 	
+}
+</script>
+
+
+<msgqueue />
+
+<form method="post" action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
+
+	<div>
+		目标控制器类：<input type="text" style="width:400px" name="target_controller_class" id="target_controller_class" value="org\opencomb\opencms\article\ArticleManage" />
+		<input type="button" value="浏览查找 ..." onclick="browserController()" />
+	</div>
+	<br />
+	<div>
+		被并入的控制器类：<input type="text" style="width:400px" name="source_controller_class" id="source_controller_class" value="org\opencomb\opencms\article\CreateArticle" />
+		<input type="button" value="浏览查找 ..." onclick="browserController()" />
+	</div>
+	<div>
+		控制器参数：<input type="text" style="width:400px" name="source_controller_params" />
+	</div>
+	<div>
+		注释：<input type="text" style="width:400px" name="source_controller_comment" />
+	</div>
+	
+	<input type="hidden" value="merge" name="act" />
+	<input type="submit" value="融合" />
+
+</form>
+
+<hr />
+<h3>已经完成融合的控制器</h3>
+
+<ul>
+<foreach for="$arrMergedControllers" key="sTargetControllerClass" item="arrControllers">
+	<li>
+		<div>
+			控制器类：
+			<a href="?c={=str_replace('\\','.',$sTargetControllerClass)}" target='_blank'>{=$sTargetControllerClass}</a>
+			<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&act=removeMerge&target={=$sTargetControllerClass}&idx=-1">取消</a>
+		</div>
+		
+		<div>
+			融入的控制器：
+			<ul>
+			<foreach for="$arrControllers" item="arrMerged" key="nIdx">
+				<li>
+					<div>
+						<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
+						<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&act=removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
+					</div>
+					<if "$arrMerged['params']">
+						<div>参数：{=$arrMerged['params']}</div>
+					</if>
+					<div>{=$arrMerged['comment']}</div>
+				</li>
+			</foreach>
+			</ul>
+		</div>
+	</li>
+</foreach>
+</ul>

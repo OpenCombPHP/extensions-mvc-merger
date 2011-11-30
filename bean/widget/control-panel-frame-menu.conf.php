@@ -1,18 +1,30 @@
 <?php
 return array(
 	array(
-		'title' => '页面融合' ,
+		'title' => '高级网页维护' ,
 		'menu' => array(
 			'direction' => 'v' ,
 			'independence' => true ,
 			'items' => array(
 					array(
-							'title'=>'创建扩展' ,
-							'link' => '?c=org.opencomb.development.toolkit.extension.CreateExtension' ,
+							'title'=>'建立控制器' ,
+							'link' => '?c=org.opencomb.mvcmerger.merger.ControllerBuilder' ,
 					) ,
 					array(
-							'title'=>'清空缓存' ,
-							'link' => '?c=org.opencomb.development.toolkit.platform.ClearCache' ,
+							'title'=>'控制器融合' ,
+							'link' => '?c=org.opencomb.mvcmerger.merger.ControllerMerger' ,
+					) ,
+					array(
+							'title'=>'建立模板' ,
+							'link' => '?c=org.opencomb.mvcmerger.merger.TemplateBuilder' ,
+					) ,
+					array(
+							'title'=>'模板编织' ,
+							'link' => '?c=org.opencomb.mvcmerger.merger.TemplateWeaver' ,
+					) ,
+					array(
+							'title'=>'视图布局' ,
+							'link' => '?c=org.opencomb.mvcmerger.merger.ViewLayerout' ,
 					) ,
 			) ,
 		) ,
