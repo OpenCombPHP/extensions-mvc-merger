@@ -1,6 +1,12 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\system\PlatformFactory;
+
+use org\opencomb\Platform;
+
+use org\jecat\framework\lang\oop\ClassLoader;
+
 use org\jecat\framework\lang\Type;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\system\Application;
@@ -64,6 +70,12 @@ class ControllerMerger extends ctrl\ControlPanel
 					'comment' => $this->params->string('source_controller_comment') ,
 		) ;
 		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
+		
+		// 清理类编译缓存
+		self::clearClassCompiled($this->params['target_controller_class']) ;
+		
+		// 清理平台缓存
+		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
 	
 		$this->form->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
 	}
@@ -94,14 +106,11 @@ class ControllerMerger extends ctrl\ControlPanel
 			
 			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
 			$this->form->createMessage(Message::success,"清除了控制器 %s 的所有融合设置",array($this->params['target'])) ;
-			
-			return ;
 		}
 		// 删除指定的融合
 		else if( empty($arrMergedControllers[$this->params['target']][$nIdx]) )
 		{
 			$this->form->createMessage(Message::error,"idx参数无效") ;
-			
 			return ;
 		}
 		else
@@ -114,11 +123,24 @@ class ControllerMerger extends ctrl\ControlPanel
 			}
 			
 			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
-			$this->form->createMessage(Message::success,"删除了控制器 %s 的指定融合设置",array($this->params['target'])) ;
 			
-			return ;
+			$this->form->createMessage(Message::success,"删除了控制器 %s 的指定融合设置",array($this->params['target'])) ;
 		}
+			
+		// 清理 class 编译缓存
+		self::clearClassCompiled($this->params['target']) ;
+		
+		// 清理平台缓存
+		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
 	}
+	
+	static public function clearClassCompiled($sClass)
+	{
+		if( $aClassFile = ClassLoader::singleton()->searchClass($sClass,ClassLoader::SEARCH_COMPILED) )
+		{
+			$aClassFile->delete() ;
+		}
+	} 
 }
 
 ?>
