@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
+use org\jecat\framework\mvc\view\Webpage;
 use org\jecat\framework\mvc\model\IModel;
 use org\jecat\framework\mvc\controller\IController;
 use org\jecat\framework\pattern\composite\IContainer;
@@ -8,52 +9,41 @@ use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\controller\Controller;
 use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
 
-class ControllerAspect
+class ViewAspect
 {
 	/**
 	 * @pointcut
 	 */
-	public function pointcutMainRun()
+	public function pointcutRender()
 	{
 		return array(
-			new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','mainRun') ,
+			new JointPointMethodDefine('org\\jecat\\framework\\mvc\\view\\View','render') ,
 		) ;
 	}
 	
 	/**
-	 * @advice before
-	 * @for pointcutMainRun
+	 * @advice around
+	 * @for pointcutRender
 	 */
-	public function upViewLayoutSetting()
+	public function layoutWrapper()
 	{
-		if($this->params->bool('mvcmerger_layout_setting'))
-		{
-			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery') ;
-			
-			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:css/view-layout-setting.css',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_CSS) ;
-			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:js/view-layout-setting.js',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_JS) ;
-		}
-	}
-	
-	/**
-	 * @advice after
-	 * @for pointcutMainRun
-	 */
-	public function reflectMvc()
-	{
-		if(!$this->params->bool('mvcmerger_browser'))
+		if(!$this->isEnable())
 		{
 			return ;
 		}
 		
-		$sJsCode = "\r\n<script>\r\n" ;
-		$sJsCode.= "if( parent && typeof(parent.structBrowser)!='undefined' ){\r\n" ;
-		$sJsCode.= "	var _mvcstruct = " . \org\opencomb\mvcmerger\aspect\ControllerAspect::generateControllerStructJcCode($this) . "; \r\n" ;
-		$sJsCode.= "	parent.structBrowser.setMvcStruct(_mvcstruct) ;\r\n" ;
-		$sJsCode.= "}\r\n" ;
-		$sJsCode.= "</script>\r\n" ;
-		
-		echo $sJsCode ;
+		if( \org\jecat\framework\system\Request::singleton()->bool('mvcmerger_layout_setting') and $this->template() and !($this instanceof \org\jecat\framework\mvc\view\Webpage) )
+		{
+			$this->outputStream()->write('<div class="mvc_merger-layout_settable_view">') ;
+			
+			aop_call_origin() ;
+			
+			$this->outputStream()->write('</div>') ;
+		}
+		else
+		{
+			return aop_call_origin() ;
+		}
 	}
 	
 	static public function generateModelStructJcCode(IModel $aModel,$sName,$nIndent=0)
