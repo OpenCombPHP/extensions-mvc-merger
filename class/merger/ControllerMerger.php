@@ -7,9 +7,9 @@ use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Type;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\system\Application;
-use org\opencomb\coresystem\mvc\controller as ctrl ;
+use org\opencomb\coresystem\mvc\controller\ControlPanel ;
 
-class ControllerMerger extends ctrl\ControlPanel
+class ControllerMerger extends ControlPanel
 {
 	public function createBeanConfig()
 	{

@@ -29,6 +29,7 @@ class ControllerAspect
 		if($this->params->bool('mvcmerger_layout_setting'))
 		{
 			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery') ;
+			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery.ui') ;
 			
 			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:css/view-layout-setting.css',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_CSS) ;
 			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:js/view-layout-setting.js',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_JS) ;

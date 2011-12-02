@@ -18,7 +18,6 @@ class MvcMerger extends Extension
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControlPanelFrameAspect') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerMerge') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerAspect') ;
-		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ViewAspect') ;
 	}
 
 	public function active()
