@@ -13,9 +13,9 @@
 </p>
 
 <script type="text/javascript">
-function browserController()
+function browserController(sClassType ,sSelectType)
 {
-	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",self,'modal=yes,width=800px,height=500px'); 	
+	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",{parent:self,allowSelectClass:sClassType,selectType:sSelectType},'modal=yes,width=800px,height=500px'); 	
 }
 </script>
 
@@ -26,12 +26,12 @@ function browserController()
 
 	<div>
 		目标控制器类：<input type="text" style="width:400px" name="target_controller_class" id="target_controller_class" value="org\opencomb\opencms\article\ArticleManage" />
-		<input type="button" value="浏览查找 ..." onclick="browserController()" />
+		<input type="button" value="浏览查找 ..." onclick="browserController('c','target')" />
 	</div>
 	<br />
 	<div>
 		被并入的控制器类：<input type="text" style="width:400px" name="source_controller_class" id="source_controller_class" value="org\opencomb\opencms\article\CreateArticle" />
-		<input type="button" value="浏览查找 ..." onclick="browserController()" />
+		<input type="button" value="浏览查找 ..." onclick="browserController('c','handle')" />
 	</div>
 	<div>
 		控制器参数：<input type="text" style="width:400px" name="source_controller_params" />
