@@ -5,13 +5,20 @@
 	font-family: Verdana, helvetica, arial, sans-serif;
 	font-size: 68.75%;
 }
+.selectClass{
+	color:blue;
+	font-weight:bold;
+}
 </style>
 
 <ul id="browser" class="filetree"></ul>
 
 <script type="text/javascript">
 var structBrowser = {
-	_mvcstruct:null 		
+	_mvcstruct:null,
+	parentObject:null,
+	allowSelectClass:[],
+	selectType:""
 } ;
 
 structBrowser.log = function(text)
@@ -24,19 +31,12 @@ structBrowser.log = function(text)
 structBrowser.setMvcStruct = function(struct)
 {
 	structBrowser._mvcstruct = struct ;
-	
 	var branchesSource = '<li>'+structBrowser._loadController(structBrowser._mvcstruct)+'</li>' ;
-	
-	jQuery("#browser").html('') ;
-	var branches = jQuery(branchesSource).appendTo("#browser");
-	jQuery("#browser").treeview({
-		add: branches
-	});
-	
+	jQuery("#browser").empty().append(jQuery(branchesSource)).treeview();
 }
 structBrowser._loadModel = function(aModel)
 {
-	var source = "<li>" + "<span class='folder'>[M] "+aModel.name+"</span>" ;
+	var source = "<li>" + "<span class='folder model'>[M] "+aModel.name+"</span>" ;
 	source+= structBrowser._loadModelList(aModel.models) ;
 	source+= '</li>' ;
 	
@@ -62,7 +62,7 @@ structBrowser._loadModelList = function(arrModels)
 }
 structBrowser._loadView = function(aView)
 {
-	var source = "<li>" + "<span class='folder'>[V] "+aView.name+"</span>" ;
+	var source = "<li>" + "<span class='folder view'>[V] "+aView.name+"</span>" ;
 	source+= structBrowser._loadViewList(aView.views) ;
 	source+= '</li>' ;
 	
@@ -88,11 +88,13 @@ structBrowser._loadViewList = function(arrViews)
 }
 structBrowser._loadController = function(aController)
 {
-	var source = '<li><span class="folder">[C] '+aController.name+'</span>' ;
+	var source = '<li><span class="folder controller">[C] '+aController.name+'</span>' ;
 	source+= structBrowser._loadModelList(aController.models) ;
 	source+= structBrowser._loadViewList(aController.views) ;		
 	source+= '</li>' ;
-	
+	jQuery(source).find('.controller:first').data("class",aController.class);
+									//.data("parmas",aController['parmas'])
+									//.data("title",aController['title']);
 	return source ;
 }
 structBrowser.setCurrentUrl = function(sUrl)
@@ -117,9 +119,79 @@ structBrowser.location = function(sUrl)
 	structBrowser.log(sUrl) ;
 	jQuery('#iframe-browser').get(0).contentWindow.location = sUrl ;
 }
+structBrowser.closeArgsAndTitleInputByNeed = function(){
+	if( this.selectType == "target"){
+		jQuery('#args').get(0).disabled = true;
+		jQuery('#title').get(0).disabled = true;
+	}
+}
+structBrowser.getArgumentFromParent = function(){
+	var sAllowSelectClass = window.dialogArguments['allowSelectClass'];
+	for(var i =0 ; i< sAllowSelectClass.length ; i++){
+		switch(sAllowSelectClass.substr(i,1))
+		{
+			case "c":
+				this.allowSelectClass.push("controller");
+				break
+			case "v":
+				this.allowSelectClass.push("view");
+				break
+			case "m":
+				this.allowSelectClass.push("model");
+				break
+			case "w":
+				this.allowSelectClass.push("widget");
+				break
+		}
+	}
+	this.parentObject = window.dialogArguments['parent'];
+	this.selectType = window.dialogArguments['selectType'];
+}
+
+structBrowser.search = function(name){
+	
+}
+
+jQuery(function(){
+	structBrowser.getArgumentFromParent();
+	structBrowser.closeArgsAndTitleInputByNeed();
+	
+	jQuery("#submitClassInfo").click(function(){
+		if(jQuery('.selectClass').length == 0){
+			alert("请至少选定一个对象");
+			return;
+		}
+		if(structBrowser.selectType == "handle"){
+			jQuery(structBrowser.parentObject).find("#source_controller_class").val(jQuery("#classname").val());
+			jQuery(structBrowser.parentObject).find("#source_controller_params").val(jQuery("#args").val());
+			jQuery(structBrowser.parentObject).find("#source_controller_comment").val(jQuery("#title").val());
+		}else{
+			jQuery(structBrowser.parentObject).find("#target_controller_class").val(jQuery("#classname").val());
+		}
+	});
+	
+	jQuery(".folder").live("click",function(e){
+		var that = jQuery(this);
+		var bIsSelectClass = false; 
+		for(var c in structBrowser.allowSelectClass){
+			bIsSelectClass = that.hasClass(structBrowser.allowSelectClass[c]) || bIsSelectClass;
+		}
+		if(!bIsSelectClass){
+			console.log('xxx');
+			return;
+		}
+		jQuery(".folder").removeClass("selectClass");
+		that.addClass("selectClass");
+		jQuery("#classname").val(that.data("class"));
+	});
+});
 </script>
+<label for="classname">类名<input type="text" id="classname" value="" style="width:400px" /></label><br/>
+<label for="args">参数<input type="text" id="args" value="" style="width:400px" /></label><br/>
+<label for="title">标题<input type="text" id="title" value="" style="width:400px" /></label><br/>
+<input type="button" id="submitClassInfo" value="提交" /><br/>
 
 <input type="text" id="current_url" value="" style="width:400px" /> 
-<input type="button" value="打开网页" onclick="structBrowser.location()" />
+<input type="button" value="打开网页" onclick="structBrowser.location()" /><br/>
 
 <iframe id="iframe-browser" src="{/*.url.path}?mvcmerger_browser=1" width="100%" height="600px" />
