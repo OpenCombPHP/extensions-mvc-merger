@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
+use org\jecat\framework\mvc\view\View;
+
 use org\jecat\framework\mvc\model\IModel;
 use org\jecat\framework\mvc\controller\IController;
 use org\jecat\framework\pattern\composite\IContainer;
@@ -20,11 +22,14 @@ class ControllerAspect
 		) ;
 	}
 	
+	// -------------------------------------------------------------------------------------- //
+	// for View Layout Setting -------------------------------------------------------------- //
+	
 	/**
 	 * @advice before
 	 * @for pointcutMainRun
 	 */
-	public function upViewLayoutSetting()
+	public function enableViewLayoutSetting_before()
 	{
 		if($this->params->bool('mvcmerger_layout_setting'))
 		{
@@ -35,6 +40,44 @@ class ControllerAspect
 			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:js/view-layout-setting.js',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_JS) ;
 		}
 	}
+	
+	/**
+	 * @advice after
+	 * @for pointcutMainRun
+	 */
+	public function enableViewLayoutSetting_after()
+	{
+		if(!$this->params->bool('mvcmerger_layout_setting'))
+		{
+			return ;
+		}
+		
+		$sJsCode = "\r\n<script>\r\n" ;
+		// $sJsCode = "var " ;
+		$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::outputViewInfoForLayoutSetting($this->mainView()) ;
+		$sJsCode.= "</script>\r\n" ;
+		
+		echo $sJsCode ;
+	}
+	
+	static public function outputViewInfoForLayoutSetting(IView $aView,$sXPathPrefix='')
+	{
+		$sXPath = $sXPathPrefix.'/'.$aView->name() ;
+		$sXPathEsc = addslashes($sXPath) ;
+		
+		$sIdEsc = addslashes(View::htmlWrapperId($aView)) ;
+		
+		$sJsCode = "jquery('#{$sIdEsc}').data('xpath',\"{$sXPath}\") ;\r\n" ;
+		foreach($aView->iterator() as $aChildView)
+		{
+			$sJsCode.= self::outputViewInfoForLayoutSetting($aChildView,$sXPath) ;
+		}
+		
+		return $sJsCode ;
+	} 
+	
+	// -------------------------------------------------------------------------------------- //
+	// for MVC Browser----------------------------------------------------------------------- //
 	
 	/**
 	 * @advice after

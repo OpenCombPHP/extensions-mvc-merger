@@ -1,13 +1,9 @@
-div .mvc_merger-layout_settable_view{
-	
-}
-
-div .mvc_merger-layout_settable_view_mouseover{
+.mvc_merger-layout_settable_view_mouseover{
 	border: 1px solid #A7D3DA;
 	background-color: #E4F4FF;	
 }
 
-div .mvc_merger-layout_settable_view_dragging{
+.mvc_merger-layout_settable_view_dragging{
 	border: 1px solid #FFE2B0;
 	background-color: #FF6A40;
 }

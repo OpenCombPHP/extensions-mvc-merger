@@ -13,14 +13,14 @@ class test extends Controller
 					
 				'viewA' => array(
 					'template' => 'mvc-merger:test-view.html' ,
-					/*'views' => array(
+					'views' => array(
 						'view-a' => array(
 							'template' => 'mvc-merger:test-view.html'
 						) ,		
 						'view-b' => array(
 							'template' => 'mvc-merger:test-view.html'
 						) ,	
-					) ,*/
+					) ,
 				) ,
 				'viewB' => array(
 					'template' => 'mvc-merger:test-view.html'
