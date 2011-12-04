@@ -12,12 +12,23 @@ class test extends Controller
 			'views' => array(
 					
 				'viewA' => array(
-					'template' => 'mvc-merger:test-view.html'
+					'template' => 'mvc-merger:test-view.html' ,
+					/*'views' => array(
+						'view-a' => array(
+							'template' => 'mvc-merger:test-view.html'
+						) ,		
+						'view-b' => array(
+							'template' => 'mvc-merger:test-view.html'
+						) ,	
+					) ,*/
 				) ,
 				'viewB' => array(
 					'template' => 'mvc-merger:test-view.html'
 				) ,		
 				'viewC' => array(
+					'template' => 'mvc-merger:test-view.html'
+				) ,		
+				'viewD' => array(
 					'template' => 'mvc-merger:test-view.html'
 				) ,		
 				'viewE' => array(

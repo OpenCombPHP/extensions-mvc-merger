@@ -116,11 +116,15 @@ class ControllerAspect
 			$sName = $aController->name()?: $sClass ;
 		}
 		$sNameEsc = addslashes($sName) ;
+		$sClassEsc = addslashes($sClass) ;
+		$sTitleEsc = addslashes($aController->title()) ;
 		$sIndent = str_repeat("\t",$nIndent) ;
 		
 		$sJsCode = "{\r\n" ;
 		$sJsCode.= $sIndent."	name: \"{$sNameEsc}\"\r\n" ;
-		$sJsCode.= $sIndent."	, class: \"{$sClass}\"\r\n" ;
+		$sJsCode.= $sIndent."	, class: \"{$sClassEsc}\"\r\n" ;
+		$sJsCode.= $sIndent."	, params: \"\"\r\n" ;
+		$sJsCode.= $sIndent."	, title: \"{$sTitleEsc}\"\r\n" ;
 		
 		// models
 		$sJsCode.= $sIndent."	, models: [ " ;

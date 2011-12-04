@@ -99,13 +99,22 @@ mvcmerger.View.prototype.stopDragging = function()
 }
 mvcmerger.View.prototype.put = function(view,where)
 {
-	if(where=='before')
+	var parentFrame = this.belongsFrame() ;
+	
+	if(parentFrame)
 	{
-		jquery(this.element).before(view.element) ;		
+		parentFrame.putin(view,this,where) ;
 	}
-	else 
+	else
 	{
-		jquery(this.element).after(view.element) ;
+		if(where=='before')
+		{
+			jquery(this.element).before(view.element) ;		
+		}
+		else 
+		{
+			jquery(this.element).after(view.element) ;
+		}
 	}
 	
 	// float
@@ -115,8 +124,21 @@ mvcmerger.View.prototype.put = function(view,where)
 }
 mvcmerger.View.prototype.autoFloat = function()
 {
-	jquery(this.element).css('float',(mvcmerger.LayoutFrame.isH(this.element.parentNode)?'left':'none')) ;
 }
+mvcmerger.View.prototype.belongsFrame = function()
+{
+	// 检查是否在一个frame item中
+	if( typeof(this.element.parentNode)=='undefined' || !jquery(this.element.parentNode).hasClass('org_jecat_framework_view_layout_frame_item') )
+	{
+		return null ;
+	}
+	if( typeof(this.element.parentNode.parentNode)=='undefined' || !jquery(this.element.parentNode.parentNode).hasClass('org_jecat_framework_view_layout_frame') )
+	{
+		throw new Error("对象在 frame item 中，但是这个 item 却不在frame 中， 系统的 frame/item/view 结构遭到损坏") ;
+	}
+	return jquery(this.element.parentNode.parentNode).data('view') ;
+}
+
 
 
 //视图布局框架类 ------------------------
@@ -132,14 +154,51 @@ mvcmerger.LayoutFrame.create = function(type)
 	jquery(newFrame).addClass('org_jecat_framework_view_layout_frame') ;
 	jquery(newFrame).addClass('org_jecat_framework_view_layout_frame_'+type) ;
 	jquery(newFrame).addClass('org_jecat_framework_view') ;
-	jquery(newFrame).html('<div class="org_jecat_framework_view_layout_end" />') ;
+	jquery(newFrame).html('<div class="org_jecat_framework_view-layout-end" />') ;
 	
 	return new mvcmerger.LayoutFrame(newFrame) ;
 }
-mvcmerger.LayoutFrame.prototype.putin = function(view)
+mvcmerger.LayoutFrame.prototype.putin = function(view,posView,where)
 {
-	jquery(this.element).find('>.org_jecat_framework_view_layout_end').before(view.element) ;
+	var newItem = document.createElement('div') ;
+	jquery(newItem).addClass('org_jecat_framework_view_layout_frame_item') ;
+	jquery(newItem).css('float',(this.isH()?'left':'none')) ;
+	
+	// 没有指定位置
+	if( typeof(posView)=='undefined' )
+	{
+		jquery(this.element).find('>.org_jecat_framework_view-layout-end').before(newItem) ;
+	}
+	// 指定位置之后
+	else
+	{
+		if( typeof(where)=='undefined' || where=='after' )
+		{
+			jquery(posView.element.parentNode).after(newItem) ;
+		}
+		else
+		{
+			jquery(posView.element.parentNode).before(newItem) ;
+		}
+	}
+
+	// 视图放入 item 中
+	jquery(newItem).append(view.element) ;
+	
 	view.autoFloat();
+}
+mvcmerger.LayoutFrame.prototype.putout = function(view)
+{
+	if( view.element.parentNode.parentNode !== this.element )
+	{
+		return ;
+	}
+	
+	// 移除 view 的 item
+	this.element.removeChild(view.element.parentNode) ;
+	
+	// 从 view 的 item 中 移除 view
+	view.element.parentNode.removeChild(view.element) ;
 }
 mvcmerger.LayoutFrame.prototype.isH = function()
 {
@@ -153,17 +212,45 @@ mvcmerger.LayoutFrame.isH = function(layoutElement)
 mvcmerger.LayoutFrame.clearAllInvalidLayoutFrame = function()
 {
 	jquery(".org_jecat_framework_view_layout_frame").each(function(){
-		if( jquery(this).find('>.org_jecat_framework_view').size() <=1 )
+		var views = jquery(this).find('>.org_jecat_framework_view_layout_frame_item>.org_jecat_framework_view') ;
+		if( views.size() <=1 )
 		{
 			// 见内部的子元素提上来
-			jquery(this).find('>.org_jecat_framework_view').each(function(){
-				jquery(this.parentNode).after(this) ;
-				jquery(this).data('view').autoFloat();
+			views.each(function(){
+				
+				var theView = jquery(this).data('view') ;
+				var theFrame = theView.belongsFrame() ;
+				
+				// 从 frame 中移除 view
+				theFrame.putout(theView) ;
+				
+				// 将 view 放置到 frame 的上级
+				var parentFrame = theFrame.belongsFrame() ;
+				if( parentFrame )
+				{
+					parentFrame.putin( theView ) ;
+				}
+				// 不在一个frame中
+				else
+				{
+					jquery(theFrame.element).after(this) ;
+				}
 			}) ;
+
+			var theFrame = jquery(this).data('view') ;
 			
-			// 删除layout
-			jquery(this).removeData('view') ;
-			this.parentNode.removeChild(this) ;
+			// 是否在另一个 frame 中
+			var parentFrame = theFrame.belongsFrame() ;
+			if( parentFrame )
+			{
+				parentFrame.putout( theFrame ) ;
+			}
+			else
+			{
+				// 删除 frame
+				jquery(this).removeData('view') ;
+				this.parentNode.removeChild(this) ;
+			}
 		}
 	}) ;
 }

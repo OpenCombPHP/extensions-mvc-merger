@@ -28,13 +28,16 @@ function browserController(sClassType ,sSelectType)
 		目标控制器类：<input type="text" style="width:400px" name="target_controller_class" id="target_controller_class" value="org\opencomb\opencms\article\ArticleManage" />
 		<input type="button" value="浏览查找 ..." onclick="browserController('c','target')" />
 	</div>
-	<br />
+	<hr />
 	<div>
 		被并入的控制器类：<input type="text" style="width:400px" name="source_controller_class" id="source_controller_class" value="org\opencomb\opencms\article\CreateArticle" />
 		<input type="button" value="浏览查找 ..." onclick="browserController('c','handle')" />
 	</div>
 	<div>
-		控制器参数：<input type="text" style="width:400px" name="source_controller_params" />
+		名称：<input type="text" style="width:200px" name="source_controller_name" />
+	</div>
+	<div>
+		参数：<input type="text" style="width:400px" name="source_controller_params" />
 	</div>
 	<div>
 		注释：<input type="text" style="width:400px" name="source_controller_comment" />
@@ -66,6 +69,9 @@ function browserController(sClassType ,sSelectType)
 						<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
 						<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&act=removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
 					</div>
+					<if "$arrMerged['name']">
+						<div>名称：{=$arrMerged['name']}</div>
+					</if>
 					<if "$arrMerged['params']">
 						<div>参数：{=$arrMerged['params']}</div>
 					</if>

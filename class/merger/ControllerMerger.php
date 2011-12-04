@@ -64,6 +64,7 @@ class ControllerMerger extends ControlPanel
 		$arrMergedControllers[ $this->params['target_controller_class'] ][] = array(
 					'controller' => $this->params['source_controller_class'] ,
 					'params' => $this->params->string('source_controller_params') ,
+					'name' => $this->params->string('source_controller_name') ,
 					'comment' => $this->params->string('source_controller_comment') ,
 		) ;
 		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
