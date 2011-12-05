@@ -31,27 +31,27 @@ structBrowser.log = function(text)
 structBrowser.setMvcStruct = function(struct)
 {
 	structBrowser._mvcstruct = struct ;
-	var branchesSource = '<li>'+structBrowser._loadController(structBrowser._mvcstruct)+'</li>' ;
-	jQuery("#browser").empty().append(jQuery(branchesSource)).treeview();
+	var li = jQuery("<li></li>");
+	li.append(structBrowser._loadController(structBrowser._mvcstruct)) ;
+	jQuery("#browser").empty().append(li).treeview();
 }
 structBrowser._loadModel = function(aModel)
 {
-	var source = "<li>" + "<span class='folder model'>[M] "+aModel.name+"</span>" ;
-	source+= structBrowser._loadModelList(aModel.models) ;
-	source+= '</li>' ;
-	
-	return source ;
+	var span = jQuery("<span class='folder model'>[M] "+aModel.name+"</span>");
+	var li = jQuery("<li></li>") ;
+	li.append(span);
+	li.append(structBrowser._loadModelList(aModel.models)) ;
+	return li ;
 }
 structBrowser._loadModelList = function(arrModels)
 {
 	if(arrModels.length)
 	{
-		var source = '<ul>' ;
+		var source = jQuery('<ul></ul>') ;
 		for(var i=0;i<arrModels.length;i++)
 		{
-			source+= structBrowser._loadModel(arrModels[i]) ;
+			source.append(structBrowser._loadModel(arrModels[i])) ;
 		}
-		source+= '</ul>' ;
 		
 		return source ;
 	}
@@ -62,9 +62,8 @@ structBrowser._loadModelList = function(arrModels)
 }
 structBrowser._loadView = function(aView)
 {
-	var source = "<li>" + "<span class='folder view'>[V] "+aView.name+"</span>" ;
-	source+= structBrowser._loadViewList(aView.views) ;
-	source+= '</li>' ;
+	var source = jQuery("<li><span class='folder view'>[V] "+aView.name+"</span></li>") ;
+	source.append(structBrowser._loadViewList(aView.views)) ;
 	
 	return source ;
 }
@@ -72,12 +71,11 @@ structBrowser._loadViewList = function(arrViews)
 {
 	if(arrViews.length)
 	{
-		var source = '<ul>' ;
+		var source = jQuery('<ul></ul>') ;
 		for(var i=0;i<arrViews.length;i++)
 		{
-			source+= structBrowser._loadView(arrViews[i]) ;
+			source.append(structBrowser._loadView(arrViews[i])) ;
 		}
-		source+= '</ul>' ;
 		
 		return source ;
 	}
@@ -88,13 +86,12 @@ structBrowser._loadViewList = function(arrViews)
 }
 structBrowser._loadController = function(aController)
 {
-	var source = '<li><span class="folder controller">[C] '+aController.name+'</span>' ;
-	source+= structBrowser._loadModelList(aController.models) ;
-	source+= structBrowser._loadViewList(aController.views) ;		
-	source+= '</li>' ;
-	jQuery(source).find('.controller:first').data("class",aController.class);
-									//.data("parmas",aController['parmas'])
-									//.data("title",aController['title']);
+	var source = jQuery('<li><span class="folder controller">[C] '+aController.name+'</span></li>') ;
+	source.append(structBrowser._loadModelList(aController.models))
+			.append(structBrowser._loadViewList(aController.views)) ;		
+	source.find('.controller:first').data("class",aController.class)
+								.data("params",aController.params)
+								.data("title",aController.title);
 	return source ;
 }
 structBrowser.setCurrentUrl = function(sUrl)
@@ -162,12 +159,13 @@ jQuery(function(){
 			return;
 		}
 		if(structBrowser.selectType == "handle"){
-			jQuery(structBrowser.parentObject).find("#source_controller_class").val(jQuery("#classname").val());
-			jQuery(structBrowser.parentObject).find("#source_controller_params").val(jQuery("#args").val());
-			jQuery(structBrowser.parentObject).find("#source_controller_comment").val(jQuery("#title").val());
+			jQuery(structBrowser.parentObject.document).find("#source_controller_class").val(jQuery("#classname").val());
+			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_params']").val(jQuery("#args").val());
+			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_comment']").val(jQuery("#title").val());
 		}else{
-			jQuery(structBrowser.parentObject).find("#target_controller_class").val(jQuery("#classname").val());
+			jQuery(structBrowser.parentObject.document).find("#target_controller_class").val(jQuery("#classname").val());
 		}
+		window.close();
 	});
 	
 	jQuery(".folder").live("click",function(e){
@@ -177,7 +175,6 @@ jQuery(function(){
 			bIsSelectClass = that.hasClass(structBrowser.allowSelectClass[c]) || bIsSelectClass;
 		}
 		if(!bIsSelectClass){
-			console.log('xxx');
 			return;
 		}
 		jQuery(".folder").removeClass("selectClass");
