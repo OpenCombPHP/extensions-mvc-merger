@@ -14,6 +14,8 @@ class ControllerMerge
 	{
 		$arrJointPoints = array() ;
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
+		
+		// for 控制器融合		
 		foreach(array_keys($aSetting->item('/merge/controller','controllers',array())) as $sControllerClass)
 		{
 			$arrJointPoints[] = new JointPointMethodDefine($sControllerClass,'init')  ;
@@ -28,26 +30,25 @@ class ControllerMerge
 	 */
 	public function init()
 	{
-		$arrJointPoints = array() ;
 		$aSetting = \org\jecat\framework\system\Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrControllers = $aSetting->item('/merge/controller','controllers',array()) ;
-		if( empty($arrControllers[__CLASS__]) )
-		{
-			return ;
-		}
 		
-		foreach($arrControllers[__CLASS__] as $arrMerge)
+		// for 控制器融合
+		$arrControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		if( !empty($arrControllers[__CLASS__]) )
 		{
-			if( empty($arrMerge['params']) )
+			foreach($arrControllers[__CLASS__] as $arrMerge)
 			{
-				$aParams = null ;
+				if( empty($arrMerge['params']) )
+				{
+					$aParams = null ;
+				}
+				else
+				{
+					parse_str($arrMerge['params'],$params) ;
+					$aParams = new \org\jecat\framework\util\DataSrc($params) ;
+				}
+				$this->add( new $arrMerge['controller']($aParams), empty($arrMerge['name'])? null: $arrMerge['name'] ) ;
 			}
-			else
-			{
-				parse_str($arrMerge['params'],$params) ;
-				$aParams = new \org\jecat\framework\util\DataSrc($params) ;
-			}
-			$this->add( new $arrMerge['controller']($aParams), empty($arrMerge['name'])? null: $arrMerge['name'] ) ;
 		}
 	}
 }

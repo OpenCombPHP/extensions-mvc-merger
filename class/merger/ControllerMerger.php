@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\mvcmerger\MvcMerger;
+
 use org\opencomb\system\PlatformFactory;
 use org\opencomb\Platform;
 use org\jecat\framework\lang\oop\ClassLoader;
@@ -70,7 +72,7 @@ class ControllerMerger extends ControlPanel
 		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
 		
 		// 清理类编译缓存
-		self::clearClassCompiled($this->params['target_controller_class']) ;
+		MvcMerger::clearClassCompiled($this->params['target_controller_class']) ;
 		
 		// 清理平台缓存
 		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
@@ -126,19 +128,11 @@ class ControllerMerger extends ControlPanel
 		}
 			
 		// 清理 class 编译缓存
-		self::clearClassCompiled($this->params['target']) ;
+		MvcMerger::clearClassCompiled($this->params['target']) ;
 		
 		// 清理平台缓存
 		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
 	}
-	
-	static public function clearClassCompiled($sClass)
-	{
-		if( $aClassFile = ClassLoader::singleton()->searchClass($sClass,ClassLoader::SEARCH_COMPILED) )
-		{
-			$aClassFile->delete() ;
-		}
-	} 
 }
 
 ?>

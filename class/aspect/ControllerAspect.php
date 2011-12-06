@@ -53,8 +53,16 @@ class ControllerAspect
 		}
 		
 		$sJsCode = "\r\n<script>\r\n" ;
-		// $sJsCode = "var " ;
-		$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::outputViewInfoForLayoutSetting($this->mainView()) ;
+		
+		// view id,xpath mapping
+		foreach($this->mainView()->iterator() as $aChildView)
+		{
+			$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::outputViewInfoForLayoutSetting($aChildView) ;
+		}
+		
+		// controller class
+		$sJsCode.= "var currentControllerClass = '". addslashes(get_class($this)) ."' ;\r\n" ;
+		
 		$sJsCode.= "</script>\r\n" ;
 		
 		echo $sJsCode ;
@@ -62,7 +70,7 @@ class ControllerAspect
 	
 	static public function outputViewInfoForLayoutSetting(IView $aView,$sXPathPrefix='')
 	{
-		$sXPath = $sXPathPrefix.'/'.$aView->name() ;
+		$sXPath = $sXPathPrefix.'/'. $aView->parent()->getName($aView) ;
 		$sXPathEsc = addslashes($sXPath) ;
 		
 		$sIdEsc = addslashes(View::htmlWrapperId($aView)) ;
