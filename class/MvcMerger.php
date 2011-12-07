@@ -20,8 +20,8 @@ class MvcMerger extends Extension
 	{
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControlPanelFrameAspect') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerMerge') ;
-		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ViewLayoutAspect') ;
-		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerAspect') ;
+		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ViewLayoutSetting') ;
+		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser') ;
 	}
 
 	public function active()
@@ -37,6 +37,11 @@ class MvcMerger extends Extension
 		// for UI Object Browser ---------
 		if(Request::singleton()->bool('mvcmerger_ui_browser'))
 		{
+			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery') ;
+			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery.ui') ;
+			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:js/uitemplate-weave.js',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_JS) ;
+			echo __METHOD__ ;
+			
 			$aUIParser = new UIObjectBrowserInfo ;
 			
 			UIFactory::singleton()->interpreterManager()->add($aUIParser) ;

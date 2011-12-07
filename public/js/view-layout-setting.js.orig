@@ -399,16 +399,24 @@ jquery(function(){
 	jquery(".org_jecat_framework_view").each(function(idx,view){
 		if(jquery(this).hasClass('mvcmerger-viewlayout'))
 		{
+<<<<<<< Updated upstream
+			new mvcmerger.LayoutFrame(view) ;
+		}
+		else
+		{
+			var aMvcmergerView = new mvcmerger.View(view) ;
+			//添加styleoption的打开按钮
+			mvcmerger.styleoption.optionbtn(view);
+=======
 			if( jquery(this).hasClass('org_jecat_framework_view-layout-frame') )
 			{
 				new mvcmerger.LayoutFrame(view) ;
 			}
 			else
 			{
-				var aMvcmergerView = new mvcmerger.View(view) ;
-				//添加styleoption的打开按钮
-				mvcmerger.styleoption.optionbtn(view);
+				new mvcmerger.View(view) ;
 			}
+>>>>>>> Stashed changes
 		}
 	}) ;
 	

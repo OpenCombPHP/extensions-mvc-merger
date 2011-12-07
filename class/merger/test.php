@@ -36,7 +36,7 @@ class test extends Controller
 				) ,		
 				'viewF' => array(
 					'template' => 'mvc-merger:test-view.html'
-				) ,		
+				) ,
 			)		
 		) ;
 	}

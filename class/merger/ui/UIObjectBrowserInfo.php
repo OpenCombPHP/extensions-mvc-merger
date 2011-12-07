@@ -24,7 +24,7 @@ class UIObjectBrowserInfo implements IInterpreter
 		$sStructJson = "<script>\r\n" ;
 		$sStructJson.= "if(typeof(__uitemplates)=='undefined'){ var __uitemplates = {} ;}\r\n" ;
 		$sStructJson.= "__uitemplates[\"{$sTemplateEsc}\"] = " ;
-		$this->buildUIObjectXPath($aObjectContainer,0,$sStructJson) ;
+		$sStructJson.= $this->buildUIObjectXPath($aObjectContainer,0) ;
 		$sStructJson.= "\r\n</script>\r\n" ;
 		
 		// ----------------------
@@ -46,10 +46,10 @@ class UIObjectBrowserInfo implements IInterpreter
 		$aObjectContainer->add( new Text(0,0,0,$sStructJson) ) ;
 	}
 	
-	public function buildUIObjectXPath(IObject $aObject,$nIdx=0,&$sStructJson,$nIndent=0)
+	public function buildUIObjectXPath(IObject $aObject,$nIdx=0,$nIndent=0)
 	{
 		$sIndent = str_repeat("\t",$nIndent) ;
-		$sStructJson.= "{\r\n" ;
+		$sStructJson = "{\r\n" ;
 		$sStructJson.= "{$sIndent}	class:'".get_class($aObject)."'\r\n" ;
 		
 		if( $aObject instanceof Node )
@@ -62,17 +62,19 @@ class UIObjectBrowserInfo implements IInterpreter
 		}
 		
 		$sStructJson.= "{$sIndent}	, children:[" ;
-		foreach($aObject->iterator() as $nIdx=>$aChildObject)
+		$arrChildJsons = array() ;
+		foreach($aObject->iterator() as $nChildIdx=>$aChildObject)
 		{
-			if($nIdx)
+			if( $aChildObject instanceof Node )
 			{
-				$sStructJson.= ",\r\n{$sIndent}	" ;
+				$arrChildJsons[] = $this->buildUIObjectXPath($aChildObject,$nChildIdx,$nIndent+1) ;
 			}
-			$this->buildUIObjectXPath($aChildObject,$nIdx,$sStructJson,$nIndent+1) ;
 		}
-		$sStructJson.= "]\r\n" ;
+		$sStructJson.= implode(",\r\n{$sIndent}\t",$arrChildJsons)."]\r\n" ;
 		
 		$sStructJson.= "{$sIndent}}" ;
+		
+		return $sStructJson ;
 	}
 	
 	public function parentNodeXPath(Node $aObject)

@@ -10,7 +10,7 @@ use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\controller\Controller;
 use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
 
-class ControllerAspect
+class MVCBrowser
 {
 	/**
 	 * @pointcut
@@ -21,68 +21,6 @@ class ControllerAspect
 			new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','mainRun') ,
 		) ;
 	}
-	
-	// -------------------------------------------------------------------------------------- //
-	// for View Layout Setting -------------------------------------------------------------- //
-	
-	/**
-	 * @advice before
-	 * @for pointcutMainRun
-	 */
-	public function enableViewLayoutSetting_before()
-	{
-		if($this->params->bool('mvcmerger_layout_setting'))
-		{
-			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery') ;
-			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery.ui') ;
-			
-			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:css/view-layout-setting.css',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_CSS) ;
-			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:js/view-layout-setting.js',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_JS) ;
-		}
-	}
-	
-	/**
-	 * @advice after
-	 * @for pointcutMainRun
-	 */
-	public function enableViewLayoutSetting_after()
-	{
-		if(!$this->params->bool('mvcmerger_layout_setting'))
-		{
-			return ;
-		}
-		
-		$sJsCode = "\r\n<script>\r\n" ;
-		
-		// view id,xpath mapping
-		foreach($this->mainView()->iterator() as $aChildView)
-		{
-			$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::outputViewInfoForLayoutSetting($aChildView) ;
-		}
-		
-		// controller class
-		$sJsCode.= "var currentControllerClass = '". addslashes(get_class($this)) ."' ;\r\n" ;
-		
-		$sJsCode.= "</script>\r\n" ;
-		
-		echo $sJsCode ;
-	}
-	
-	static public function outputViewInfoForLayoutSetting(IView $aView,$sXPathPrefix='')
-	{
-		$sXPath = $sXPathPrefix.'/'. $aView->parent()->getName($aView) ;
-		$sXPathEsc = addslashes($sXPath) ;
-		
-		$sIdEsc = addslashes(View::htmlWrapperId($aView)) ;
-		
-		$sJsCode = "jquery('#{$sIdEsc}').data('xpath',\"{$sXPath}\") ;\r\n" ;
-		foreach($aView->iterator() as $aChildView)
-		{
-			$sJsCode.= self::outputViewInfoForLayoutSetting($aChildView,$sXPath) ;
-		}
-		
-		return $sJsCode ;
-	} 
 	
 	// -------------------------------------------------------------------------------------- //
 	// for MVC Browser----------------------------------------------------------------------- //
@@ -100,7 +38,7 @@ class ControllerAspect
 		
 		$sJsCode = "\r\n<script>\r\n" ;
 		$sJsCode.= "if( parent && typeof(parent.structBrowser)!='undefined' ){\r\n" ;
-		$sJsCode.= "	var _mvcstruct = " . \org\opencomb\mvcmerger\aspect\ControllerAspect::generateControllerStructJcCode($this) . "; \r\n" ;
+		$sJsCode.= "	var _mvcstruct = " . \org\opencomb\mvcmerger\aspect\MVCBrowser::generateControllerStructJcCode($this) . "; \r\n" ;
 		$sJsCode.= "	parent.structBrowser.setMvcStruct(_mvcstruct) ;\r\n" ;
 		$sJsCode.= "}\r\n" ;
 		$sJsCode.= "</script>\r\n" ;
@@ -123,7 +61,7 @@ class ControllerAspect
 			{
 				$sJsCode.= "\r\n{$sIndent}	, " ;
 			}
-			$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::generateModelStructJcCode($aModel->child($sModelName),$sModelName,$sIndent+1) ;
+			$sJsCode.= \org\opencomb\mvcmerger\aspect\MVCBrowser::generateModelStructJcCode($aModel->child($sModelName),$sModelName,$sIndent+1) ;
 		}
 		$sJsCode.= $sIndent." ]\r\n" ;
 		
@@ -185,7 +123,7 @@ class ControllerAspect
 			{
 				$sJsCode.= "\r\n{$sIndent}	, " ;
 			}
-			$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::generateModelStructJcCode($aController->modelByName($sModelName),$sModelName,$sIndent+1) ;
+			$sJsCode.= \org\opencomb\mvcmerger\aspect\MVCBrowser::generateModelStructJcCode($aController->modelByName($sModelName),$sModelName,$sIndent+1) ;
 		}
 		$sJsCode.= $sIndent." ]\r\n" ;
 		
@@ -197,7 +135,7 @@ class ControllerAspect
 			{
 				$sJsCode.= "\r\n{$sIndent}	, " ;
 			}
-			$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::generateViewStructJcCode($aController->mainView()->getByName($sViewName),$sViewName,$sIndent+1) ;
+			$sJsCode.= \org\opencomb\mvcmerger\aspect\MVCBrowser::generateViewStructJcCode($aController->mainView()->getByName($sViewName),$sViewName,$sIndent+1) ;
 		}
 		$sJsCode.= $sIndent." ]\r\n" ;
 		
@@ -209,7 +147,7 @@ class ControllerAspect
 			{
 				$sJsCode.= "\r\n{$sIndent}	, " ;
 			}
-			$sJsCode.= \org\opencomb\mvcmerger\aspect\ControllerAspect::generateControllerStructJcCode($aController->getByName($sChildControllerName),$sChildControllerName,$sIndent+1) ;
+			$sJsCode.= \org\opencomb\mvcmerger\aspect\MVCBrowser::generateControllerStructJcCode($aController->getByName($sChildControllerName),$sChildControllerName,$sIndent+1) ;
 		}
 		$sJsCode.= $sIndent." ]\r\n" ;
 		
