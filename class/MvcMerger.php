@@ -39,8 +39,9 @@ class MvcMerger extends Extension
 		{
 			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery') ;
 			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery.ui') ;
+			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery.treeview') ;
+			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:css/uitemplate-weave.css',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_CSS) ;
 			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:js/uitemplate-weave.js',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_JS) ;
-			echo __METHOD__ ;
 			
 			$aUIParser = new UIObjectBrowserInfo ;
 			
