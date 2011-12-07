@@ -23,7 +23,7 @@ mvcmerger.View.prototype.bindEvents = function()
 {
 	// 视图的鼠标效果
 	jquery(this.element).mouseover(function(e){
-		console.log('mouseover '+this.id) ;
+//		console.log('mouseover '+this.id) ;
 		// 先把所有其它的视图 mouseover 效果移除
 		jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
 		// 加上mouseover
@@ -73,7 +73,7 @@ mvcmerger.View.prototype.bindEvents = function()
 				jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
 				jquery(this).addClass('mvc_merger-layout_settable_view_mouseover') ;
 				
-				console.log('dropping:over '+this.id) ;
+//				console.log('dropping:over '+this.id) ;
 			}
 		}
 		, out: function(event,ui) {
@@ -82,7 +82,7 @@ mvcmerger.View.prototype.bindEvents = function()
 				// 移除 mouseover 效果
 				jquery(this).removeClass('mvc_merger-layout_settable_view_mouseover') ;
 				
-				console.log('dropping:out '+this.id) ;
+//				console.log('dropping:out '+this.id) ;
 			}
 		}
 		, drop: function(event,ui) {
@@ -92,7 +92,7 @@ mvcmerger.View.prototype.bindEvents = function()
 				// 对保留 mouseover 效果的元素进行操作
 				mvcmerger.droppingToView = jquery('.mvc_merger-layout_settable_view_mouseover').data('view') ;
 				
-				console.log('drop '+mvcmerger.droppingToView.element.id) ;
+//				console.log('drop '+mvcmerger.droppingToView.element.id) ;
 				jquery('#mvc_merger-layout-dropping-buttons-box').css('left',event.originalEvent.pageX) ;
 				jquery('#mvc_merger-layout-dropping-buttons-box').css('top',event.originalEvent.pageY) ;
 				jquery('#mvc_merger-layout-dropping-buttons-box').show() ;
@@ -315,6 +315,84 @@ JSON.stringify = JSON.stringify || function (obj) {
         return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
     }
 };
+/* -----------------风格菜单------------------ */
+mvcmerger.styleoption = {
+	optionDialog:jQuery('<div class="styleoption" title="视图属性">'
+			+ '<ul>'
+				+ '<li><label>class<input type="text" class="styleoption_class" value=""/></label></li>'
+				+ '<li><label>width<input type="text" class="styleoption_width" value=""/></label></li>'
+				+ '<li><label>height<input type="text" class="styleoption_height" value=""/></label></li>'
+				+ '<li><label>margin<input type="text" class="styleoption_marign" value=""/></label></li>'
+				+ '<li><label>padding<input type="text" class="styleoption_padding" value=""/></label></li>'
+				+ '<li><label>style<input type="textarea" class="styleoption_style" value=""/></label></li>'
+				+ '<li><label>title<input type="text" class="styleoption_title" value=""/></label></li>'
+				+ '<li><label>type'
+					+ '<select class="styleoption_type">'
+						+ '<option value="v">竖向</option>'
+						+ '<option value="h">横向</option>'
+						+ '<option value="tab">选项卡</option>'
+					+ '</select>'
+					+ '</label></li>'
+			+ '</ul>'
+			+ '</div>')
+};
+//给view添加打开styleoption的按钮
+mvcmerger.styleoption.optionbtn = function(view){
+	var openbtn =jQuery("<div class='styleoption_open_btn'></div>");
+	jQuery(view).append(openbtn);
+	jQuery(view).hover(function(){
+		openbtn.show(0);
+	},function(){
+		openbtn.hide(0);
+	});
+	openbtn.click(function(){
+		mvcmerger.styleoption.open(openbtn);
+	});
+};
+//打开菜单的方法
+mvcmerger.styleoption.open = function(openbtn){
+	var view = openbtn.parents('.org_jecat_framework_view:first');
+	mvcmerger.styleoption.openedOptionDialog = mvcmerger.styleoption.optionDialog.clone();
+	jQuery(view).append(mvcmerger.styleoption.openedOptionDialog);
+	mvcmerger.styleoption.openedOptionDialog.dialog({
+		buttons:{
+			'取消':mvcmerger.styleoption.cancel
+			, '确定':mvcmerger.styleoption.save
+		}
+		, width:400
+		, height:300
+		, closeText: 'hide'
+		, closeOnEscape: true
+		, show: 'slide'
+	});
+	
+	//取得view的数据
+	var arrViewData = ['class','width','height','marign','padding','style','title','type'];
+	jQuery.each( arrViewData ,function(i,v){
+		mvcmerger.styleoption.openedOptionDialog.find('.styleoption_'+v).val(view.data(v));
+	});
+	//特殊对待type数据??/////////////////////////////
+	
+	//保存事件
+	mvcmerger.styleoption.save = function(){
+		var arrViewData = ['class','width','height','marign','padding','style','title','type'];
+		jQuery.each( arrViewData ,function(i,v){
+			view.data( v , mvcmerger.styleoption.openedOptionDialog.find('.styleoption_'+ v).val() );
+		});
+		mvcmerger.styleoption.cancel();
+	};
+	//取消事件
+	mvcmerger.styleoption.openedOptionDialog.find(".styleoption_cancel_btn").click(mvcmerger.styleoption.cancel);
+	//在对话框以外的地方点击按照取消处理
+//	jQuery('div').not(mvcmerger.styleoption.openedOptionDialog).click(function(){
+//			mvcmerger.styleoption.cancel();
+//	});
+};
+//关闭菜单的方法
+mvcmerger.styleoption.cancel = function(){
+	mvcmerger.styleoption.openedOptionDialog.remove();
+	delete mvcmerger.styleoption.openedOptionDialog;
+};
 /* ----------------------------------- */
 
 jquery(function(){
@@ -327,7 +405,9 @@ jquery(function(){
 		}
 		else
 		{
-			new mvcmerger.View(view) ;
+			var aMvcmergerView = new mvcmerger.View(view) ;
+			//添加styleoption的打开按钮
+			mvcmerger.styleoption.optionbtn(view);
 		}
 	}) ;
 	
@@ -377,7 +457,7 @@ jquery(function(){
 		, closeOnEscape: false
 		, show: 'slide'
 	});
-
+	
 	// "放置"工具按钮
 	jquery(document.body).append('<div id="mvc_merger-layout-dropping-buttons-box">'
 			

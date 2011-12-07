@@ -23,3 +23,16 @@
 	border: 1px solid #A7D3DA;
 	background-color: #E4F4FF;
 }
+
+.styleoption{
+}
+
+.styleoption_open_btn{
+	display:none;
+	width:20px;
+	height:20px;
+	position: absolute;
+	right:3px;
+	top:3px;
+	background:black;
+}
