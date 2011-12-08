@@ -3,13 +3,13 @@ ub = {
 	aTemplates:null,
 	aDialog:jQuery(
 		'<div id="ub_dialog" title="模板编织">'
-			+ '<div id="ub_left">'
-				+ '<div id="ub_toolbox">'
-					+ '<div id="ub_select_dom" class="toolBtns">'
-					+ '</div>'
-					+ '<div id="ub_select_tag" class="toolBtns">'
-					+ '</div>'
+			+ '<div id="ub_toolbox">'
+				+ '<div id="ub_select_dom" class="toolBtns">'
 				+ '</div>'
+				+ '<div id="ub_select_tag" class="toolBtns">'
+				+ '</div>'
+			+ '</div>'
+			+ '<div id="ub_left">'
 				+ '<div id="ub_template_list">'
 					+ '<ul>'
 					+ '</ul>'
@@ -61,7 +61,6 @@ ub = {
 		ub.aDialog.dialog({
 			width:900
 			, height:500
-			, closeText: 'hide'
 			, closeOnEscape: true
 			, show: 'slide'
 		});
@@ -152,17 +151,23 @@ ub = {
 		var xpath = dom.attr("xpath");
 		var treeview = jQuery("#ub_template_list .treeview");
 		//收起已经展开的tag
-		treeview.find('div.collapsable-hitarea').click();
-		//打开需要显示的节点
-		var target = treeview.find("li[tagxpath='"+xpath+"']");
+		ub.closeTree();
+		//需要显示的节点
+		var target = treeview.find("li[tagxpath='"+xpath+"']").first();
 		//展开父节点
-		target.parents('li.expandable').find('div.expandable-hitarea:first-child').click();
-		//展开目标节点
+		target.parents('.expandable').find("span:first").click();
+		//选中目标节点
 		target.click();
+		//滚动到用户可见
+		ub.scrollToSee(target,jQuery("#ub_left"));
 		//关闭选择模式
 		ub.closeSelectDomMode();
 		e.stopPropagation();
 		return false;
+	},
+	scrollToSee:function(dom,container){
+		var toHeight = 100; //把目标拉到30像素的位置,方便查看
+		container.scrollTop(dom.position().top-toHeight);
 	},
 	highLightDom:function(e){
 		var dom = jQuery(e.target);
@@ -173,6 +178,10 @@ ub = {
 		var dom = jQuery(e.target);
 		dom.removeClass("highlight");
 		e.stopPropagation();
+	},
+	closeTree:function(){
+		jQuery("#ub_collapseAll").click();
+		jQuery("#ub_treecontrol ul").css({display:"none"});
 	},
 	//*********end 选择dom模式**********
 	
