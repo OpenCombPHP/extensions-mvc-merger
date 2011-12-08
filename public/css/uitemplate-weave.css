@@ -1,0 +1,39 @@
+#ub_dialog{
+	
+}
+#ub_left{
+	width:50%;
+	height:100%;
+	float:left;
+	overflow-x:auto;
+	overflow-y:scroll;
+}
+#ub_right{
+	width:50%;
+	height:100%;
+	float:left;
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
+#ub_source{
+	width:100%;
+	height:160px;
+}
+
+.highlight{
+	background:blue;
+}
+
+#ub_template_list ul,#ub_template_list li{
+	cursor: pointer;
+}
+
+.selectTag{
+	font-weight:bold;
+	color:green;
+}
+
+.selectTag *{
+	font-weight:normal;
+	color:black;
+}
