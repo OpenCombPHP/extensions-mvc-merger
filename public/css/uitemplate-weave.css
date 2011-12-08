@@ -21,7 +21,7 @@
 }
 
 .highlight{
-	background:blue;
+	background:#F6A828;
 }
 
 #ub_template_list ul,#ub_template_list li{
@@ -33,7 +33,38 @@
 	color:green;
 }
 
-.selectTag *{
+.selectTag li span{
 	font-weight:normal;
 	color:black;
 }
+
+#viewbtns{
+	display:none;
+	position:absolute;
+	width:auto;
+	height:30px;
+}
+#showTag{
+	width:30px;
+	height:30px;
+}
+
+#ub_toolbox{
+	width:100%;
+	height:30px;
+}
+.toolBtns{
+	width:26px;
+	height:26px;
+	float:left;
+}
+.toolBtnSelect{
+	border:blue 2px solid ;
+}
+#ub_select_dom{
+	background:red;
+}
+#ub_select_tag{
+	background:green;
+}
+

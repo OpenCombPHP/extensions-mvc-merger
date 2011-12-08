@@ -4,6 +4,12 @@ ub = {
 	aDialog:jQuery(
 		'<div id="ub_dialog" title="模板编织">'
 			+ '<div id="ub_left">'
+				+ '<div id="ub_toolbox">'
+					+ '<div id="ub_select_dom" class="toolBtns">'
+					+ '</div>'
+					+ '<div id="ub_select_tag" class="toolBtns">'
+					+ '</div>'
+				+ '</div>'
 				+ '<div id="ub_template_list">'
 					+ '<ul>'
 					+ '</ul>'
@@ -30,6 +36,11 @@ ub = {
 			+ '</div>'
 		+ '</div>'	
 	),
+	aViewbtns:jQuery(
+		'<div id="viewbtns">'
+			+ '<a id="showTag" href="#">显</a>'
+		+ '</div>'
+	),
 	//初始化
 	init:function(){
 		//加载模板信息
@@ -55,6 +66,7 @@ ub = {
 			, show: 'slide'
 		});
 	},
+	//************初始化tag列表************
 	initTagList:function(){
 		jQuery.each(ub.aTemplates ,function(sKey,aTemplate){
 			var arrKeys = sKey.split(':');
@@ -76,38 +88,95 @@ ub = {
 		jQuery.each(aTags,function(nKey,aTag){
 			var aLi = jQuery("<li><span>&lt;"+aTag['tag']+"&gt;</span></li>");
 			aLi.append(ub.initChildrenTagList(aTag['children']));
-			aUl.append(aLi.data("data",aTag));
+			aUl.append(aLi.attr('tagxpath',aTag['xpath']).data("data",aTag));
 		});
 		return aUl;
 	},
-	highLightDom:function(dom){
-		dom.addClass("highlight");
-		setTimeout(function(){dom.removeClass("highlight");},3000);
-	},
-	highLightTag:function(tag){
-		tag.addClass("highlight");
-		setTimeout(function(){tag.removeClass("highlight");},3000);
-	},
-	highLightSelect:function(tag){
-		jQuery('#ub_template_list ul,#ub_template_list li').removeClass("selectTag");
-		jQuery(tag).addClass("selectTag");
-	},
-	sentTagInfoToEditForm:function(tag){
-		jQuery('#ub_template').val(tag.parents("li:last").find("span").text());
-		jQuery('#ub_xpath').val(tag.data("data")['xpath']);
-	},
-	clearEditForm:function(){
-		jQuery('#ub_edit').find('input textarea').val('');
-	},
-	bindEvent:function(){
-		//选择标签
-		jQuery('#ub_template_list>ul>li').find("ul , li").click(ub.selectTag);
-	},
+	//************end 初始化tag列表************
+	
+	//**************选择tag列表中的元素**************
 	selectTag:function(e){
 		ub.highLightSelect(jQuery(this));
 		ub.sentTagInfoToEditForm(jQuery(this));
 		e.stopPropagation();
 	},
+	highLightSelect:function(tag){
+		jQuery('#ub_template_list ul,#ub_template_list li').removeClass("selectTag");
+		jQuery(tag).addClass("selectTag");
+	},
+	//**************end 选择tag列表中的元素********
+	
+	//**************点中tag后 编辑属性**************
+	sentTagInfoToEditForm:function(tag){
+		jQuery('#ub_template').val(tag.parents("li:last").find("span:first").text());
+		jQuery('#ub_xpath').val(tag.data("data")['xpath']);
+	},
+	clearEditForm:function(){
+		jQuery('#ub_edit').find('input textarea').val('');
+	},
+	//**************end 点中tag后 编辑属性**************
+	
+	//绑定事件
+	bindEvent:function(){
+		//选择标签
+		jQuery('#ub_template_list>ul>li').find("ul , li").click(ub.selectTag);
+		
+		//选取dom模式开关
+		jQuery("#ub_select_dom").click(function(){
+			if(jQuery(this).hasClass("toolBtnSelect")){
+				ub.closeSelectDomMode();
+			}else{
+				ub.openSelectDomMode();
+			}
+		});
+	},
+	
+	//*********选择dom模式**********
+	openSelectDomMode:function(){
+		jQuery("#ub_select_dom").addClass("toolBtnSelect");
+		//绑定选择dom的方法
+		jQuery('body').on("mouseover","*[xpath]",ub.highLightDom);
+		jQuery('body').on("mouseout","*[xpath]",ub.lowLightDom);
+		jQuery('body').on("click","*[xpath]",ub.selectDomAndFindTag);
+	},
+	closeSelectDomMode:function(){
+		jQuery("#ub_select_dom").removeClass("toolBtnSelect");
+		//卸载选择dom的方法
+		jQuery('body').off("mouseover","*[xpath]",ub.highLightDom);
+		jQuery('body').off("mouseout","*[xpath]",ub.lowLightDom);
+		jQuery('body').off("click","*[xpath]",ub.selectDomAndFindTag);
+	},
+	selectDomAndFindTag:function(e){
+		var dom = jQuery(e.target);
+		dom.removeClass("highlight");
+		var xpath = dom.attr("xpath");
+		var treeview = jQuery("#ub_template_list .treeview");
+		//收起已经展开的tag
+		treeview.find('div.collapsable-hitarea').click();
+		//打开需要显示的节点
+		var target = treeview.find("li[tagxpath='"+xpath+"']");
+		//展开父节点
+		target.parents('li.expandable').find('div.expandable-hitarea:first-child').click();
+		//展开目标节点
+		target.click();
+		//关闭选择模式
+		ub.closeSelectDomMode();
+		e.stopPropagation();
+		return false;
+	},
+	highLightDom:function(e){
+		var dom = jQuery(e.target);
+		dom.addClass("highlight");
+		e.stopPropagation();
+	},
+	lowLightDom:function(e){
+		var dom = jQuery(e.target);
+		dom.removeClass("highlight");
+		e.stopPropagation();
+	},
+	//*********end 选择dom模式**********
+	
+	//调试
 	log:function(message){
 		if(typeof(console) == 'object'){
 			console.log(message);
