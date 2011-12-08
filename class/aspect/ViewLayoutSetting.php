@@ -1,10 +1,10 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
+use org\jecat\framework\mvc\view\ViewLayoutItem;
+use org\jecat\framework\mvc\view\ViewLayoutFrame;
 use org\jecat\framework\mvc\view\IView;
-
 use org\jecat\framework\mvc\view\View;
-use org\jecat\framework\mvc\view\ViewLayout;
 use org\jecat\framework\mvc\controller\IController;
 use org\jecat\framework\util\DataSrc;
 use org\jecat\framework\system\Application;
@@ -41,37 +41,84 @@ class ViewLayoutSetting
 		}
 	}
 	
+	
 	/**
-	 * @advice after
-	 * @for pointcutMainRun
+	 * @pointcut
 	 */
-	public function enableViewLayoutSetting_after()
+	public function pointcutControllerRenderMainView()
+	{
+		return array(
+				new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','renderMainView') ,
+		) ;
+	}
+	/**
+	 * @pointcut
+	 */
+	public function pointcutControllerDisplayrMainView()
+	{
+		return array(
+				new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','displayMainView') ,
+		) ;
+	}
+	
+	/**
+	 * 在 controller 的 renderMainView() 之后反射视图结构
+	 * 
+	 * @advice after
+	 * @for pointcutControllerRenderMainView
+	 */
+	public function enableViewLayoutSetting_afterRender()
 	{
 		if(!$this->params->bool('mvcmerger_layout_setting'))
 		{
 			return ;
 		}
 		
-		$sJsCode = "\r\n<script>\r\n" ;
+		$this->sJsCode = "\r\n<script>\r\n" ;
 		
 		// view id,xpath mapping
-		$sMainViewIdEsc = addslashes(View::htmlWrapperId($this->mainView())) ;
-		$sJsCode.= "jquery('#{$sMainViewIdEsc}').addClass('mvcmerger-viewlayout') ;\r\n" ;
+		$sMainViewIdEsc = addslashes(\org\jecat\framework\mvc\view\ViewLayoutItem::htmlWrapperId($this->mainView())) ;
+		$this->sJsCode.= "jquery('#{$sMainViewIdEsc}').data('xpath',\"/\").addClass('mvcmerger-viewlayout') ;\r\n" ;
 		foreach($this->mainView()->iterator() as $aView)
 		{
-			$sJsCode.= \org\opencomb\mvcmerger\aspect\ViewLayoutSetting::outputViewInfoForLayoutSetting($aView) ;
+			$this->sJsCode.= \org\opencomb\mvcmerger\aspect\ViewLayoutSetting::outputViewInfoForLayoutSetting($aView) ;
 		}
 		
 		// controller class
-		$sJsCode.= "var currentControllerClass = '". addslashes(get_class($this)) ."' ;\r\n" ;
+		$this->sJsCode.= "var currentControllerClass = '". addslashes(get_class($this)) ."' ;\r\n" ;
 		
-		$sJsCode.= "</script>\r\n" ;
-		
-		echo $sJsCode ;
+		$this->sJsCode.= "</script>\r\n" ;
+	}
+	
+	/**
+	 * 在 controller 的 displayMainView() 之后以json格式输出视图结构
+	 * 
+	 * @advice after
+	 * @for pointcutControllerDisplayrMainView
+	 */
+	public function enableViewLayoutSetting_afterDisplay()
+	{
+		if($this->params->bool('mvcmerger_layout_setting'))
+		{
+			echo $this->sJsCode ;
+		}
 	}
 	
 	static public function outputViewInfoForLayoutSetting(IView $aView,$sXPathPrefix='')
-	{		
+	{
+		// 对 ViewLayoutItem 透明处理
+		if( $aView instanceof ViewLayoutItem )
+		{
+			if( $aView = $aView->view() )
+			{
+				return self::outputViewInfoForLayoutSetting($aView,$sXPathPrefix) ;
+			}
+			else 
+			{
+				return '' ;
+			}
+		}
+		
 		if($aParentView=$aView->parent())
 		{
 			$sName = $aParentView->getName($aView)?: $aView->name() ;
@@ -83,7 +130,7 @@ class ViewLayoutSetting
 		$sXPath = $sXPathPrefix.'/'.$sName ;
 		$sXPathEsc = addslashes($sXPath) ;
 		
-		$sIdEsc = addslashes(View::htmlWrapperId($aView)) ;
+		$sIdEsc = addslashes(ViewLayoutItem::htmlWrapperId($aView)) ;
 		
 		$sJsCode = "jquery('#{$sIdEsc}').data('xpath',\"{$sXPath}\").addClass('mvcmerger-viewlayout') ;\r\n" ;
 		foreach($aView->iterator() as $aChildView)
@@ -143,11 +190,10 @@ class ViewLayoutSetting
 			{
 				$sFrameName = basename($arrFrameConfig['xpath']) ;
 				$sFrameParentPath = dirname($arrFrameConfig['xpath']) ;
-				echo $sFrameParentPath, ':', $sFrameName ;
 				
 				if( $aFrameParent = View::xpath($aController->mainView(),$sFrameParentPath) )
 				{
-					$aLayoutFrame = new ViewLayout($arrFrameConfig['type'],$sFrameName) ;
+					$aLayoutFrame = new ViewLayoutFrame($arrFrameConfig['type'],$sFrameName) ;
 					$aFrameParent->add($aLayoutFrame) ;
 				}
 				else
@@ -155,23 +201,24 @@ class ViewLayoutSetting
 					return ;
 				}
 			}
-			
-			$aLayoutFrame->clear() ;
-			$aLayoutFrame->outputStream()->clear() ;
 		}
 		else
 		{
-			$aLayoutFrame = new ViewLayout($arrFrameConfig['type']) ;
-			$aLayoutFrame->addCssClass('tmp-frame') ;
+			$aLayoutFrame = new ViewLayoutFrame($arrFrameConfig['type']) ;
+			self::addFrameClass($aLayoutFrame,'mvcmerger-viewlayout') ;
+			self::addFrameClass($aLayoutFrame,'mvcmerger-tmp-frame') ;
 		}
+		
+		$aLayoutFrame->setType($arrFrameConfig['type']) ;
 				
+		$arrChildViews = array() ;
 		foreach ($arrFrameConfig['items'] as $arrItem)
 		{
 			if( $arrItem['class']=='frame' )
 			{
 				if( $aView  = self::layout($aController,$arrItem) )
 				{
-					$aLayoutFrame->add($aView,null) ;
+					$arrChildViews[] = $aView ;
 				}
 			}
 			else if( $arrItem['class']=='view' )
@@ -179,14 +226,31 @@ class ViewLayoutSetting
 				$aView = View::xpath($aController->mainView(),$arrItem['xpath']) ;
 				if($aView)
 				{
-					$aLayoutFrame->add($aView,null,true) ;
+					$arrChildViews[] = $aView ;
 				}
 			}
 		}
 		
-		$aLayoutFrame->render() ;
+		$aLayoutFrame->clear() ;
+		$aLayoutFrame->outputStream()->clear() ;
+		
+		foreach($arrChildViews as $aView)
+		{
+			$aLayoutFrame->add($aView) ;
+		}
+		
+		$aLayoutFrame->render(true) ;
 		
 		return $aLayoutFrame ;
+	}
+	
+	static public function addFrameClass(ViewLayoutFrame $aFrame,$sClass)
+	{
+		$arrClasses =& $aFrame->variables()->getRef('wrapper.classes') ;
+		if( !in_array($sClass,$arrClasses) )
+		{
+			$arrClasses[] = $sClass ;
+		}
 	}
 }
 

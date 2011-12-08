@@ -23,7 +23,6 @@ mvcmerger.View.prototype.bindEvents = function()
 {
 	// 视图的鼠标效果
 	jquery(this.element).mouseover(function(e){
-//		console.log('mouseover '+this.id) ;
 		// 先把所有其它的视图 mouseover 效果移除
 		jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
 		// 加上mouseover
@@ -42,7 +41,7 @@ mvcmerger.View.prototype.bindEvents = function()
 		, distance: 10 // 拖动生效所需的 鼠标移动距离
 		, start: function(event,ui) {
 
-			if( jquery(this).hasClass('org_jecat_framework_view') )
+			if( jquery(this).hasClass('mvcmerger-viewlayout') )
 			{
 				jquery('#mvc_merger-layout-dropping-buttons-box').hide() ;
 				
@@ -67,7 +66,7 @@ mvcmerger.View.prototype.bindEvents = function()
 		tolerance: 'pointer'
 		//, hoverClass: 'mvc_merger-layout_settable_view_mouseover'
 		, over: function(event,ui) {
-			if( jquery(ui.draggable).hasClass('org_jecat_framework_view') )
+			if( jquery(ui.draggable).hasClass('mvcmerger-viewlayout') )
 			{
 				// 先把所有其它的视图 mouseover 效果移除
 				jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
@@ -77,7 +76,7 @@ mvcmerger.View.prototype.bindEvents = function()
 			}
 		}
 		, out: function(event,ui) {
-			if( jquery(ui.draggable).hasClass('org_jecat_framework_view') )
+			if( jquery(ui.draggable).hasClass('mvcmerger-viewlayout') )
 			{
 				// 移除 mouseover 效果
 				jquery(this).removeClass('mvc_merger-layout_settable_view_mouseover') ;
@@ -87,7 +86,7 @@ mvcmerger.View.prototype.bindEvents = function()
 		}
 		, drop: function(event,ui) {
 
-			if( jquery(ui.draggable).hasClass('org_jecat_framework_view') )
+			if( jquery(ui.draggable).hasClass('mvcmerger-viewlayout') )
 			{
 				// 对保留 mouseover 效果的元素进行操作
 				mvcmerger.droppingToView = jquery('.mvc_merger-layout_settable_view_mouseover').data('view') ;
@@ -140,16 +139,16 @@ mvcmerger.View.prototype.put = function(view,where)
 }
 mvcmerger.View.prototype.autoFloat = function()
 {
-	// jquery(this.element).css('float',(mvcmerger.LayoutFrame.isH(this.element.parentNode)?'left':'none')) ;
+	jquery(this.element).css('float',(mvcmerger.LayoutFrame.isH(this.element.parentNode)?'left':'none')) ;
 }
 mvcmerger.View.prototype.belongsFrame = function()
 {
 	// 检查是否在一个frame item中
-	if( typeof(this.element.parentNode)=='undefined' || !jquery(this.element.parentNode).hasClass('org_jecat_framework_view-layout-frame_item') )
+	if( typeof(this.element.parentNode)=='undefined' || !jquery(this.element.parentNode).hasClass('jc-view-layout-frame_item') )
 	{
 		return null ;
 	}
-	if( typeof(this.element.parentNode.parentNode)=='undefined' || !jquery(this.element.parentNode.parentNode).hasClass('org_jecat_framework_view-layout-frame') )
+	if( typeof(this.element.parentNode.parentNode)=='undefined' || !jquery(this.element.parentNode.parentNode).hasClass('jc-view-layout-frame') )
 	{
 		throw new Error("对象在 frame item 中，但是这个 item 却不在frame 中， 系统的 frame/item/view 结构遭到损坏") ;
 	}
@@ -168,23 +167,23 @@ mvcmerger.LayoutFrame.prototype = new mvcmerger.View() ;
 mvcmerger.LayoutFrame.create = function(type)
 {
 	var newFrame = document.createElement('div') ;
-	jquery(newFrame).addClass('org_jecat_framework_view-layout-frame') ;
+	jquery(newFrame).addClass('jc-view-layout-frame') ;
 	jquery(newFrame).addClass(mvcmerger.LayoutFrame.types[type]) ;
-	jquery(newFrame).addClass('org_jecat_framework_view') ;
-	jquery(newFrame).addClass('tmp-frame') ;
-	jquery(newFrame).html('<div class="org_jecat_framework_view-layout-end" />') ;
+	jquery(newFrame).addClass('mvcmerger-viewlayout') ;
+	jquery(newFrame).addClass('mvcmerger-tmp-frame') ;
+	jquery(newFrame).html('<div class="jc-view-layout-end-item" />') ;
 	
 	return new mvcmerger.LayoutFrame(newFrame) ;
 }
 mvcmerger.LayoutFrame.prototype.putin = function(view)
 {
-	jquery(this.element).find('>.org_jecat_framework_view-layout-end').before(view.element) ;
+	jquery(this.element).find('>.jc-view-layout-end-item').before(view.element) ;
 	view.autoFloat();
 }
 mvcmerger.LayoutFrame.types = {
-		h: 'org_jecat_framework_view-layout-frame-horizontal'
-		, v: 'org_jecat_framework_view-layout-frame-vertical'
-		, tab: 'org_jecat_framework_view-layout-frame-tab'
+		h: 'jc-view-layout-frame-horizontal'
+		, v: 'jc-view-layout-frame-vertical'
+		, tab: 'jc-view-layout-frame-tab'
 }
 mvcmerger.LayoutFrame.prototype.layoutType = function(){
 	
@@ -209,18 +208,18 @@ mvcmerger.LayoutFrame.isH = function(layoutElement)
 
 mvcmerger.LayoutFrame.clearAllInvalidLayoutFrame = function()
 {
-	jquery(".org_jecat_framework_view-layout-frame").each(function(){
+	jquery(".jc-view-layout-frame").each(function(){
 		
 		// 模板中提供的 frame， 非 js 临时创建
-		if(!jquery(this).hasClass('tmp-frame'))
+		if(!jquery(this).hasClass('mvcmerger-tmp-frame'))
 		{
 			return ;
 		}
 		
-		if( jquery(this).find('>.org_jecat_framework_view').size() <=1 )
+		if( jquery(this).find('>.mvcmerger-viewlayout').size() <=1 )
 		{
 			// 见内部的子元素提上来
-			jquery(this).find('>.org_jecat_framework_view').each(function(){
+			jquery(this).find('>.mvcmerger-viewlayout').each(function(){
 				jquery(this.parentNode).after(this) ;
 				mvcmerger.View.obj(this).autoFloat();
 			}) ;
@@ -234,21 +233,34 @@ mvcmerger.LayoutFrame.clearAllInvalidLayoutFrame = function()
 
 
 // ------------------
+mvcmerger.exportedItems = {} ;
 mvcmerger.exportConfig = function()
 {
+	mvcmerger.exportedItems = {} ;
 	var config = [] ;
 	
-	jquery('.org_jecat_framework_view-layout-frame').each(function(){
+	jquery('.jc-view-layout-frame').each(function(){
 
 		// 过滤非顶层 frame
-		if( !this.parentNode || !jquery(this).hasClass('mvcmerger-viewlayout') || jquery(this.parentNode).hasClass('org_jecat_framework_view-layout-frame') )
+		if( !this.parentNode || !jquery(this).hasClass('mvcmerger-viewlayout') || jquery(this.parentNode).hasClass('mvcmerger-tmp-frame') )
 		{
 			return ;
 		}
 
+		if( this.id && typeof(mvcmerger.exportedItems[this.id])!='undefined' )
+		{
+			return ;
+		}
+		console.log(this.id+', name:'+jquery(this).attr('name')) ;
+
 		var frameConfig = mvcmerger.exportLayoutConfig(mvcmerger.View.obj(this)) ;
 		if(frameConfig)
 		{
+			if(this.id)
+			{
+				mvcmerger.exportedItems[this.id] = this ;
+			}
+			
 			config.push( frameConfig ) ;
 		}
 	}) ;
@@ -257,6 +269,7 @@ mvcmerger.exportConfig = function()
 }
 mvcmerger.exportLayoutConfig = function(layout)
 {
+	
 	var config = { 
 			class: 'frame'
 			, type: layout.layoutType()
@@ -265,7 +278,13 @@ mvcmerger.exportLayoutConfig = function(layout)
 			, items:[]
 	} ;
 	
-	jquery(layout.element).find('>.org_jecat_framework_view').each(function(){
+	jquery(layout.element).find('>.mvcmerger-viewlayout').each(function(){
+
+		if( this.id && typeof(mvcmerger.exportedItems[this.id])!='undefined' )
+		{
+			return ;
+		}
+		
 		var obj = mvcmerger.View.obj(this) ;
 		
 		// 递归下级 layout
@@ -274,6 +293,10 @@ mvcmerger.exportLayoutConfig = function(layout)
 			var frameConfig = mvcmerger.exportLayoutConfig(obj) ;
 			if(frameConfig)
 			{
+				if(this.id)
+				{
+					mvcmerger.exportedItems[this.id] = this ;
+				}
 				config.items.push( frameConfig ) ;
 			}
 		}
@@ -282,6 +305,10 @@ mvcmerger.exportLayoutConfig = function(layout)
 		{
 			if(jquery(this).data('xpath'))
 			{
+				if(this.id)
+				{
+					mvcmerger.exportedItems[this.id] = this ;
+				}
 				config.items.push({
 					class: 'view'
 					, id: this.id
@@ -349,7 +376,7 @@ mvcmerger.styleoption.optionbtn = function(view){
 };
 //打开菜单的方法
 mvcmerger.styleoption.open = function(openbtn){
-	var view = openbtn.parents('.org_jecat_framework_view:first');
+	var view = openbtn.parents('.jc-view:first');
 	mvcmerger.styleoption.openedOptionDialog = mvcmerger.styleoption.optionDialog.clone();
 	jQuery(view).append(mvcmerger.styleoption.openedOptionDialog);
 	mvcmerger.styleoption.openedOptionDialog.dialog({
@@ -396,19 +423,16 @@ mvcmerger.styleoption.cancel = function(){
 jquery(function(){
 
 	// 初始化 view 
-	jquery(".org_jecat_framework_view").each(function(idx,view){
-		if(jquery(this).hasClass('mvcmerger-viewlayout'))
+	jquery(".mvcmerger-viewlayout").each(function(idx,view){
+		if( jquery(this).hasClass('jc-view-layout-frame') )
 		{
-			if( jquery(this).hasClass('org_jecat_framework_view-layout-frame') )
-			{
-				new mvcmerger.LayoutFrame(view) ;
-			}
-			else
-			{
-				var aMvcmergerView = new mvcmerger.View(view) ;
-				//添加styleoption的打开按钮
-				mvcmerger.styleoption.optionbtn(view);
-			}
+			new mvcmerger.LayoutFrame(view) ;
+		}
+		else if( jquery(this).hasClass('jc-view-layout-item') )
+		{
+			var aMvcmergerView = new mvcmerger.View(view) ;
+			//添加styleoption的打开按钮
+			mvcmerger.styleoption.optionbtn(view);
 		}
 	}) ;
 	
@@ -433,12 +457,21 @@ jquery(function(){
 				} ) ; 
 			}
 			, '保存':function(){
+				
+				var config = mvcmerger.exportConfig() ;
+				console.log(config) ;
+				if( !config || !config.length )
+				{
+					jquery('#mvc_merger-view_layout_setting_controlPanel_messages').html('配置无效') ;
+					return ;
+				}
+				
 				jquery('#mvc_merger-view_layout_setting_controlPanel_messages').html('正在保存视图布局的配置 ... ...') ;
 				
 				jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&only_msg_queue=1&act=save',{
 					data:{
 						controller: currentControllerClass
-						, config: JSON.stringify(mvcmerger.exportConfig())
+						, config: JSON.stringify(config)
 					}
 					, type: 'POST'
 					, complete: function(jqXHR, textStatus){
