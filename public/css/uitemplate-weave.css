@@ -47,15 +47,13 @@
 	color:black;
 }
 
-#viewbtns{
-	display:none;
+#tagToolbtns{
 	position:absolute;
 	width:auto;
 	height:30px;
 }
-#showTag{
-	width:30px;
-	height:30px;
+#showDom{
+	
 }
 
 #ub_toolbox{
@@ -72,7 +70,4 @@
 }
 #ub_select_dom{
 	background:red;
-}
-#ub_select_tag{
-	background:green;
 }

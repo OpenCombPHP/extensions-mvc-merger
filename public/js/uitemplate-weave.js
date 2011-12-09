@@ -6,8 +6,6 @@ ub = {
 			+ '<div id="ub_toolbox">'
 				+ '<div id="ub_select_dom" class="toolBtns">'
 				+ '</div>'
-				+ '<div id="ub_select_tag" class="toolBtns">'
-				+ '</div>'
 			+ '</div>'
 			+ '<div id="ub_left">'
 				+ '<div id="ub_template_list">'
@@ -36,9 +34,9 @@ ub = {
 			+ '</div>'
 		+ '</div>'	
 	),
-	aViewbtns:jQuery(
-		'<div id="viewbtns">'
-			+ '<a id="showTag" href="#">显</a>'
+	aTagToolBtns:jQuery(
+		'<div id="tagToolbtns">'
+			+ '<a id="showDom" href="#">显</a>'
 		+ '</div>'
 	),
 	//初始化
@@ -128,6 +126,18 @@ ub = {
 				ub.openSelectDomMode();
 			}
 		});
+		
+		//选取tag按钮
+		jQuery("#showDom",ub.aTagToolBtns).click(function(){
+			ub.highLightDomForSec(jQuery(this).closest("li"),4);
+			return false;
+		});
+		jQuery("#ub_template_list .treeview li li").hover(function(){
+			ub.addTagToolBtns(jQuery(this));
+		},function(){
+			ub.removeTagToolBtns(jQuery(this));
+		});
+		
 	},
 	
 	//*********选择dom模式**********
@@ -159,13 +169,13 @@ ub = {
 		//选中目标节点
 		target.click();
 		//滚动到用户可见
-		ub.scrollToSee(target,jQuery("#ub_left"));
+		ub.scrollToSeeTag(target,jQuery("#ub_left"));
 		//关闭选择模式
 		ub.closeSelectDomMode();
 		e.stopPropagation();
 		return false;
 	},
-	scrollToSee:function(dom,container){
+	scrollToSeeTag:function(dom,container){
 		var toHeight = 100; //把目标拉到30像素的位置,方便查看
 		container.scrollTop(dom.position().top-toHeight);
 	},
@@ -184,6 +194,27 @@ ub = {
 		jQuery("#ub_treecontrol ul").css({display:"none"});
 	},
 	//*********end 选择dom模式**********
+	
+	//*********选择tag按钮**********
+	addTagToolBtns:function(tag){
+		tag.append(ub.aTagToolBtns.show(0).css({
+			top:tag.position().top //和tag同高
+			,left:(tag.position().left+tag.width()-ub.aTagToolBtns.width()-40)  //在tag尾部显示
+		}));
+	},
+	removeTagToolBtns:function(){
+		ub.aTagToolBtns.hide(0);
+	},
+	scrollToSeeDom:function(dom,container){
+		var toHeight = 100; //把目标拉到30像素的位置,方便查看
+		container.scrollTop(dom.position().top-toHeight);
+	},
+	highLightDomForSec:function(tag,sec){
+		var dom = jQuery("*[xpath='"+tag.attr('tagxpath')+"']");
+		dom.addClass("highlight");
+		setTimeout(function(){dom.removeClass("highlight")} , sec*1000);
+	},
+	//*********end 选择tag按钮**********
 	
 	//调试
 	log:function(message){
