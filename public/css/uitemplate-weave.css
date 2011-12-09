@@ -3,25 +3,34 @@
 }
 #ub_left{
 	width:50%;
-	height:100%;
+	height:90%;
 	float:left;
 	overflow-x:auto;
-	overflow-y:scroll;
+	overflow-y:auto;
 }
 #ub_right{
 	width:50%;
-	height:100%;
+	height:90%;
 	float:left;
-	overflow-x:hidden;
-	overflow-y:scroll;
+	overflow-x:auto;
+	overflow-y:auto;
 }
 #ub_source{
 	width:100%;
 	height:160px;
 }
-
+#ub_template{
+	width:300px;	
+}
+#ub_xpath{
+	width:300px;	
+}
 .highlight{
-	background:blue;
+	background:#F6A828;
+}
+
+#ub_template_list{
+	
 }
 
 #ub_template_list ul,#ub_template_list li{
@@ -33,7 +42,32 @@
 	color:green;
 }
 
-.selectTag *{
+.selectTag li span{
 	font-weight:normal;
 	color:black;
+}
+
+#tagToolbtns{
+	position:absolute;
+	width:auto;
+	height:30px;
+}
+#showDom{
+	
+}
+
+#ub_toolbox{
+	width:100%;
+	height:30px;
+}
+.toolBtns{
+	width:26px;
+	height:26px;
+	float:left;
+}
+.toolBtnSelect{
+	border:blue 2px solid ;
+}
+#ub_select_dom{
+	background:red;
 }
