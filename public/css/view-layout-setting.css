@@ -27,12 +27,17 @@
 .styleoption{
 }
 
-.styleoption_open_btn{
+.optionBtnsContainer{
 	display:none;
-	width:20px;
 	height:20px;
 	position: absolute;
 	left:3px;
 	top:3px;
+}
+.styleoption_open_btn{
+	width:20px;
+	height:20px;
+	margin:0 2px;
+	float:right;
 	background:black;
 }

@@ -363,22 +363,37 @@ mvcmerger.styleoption = {
 };
 //给view添加打开styleoption的按钮
 mvcmerger.styleoption.optionbtn = function(view){
-	var openbtn =jQuery("<div class='styleoption_open_btn'></div>");
-	jQuery(view).append(openbtn);
-	jQuery(view).hover(function(){
-		openbtn.show(0);
-	},function(){
-		openbtn.hide(0);
+	var openbtns =jQuery("<div class='optionBtnsContainer'></div>");
+	view.append(openbtns);
+	view.hover(function(e){
+		openbtns.show(0);
+		e.stopPropagation() ;
+	},function(e){
+		openbtns.hide(0);
+		e.stopPropagation() ;
 	});
+	mvcmerger.styleoption.buildParentOptionbtns(view,openbtns);
+};
+
+mvcmerger.styleoption.buildParentOptionbtns = function(view,targetContainer){
+	var openbtn =jQuery("<div class='styleoption_open_btn'></div>");
+	targetContainer.append(openbtn.data("frame",view));
 	openbtn.click(function(){
 		mvcmerger.styleoption.open(openbtn);
 	});
+	var parentFrame = view.parents('.jc-view-layout-frame:first');
+	if(parentFrame.length == 0){
+		return;
+	}else{
+		mvcmerger.styleoption.buildParentOptionbtns(parentFrame,targetContainer);
+	}
 };
+
 //打开菜单的方法
 mvcmerger.styleoption.open = function(openbtn){
-	var view = openbtn.parents('.jc-view:first');
+	var view = openbtn.data("frame");
 	mvcmerger.styleoption.openedOptionDialog = mvcmerger.styleoption.optionDialog.clone();
-	jQuery(view).append(mvcmerger.styleoption.openedOptionDialog);
+	view.append(mvcmerger.styleoption.openedOptionDialog);
 	mvcmerger.styleoption.openedOptionDialog.dialog({
 		buttons:{
 			'取消':mvcmerger.styleoption.cancel
@@ -431,9 +446,9 @@ jquery(function(){
 		else if( jquery(this).hasClass('jc-view-layout-item') )
 		{
 			var aMvcmergerView = new mvcmerger.View(view) ;
-			//添加styleoption的打开按钮
-			mvcmerger.styleoption.optionbtn(view);
 		}
+		//添加styleoption的打开按钮
+		mvcmerger.styleoption.optionbtn(jQuery(view));
 	}) ;
 	
 	// 操作界面
