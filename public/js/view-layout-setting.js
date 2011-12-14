@@ -275,8 +275,9 @@ mvcmerger.exportLayoutConfig = function(layout)
 			, type: layout.layoutType()
 			, xpath: jquery(layout.element).data('xpath')
 			, name: jquery(layout.element).attr('name')
-			, items:[]
-			, style:mvcmerger.getStyle(jquery(layout.element))
+			, items : []
+			, properties: jquery(layout.element).data("properties")
+			, attributes : mvcmerger.getStyle(jquery(layout.element))
 	} ;
 	
 	jquery(layout.element).find('>.mvcmerger-viewlayout').each(function(){
@@ -315,7 +316,8 @@ mvcmerger.exportLayoutConfig = function(layout)
 					, id: this.id
 					//, name: jquery(this).attr('name') 
 					, xpath: jquery(this).data('xpath')
-					, style: mvcmerger.getStyle(jquery(this))
+					, properties: jquery(this).data("properties")
+					, attributes: mvcmerger.getStyle(jquery(this))
 				}) ;
 			}
 		}
@@ -328,8 +330,8 @@ mvcmerger.getStyle = function(frame){
 	if(jQuery.type(styleData) == "undefined"){
 		return {};
 	}
-	var styleListForSave = ['class','width','height','marign','padding','border','background','style','title','type'];
-	var style = {};
+	var styleListForSave = ['class','width','height','margin','padding','border','background','title','type'];
+	var attributes = {style:""};
 	jQuery.each(styleListForSave,function(i,v){
 		if(v == "margin"){
 			var arrMargin = [];
@@ -337,14 +339,18 @@ mvcmerger.getStyle = function(frame){
 			arrMargin.push(styleData['styleoption_margin_r']);
 			arrMargin.push(styleData['styleoption_margin_b']);
 			arrMargin.push(styleData['styleoption_margin_l']);
-			style[v] = jQuery.trim(arrMargin.join(" "));
+			if(jQuery.trim(arrMargin.join(" ")) != ""){
+				attributes['style'] += v+":"+jQuery.trim(arrMargin.join(" "))+";";
+			}
 		}else if(v == 'padding'){
 			var arrPadding = [];
 			arrPadding.push(styleData['styleoption_padding_u']);
 			arrPadding.push(styleData['styleoption_padding_r']);
 			arrPadding.push(styleData['styleoption_padding_b']);
 			arrPadding.push(styleData['styleoption_padding_l']);
-			style[v] = jQuery.trim(arrPadding.join(" "));
+			if(jQuery.trim(arrPadding.join(" ")) != ""){
+				attributes['style'] += v+":"+jQuery.trim(arrPadding.join(" "))+";";
+			}
 		}else if(v == 'border'){
 			var typeClassName = 'styleoption_border_type_';
 			var widthClassName = 'styleoption_border_';
@@ -354,18 +360,28 @@ mvcmerger.getStyle = function(frame){
 				var onePartOfBorder = styleData[typeClassName + vv]
 											+ " " +styleData[widthClassName + vv];
 											+ " " +styleData[colorClassName + vv];
-				style["border-"+vv] = jQuery.trim(onePartOfBorder);
+				if(jQuery.trim(onePartOfBorder) != "" && jQuery.trim(onePartOfBorder) != "none"){
+					attributes['style'] += "border-"+vv+":"+jQuery.trim(onePartOfBorder)+";";
+				}
 			});
 		}else if(v == 'background'){
-			style[v] = jQuery.trim(styleData['styleoption_background_img']
-							+ " " +styleData['styleoption_background_color']
-							+ " " +styleData['styleoption_background_position']
-							+ " " +styleData['styleoption_repeat']);
+			var background = jQuery.trim(styleData['styleoption_background_img']
+								+ " " +styleData['styleoption_background_color']
+								+ " " +styleData['styleoption_background_position']
+								+ " " +styleData['styleoption_repeat']);
+			if(background != ""){
+				attributes['style'] += v+":"+background+";";
+			}
+		}else if(v == 'width' || v == 'height'){
+			attributes['style'] += v+":"+jQuery.trim(styleData['styleoption_'+ v])+"px;";
 		}else{
-			style[v] = jQuery.trim(styleData['styleoption_'+ v]);
+			attributes[v] = jQuery.trim(styleData['styleoption_'+ v]);
 		}
 	});
-	return style;
+	if(styleData['styleoption_style']){
+		attributes['style'] += styleData['styleoption_style'];
+	}
+	return attributes;
 };
 JSON.stringify = JSON.stringify || function (obj) {
     var t = typeof (obj);
@@ -687,7 +703,7 @@ jquery(function(){
 	});
 	
 	// "放置"工具按钮
-	jquery(document.body).append(jQuery('<div id="mvc_merger-layout-dropping-buttons-box">'
+	jquery(document.body).append('<div id="mvc_merger-layout-dropping-buttons-box">'
 			+ '<div id="mvc_merger-layout-dropping-before" class="mvc_merger-layout-dropping-button">前</div>'
 			+ '<div id="mvc_merger-layout-dropping-after" class="mvc_merger-layout-dropping-button">后</div>'
 			+ '<div id="mvc_merger-layout-dropping-h-before" class="mvc_merger-layout-dropping-button">横向左</div>'
@@ -695,7 +711,7 @@ jquery(function(){
 			+ '<div id="mvc_merger-layout-dropping-v-before" class="mvc_merger-layout-dropping-button">竖向上</div>'
 			+ '<div id="mvc_merger-layout-dropping-v-after" class="mvc_merger-layout-dropping-button">竖向下</div>'
 			+ '<div id="mvc_merger-layout-dropping-cannel" class="mvc_merger-layout-dropping-button">取消</div>'
-			+ '</div>')
+			+ '</div>'
 	) ;
 	
 	// 取消按钮
