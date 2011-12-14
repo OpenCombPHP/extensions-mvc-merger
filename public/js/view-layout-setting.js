@@ -251,7 +251,7 @@ mvcmerger.exportConfig = function()
 		{
 			return ;
 		}
-		console.log(this.id+', name:'+jquery(this).attr('name')) ;
+//		console.log(this.id+', name:'+jquery(this).attr('name')) ;
 
 		var frameConfig = mvcmerger.exportLayoutConfig(mvcmerger.View.obj(this)) ;
 		if(frameConfig)
@@ -585,7 +585,17 @@ mvcmerger.styleoption.open = function(openbtn){
 		}
 		var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
 		inputAndSelect.each(function(index){
-			style[jQuery(this).attr("class")] = jQuery(this).val()
+			if((jQuery(this).hasClass("styleoption_border_type_bottom")
+			   || jQuery(this).hasClass("styleoption_border_type_left")
+			   || jQuery(this).hasClass("styleoption_border_type_top")
+			   || jQuery(this).hasClass("styleoption_border_type_right")
+				) && jQuery(this).val() != "none"){
+				style[jQuery(this).attr("class")] = jQuery(this).val();
+			}else if(jQuery(this).hasClass("styleoption_repeat") && jQuery(this).val() != "repeat"){
+				style[jQuery(this).attr("class")] = jQuery.trim(jQuery(this).val());
+			}else if(jQuery.trim(jQuery(this).val()) != ""){
+				style[jQuery(this).attr("class")] = jQuery.trim(jQuery(this).val());
+			}
 		});
 		view.data( "properties" , style);
 		console.log(view.data("properties"));
@@ -619,8 +629,12 @@ mvcmerger.styleoption.open = function(openbtn){
 		view.data("type","tab");
 	}
 	
-	//取得view的数据
+	//取得view的数据(还原表单)
 	var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
+	if(view.data("layout_properties")){
+		view.data("properties",view.data("layout_properties"));
+		view.removeData("layout_properties");
+	}
 	var styleForFrame = view.data("properties");
 	if(styleForFrame){
 		inputAndSelect.each(function(index){
@@ -632,7 +646,6 @@ mvcmerger.styleoption.open = function(openbtn){
 /* ----------------------------------- */
 
 jquery(function(){
-
 	// 初始化 view 
 	jquery(".mvcmerger-viewlayout").each(function(idx,view){
 		if( jquery(this).hasClass('jc-view-layout-frame') )
@@ -670,7 +683,6 @@ jquery(function(){
 			, '保存':function(){
 				
 				var config = mvcmerger.exportConfig() ;
-				console.log(config) ;
 				if( !config || !config.length )
 				{
 					jquery('#mvc_merger-view_layout_setting_controlPanel_messages').html('配置无效') ;
