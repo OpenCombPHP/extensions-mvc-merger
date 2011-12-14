@@ -357,9 +357,11 @@ mvcmerger.getStyle = function(frame){
 			var colorClassName = 'styleoption_border_color_';
 			var arrParts = ['top','right','bottom','left'];
 			jQuery.each(arrParts,function(ii,vv){
-				var onePartOfBorder = styleData[typeClassName + vv]
-											+ " " +styleData[widthClassName + vv];
-											+ " " +styleData[colorClassName + vv];
+				var onePartOfBorder = styleData[typeClassName + vv] + ' ';
+				if(jQuery.trim(styleData[widthClassName + vv]) != ""){
+					onePartOfBorder += styleData[widthClassName + vv] + "px ";
+				}
+				onePartOfBorder += styleData[colorClassName + vv];
 				if(jQuery.trim(onePartOfBorder) != "" && jQuery.trim(onePartOfBorder) != "none"){
 					attributes['style'] += "border-"+vv+":"+jQuery.trim(onePartOfBorder)+";";
 				}
@@ -489,8 +491,8 @@ mvcmerger.styleoption = {
 				+ '<label>color<input class="styleoption_background_color"/></label><br/>'
 				+ '<label>position<input class="styleoption_background_position"/></label>'
 				+ '<label>repeat<select class="styleoption_repeat">'
-					+ '<option value="no-repeat">no-repeat</option>'
 					+ '<option value="repeat">repeat</option>'
+					+ '<option value="no-repeat">no-repeat</option>'
 					+ '<option value="repeat-x">repeat-x</option>'
 					+ '<option value="repeat-y">repeat-y</option>'
 					+ '<option value="inherit">inherit</option>'
@@ -515,10 +517,10 @@ mvcmerger.styleoption.optionbtn = function(view){
 		var openbtns =jQuery("<div class='optionBtnsContainer'></div>");
 		view.append(openbtns);
 		mvcmerger.styleoption.buildParentOptionbtns(view,openbtns);
-		e.stopPropagation() ;
+//		e.stopPropagation() ;
 	},function(e){
 		view.find(".optionBtnsContainer").remove();
-		e.stopPropagation() ;
+//		e.stopPropagation() ;
 	});
 };
 
