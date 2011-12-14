@@ -276,6 +276,7 @@ mvcmerger.exportLayoutConfig = function(layout)
 			, xpath: jquery(layout.element).data('xpath')
 			, name: jquery(layout.element).attr('name')
 			, items:[]
+			, style:mvcmerger.getStyle(jquery(layout.element))
 	} ;
 	
 	jquery(layout.element).find('>.mvcmerger-viewlayout').each(function(){
@@ -314,13 +315,58 @@ mvcmerger.exportLayoutConfig = function(layout)
 					, id: this.id
 					//, name: jquery(this).attr('name') 
 					, xpath: jquery(this).data('xpath')
+					, style: mvcmerger.getStyle(jquery(this))
 				}) ;
 			}
 		}
 	}) ;
 	
 	return config.items.length? config: null ;
-}
+};
+mvcmerger.getStyle = function(frame){
+	var styleData = frame.data("properties");
+	if(jQuery.type(styleData) == "undefined"){
+		return {};
+	}
+	var styleListForSave = ['class','width','height','marign','padding','border','background','style','title','type'];
+	var style = {};
+	jQuery.each(styleListForSave,function(i,v){
+		if(v == "margin"){
+			var arrMargin = [];
+			arrMargin.push(styleData['styleoption_margin_u']);
+			arrMargin.push(styleData['styleoption_margin_r']);
+			arrMargin.push(styleData['styleoption_margin_b']);
+			arrMargin.push(styleData['styleoption_margin_l']);
+			style[v] = jQuery.trim(arrMargin.join(" "));
+		}else if(v == 'padding'){
+			var arrPadding = [];
+			arrPadding.push(styleData['styleoption_padding_u']);
+			arrPadding.push(styleData['styleoption_padding_r']);
+			arrPadding.push(styleData['styleoption_padding_b']);
+			arrPadding.push(styleData['styleoption_padding_l']);
+			style[v] = jQuery.trim(arrPadding.join(" "));
+		}else if(v == 'border'){
+			var typeClassName = 'styleoption_border_type_';
+			var widthClassName = 'styleoption_border_';
+			var colorClassName = 'styleoption_border_color_';
+			var arrParts = ['top','right','bottom','left'];
+			jQuery.each(arrParts,function(ii,vv){
+				var onePartOfBorder = styleData[typeClassName + vv]
+											+ " " +styleData[widthClassName + vv];
+											+ " " +styleData[colorClassName + vv];
+				style["border-"+vv] = jQuery.trim(onePartOfBorder);
+			});
+		}else if(v == 'background'){
+			style[v] = jQuery.trim(styleData['styleoption_background_img']
+							+ " " +styleData['styleoption_background_color']
+							+ " " +styleData['styleoption_background_position']
+							+ " " +styleData['styleoption_repeat']);
+		}else{
+			style[v] = jQuery.trim(styleData['styleoption_'+ v]);
+		}
+	});
+	return style;
+};
 JSON.stringify = JSON.stringify || function (obj) {
     var t = typeof (obj);
     if (t != "object" || obj === null) {
@@ -347,92 +393,224 @@ mvcmerger.styleoption = {
 				+ '<li><label>class<input type="text" class="styleoption_class" value=""/></label></li>'
 				+ '<li><label>width<input type="text" class="styleoption_width" value=""/></label></li>'
 				+ '<li><label>height<input type="text" class="styleoption_height" value=""/></label></li>'
-				+ '<li><label>margin<input type="text" class="styleoption_marign" value=""/></label></li>'
-				+ '<li><label>padding<input type="text" class="styleoption_padding" value=""/></label></li>'
-				+ '<li><label>style<input type="textarea" class="styleoption_style" value=""/></label></li>'
-				+ '<li><label>title<input type="text" class="styleoption_title" value=""/></label></li>'
+				+ '<li><label>margin<input type="text" class="styleoption_margin_u" title="外边距:上"/></label>'
+					+ '<input type="text" class="styleoption_margin_r" title="外边距:右"/>'
+					+ '<input type="text" class="styleoption_margin_b" title="外边距:下"/>'
+					+ '<input type="text" class="styleoption_margin_l" title="外边距:左"/>'
+				+ '</li>'
+				+ '<li><label>padding<input type="text" class="styleoption_padding_u" title="内边距:上"/></label>'
+					+ '<input type="text" class="styleoption_padding_r" title="内边距:右"/>'
+					+ '<input type="text" class="styleoption_padding_b" title="内边距:下"/>'
+					+ '<input type="text" class="styleoption_padding_l" title="内边距:左"/>'
+				+ '</li>'
+				+ '<li><label>border</label><br/>'
+					+ '<label>上<select class="styleoption_border_type_top">'
+						+ '<option value="none">none</option>'
+						+ '<option value="solid">solid</option>'
+						+ '<option value="inset">inset</option>'
+						+ '<option value="outset">outset</option>'
+						+ '<option value="hidden">hidden</option>'
+						+ '<option value="dotted">dotted</option>'
+						+ '<option value="dashed">dashed</option>'
+						+ '<option value="double">double</option>'
+						+ '<option value="groove">groove</option>'
+						+ '<option value="ridge">ridge</option>'
+						+ '<option value="inherit">inherit</option>'
+					+ '</select></label>'
+					+ '<input type="text" class="styleoption_border_top" title="宽度:上"/>'
+					+ '<input type="text" class="styleoption_border_color_top" title="颜色:上"/><br/>'
+					
+					+ '<label>下<select class="styleoption_border_type_bottom">'
+						+ '<option value="none">none</option>'
+						+ '<option value="solid">solid</option>'
+						+ '<option value="inset">inset</option>'
+						+ '<option value="outset">outset</option>'
+						+ '<option value="hidden">hidden</option>'
+						+ '<option value="dotted">dotted</option>'
+						+ '<option value="dashed">dashed</option>'
+						+ '<option value="double">double</option>'
+						+ '<option value="groove">groove</option>'
+						+ '<option value="ridge">ridge</option>'
+						+ '<option value="inherit">inherit</option>'
+					+ '</select></label>'
+					+ '<input type="text" class="styleoption_border_bottom" title="宽度:下"/>'
+					+ '<input type="text" class="styleoption_border_color_bottom" title="颜色:下"/><br/>'
+					
+					+ '<label>左<select class="styleoption_border_type_left">'
+						+ '<option value="none">none</option>'
+						+ '<option value="solid">solid</option>'
+						+ '<option value="inset">inset</option>'
+						+ '<option value="outset">outset</option>'
+						+ '<option value="hidden">hidden</option>'
+						+ '<option value="dotted">dotted</option>'
+						+ '<option value="dashed">dashed</option>'
+						+ '<option value="double">double</option>'
+						+ '<option value="groove">groove</option>'
+						+ '<option value="ridge">ridge</option>'
+						+ '<option value="inherit">inherit</option>'
+					+ '</select></label>'
+					+ '<input type="text" class="styleoption_border_left" title="宽度:左"/>'
+					+ '<input type="text" class="styleoption_border_color_left" title="颜色:左"/><br/>'
+					
+					+ '<label>右<select class="styleoption_border_type_right">'
+						+ '<option value="none">none</option>'
+						+ '<option value="solid">solid</option>'
+						+ '<option value="inset">inset</option>'
+						+ '<option value="outset">outset</option>'
+						+ '<option value="hidden">hidden</option>'
+						+ '<option value="dotted">dotted</option>'
+						+ '<option value="dashed">dashed</option>'
+						+ '<option value="double">double</option>'
+						+ '<option value="groove">groove</option>'
+						+ '<option value="ridge">ridge</option>'
+						+ '<option value="inherit">inherit</option>'
+					+ '</select></label>'
+					+ '<input type="text" class="styleoption_border_right" title="宽度:右"/>'
+					+ '<input type="text" class="styleoption_border_color_right" title="颜色:右"/><br/>'
+				+ '</li>'
+				+ '<li><label>background</label><br/>'
+				+ '<label>img<input class="styleoption_background_img"/></label><br/>'
+				+ '<label>color<input class="styleoption_background_color"/></label><br/>'
+				+ '<label>position<input class="styleoption_background_position"/></label>'
+				+ '<label>repeat<select class="styleoption_repeat">'
+					+ '<option value="no-repeat">no-repeat</option>'
+					+ '<option value="repeat">repeat</option>'
+					+ '<option value="repeat-x">repeat-x</option>'
+					+ '<option value="repeat-y">repeat-y</option>'
+					+ '<option value="inherit">inherit</option>'
+				+ '</select></label></li>'
+				+ '<li><label>style<textarea class="styleoption_style"/></label></li>'
+				+ '<li><label>title<input type="text" class="styleoption_title"/></label></li>'
 				+ '<li><label>type'
 					+ '<select class="styleoption_type">'
 						+ '<option value="v">竖向</option>'
 						+ '<option value="h">横向</option>'
 						+ '<option value="tab">选项卡</option>'
 					+ '</select>'
-					+ '</label></li>'
+					+ '</label>'
+				+ '</li>'
 			+ '</ul>'
-			+ '</div>')
+			+ '</div>'),
+	openedOptionDialog:null,
 };
 //给view添加打开styleoption的按钮
 mvcmerger.styleoption.optionbtn = function(view){
-	var openbtns =jQuery("<div class='optionBtnsContainer'></div>");
-	view.append(openbtns);
 	view.hover(function(e){
-		openbtns.show(0);
+		var openbtns =jQuery("<div class='optionBtnsContainer'></div>");
+		view.append(openbtns);
+		mvcmerger.styleoption.buildParentOptionbtns(view,openbtns);
 		e.stopPropagation() ;
 	},function(e){
-		openbtns.hide(0);
+		view.find(".optionBtnsContainer").remove();
 		e.stopPropagation() ;
 	});
-	mvcmerger.styleoption.buildParentOptionbtns(view,openbtns);
 };
 
-mvcmerger.styleoption.buildParentOptionbtns = function(view,targetContainer){
+mvcmerger.styleoption.buildParentOptionbtns = function(view,btnContainer){
 	var openbtn =jQuery("<div class='styleoption_open_btn'></div>");
-	targetContainer.append(openbtn.data("frame",view));
+	btnContainer.append(openbtn.data("frame",view).attr('title',view.get(0).id));
+	//设置btntype,btntype指的是btn对应frame的类型,这个class用来显示不同的按钮样式
+	if(view.hasClass("jc-view-layout-item")){
+		openbtn.addClass("jc-view-btn-item");
+	}else if(view.hasClass("jc-view-layout-frame-horizontal")){
+		openbtn.addClass("jc-view-btn-horizontal");
+	}else if(view.hasClass("jc-view-layout-frame-vertical")){
+		openbtn.addClass("jc-view-btn-vertical");
+	}else if(view.hasClass("jc-view-layout-frame-tab")){
+		openbtn.addClass("jc-view-btn-tab");
+	}
 	openbtn.click(function(){
-		mvcmerger.styleoption.open(openbtn);
+		mvcmerger.styleoption.open(jQuery(this));
+	});
+	openbtn.hover(function(){
+		jQuery(this).data("frame").addClass("highLightFrame");
+	},function(){
+		jQuery(this).data("frame").removeClass("highLightFrame");
 	});
 	var parentFrame = view.parents('.jc-view-layout-frame:first');
 	if(parentFrame.length == 0){
 		return;
 	}else{
-		mvcmerger.styleoption.buildParentOptionbtns(parentFrame,targetContainer);
+		mvcmerger.styleoption.buildParentOptionbtns(parentFrame,btnContainer);
 	}
 };
 
 //打开菜单的方法
 mvcmerger.styleoption.open = function(openbtn){
 	var view = openbtn.data("frame");
+	//表单唯一
+	if(jQuery.type(mvcmerger.styleoption.openedOptionDialog) == 'object'){
+		mvcmerger.styleoption.openedOptionDialog.remove();
+	}
+	
 	mvcmerger.styleoption.openedOptionDialog = mvcmerger.styleoption.optionDialog.clone();
+	
+	//是横向layout还是纵向,还是tab?也可能哪个也不是:all false
+	var isH = view.hasClass('jc-view-layout-frame-horizontal') ? true : null;
+	var isV = view.hasClass('jc-view-layout-frame-vertical') ? true : null;
+	var isT = view.hasClass('jc-view-layout-frame-tab') ? true : null;
+	
+	//只有layout才有type属性
+	if(!isH  && !isV && !isT){
+		mvcmerger.styleoption.openedOptionDialog.find('.styleoption_type').closest('li').remove();
+	}
+	
 	view.append(mvcmerger.styleoption.openedOptionDialog);
+	
+	//保存事件
+	mvcmerger.styleoption.save = function(){
+		var style  = {};
+		if(jQuery.type(view.data("properties")) != "object"){
+			view.data("properties",{});
+		}else{
+			style = view.data("properties");
+		}
+		var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
+		inputAndSelect.each(function(index){
+			style[jQuery(this).attr("class")] = jQuery(this).val()
+		});
+		view.data( "properties" , style);
+		console.log(view.data("properties"));
+		mvcmerger.styleoption.cancel();
+	};
+
+	//关闭菜单的方法
+	mvcmerger.styleoption.cancel = function(){
+		mvcmerger.styleoption.openedOptionDialog.remove();
+		delete mvcmerger.styleoption.openedOptionDialog;
+	};
+	
 	mvcmerger.styleoption.openedOptionDialog.dialog({
 		buttons:{
 			'取消':mvcmerger.styleoption.cancel
 			, '确定':mvcmerger.styleoption.save
 		}
 		, width:400
-		, height:300
+		, height:600
 		, closeText: 'hide'
 		, closeOnEscape: true
 		, show: 'slide'
 	});
 	
-	//取得view的数据
-	var arrViewData = ['class','width','height','marign','padding','style','title','type'];
-	jQuery.each( arrViewData ,function(i,v){
-		mvcmerger.styleoption.openedOptionDialog.find('.styleoption_'+v).val(view.data(v));
-	});
-	//特殊对待type数据??/////////////////////////////
+	//体现layout 的type类型到.styleoption_type中
+	if(isH && !view.data('type')){
+		view.data("type","h");
+	}else if(isV && !view.data('type')){
+		view.data("type","v");
+	}else if(isT && !view.data('type')){
+		view.data("type","tab");
+	}
 	
-	//保存事件
-	mvcmerger.styleoption.save = function(){
-		var arrViewData = ['class','width','height','marign','padding','style','title','type'];
-		jQuery.each( arrViewData ,function(i,v){
-			view.data( v , mvcmerger.styleoption.openedOptionDialog.find('.styleoption_'+ v).val() );
+	//取得view的数据
+	var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
+	var styleForFrame = view.data("properties");
+	if(styleForFrame){
+		inputAndSelect.each(function(index){
+			jQuery(this).val(styleForFrame[jQuery(this).attr("class")]);
 		});
-		mvcmerger.styleoption.cancel();
-	};
-	//取消事件
-	mvcmerger.styleoption.openedOptionDialog.find(".styleoption_cancel_btn").click(mvcmerger.styleoption.cancel);
-	//在对话框以外的地方点击按照取消处理
-//	jQuery('div').not(mvcmerger.styleoption.openedOptionDialog).click(function(){
-//			mvcmerger.styleoption.cancel();
-//	});
+	}
 };
-//关闭菜单的方法
-mvcmerger.styleoption.cancel = function(){
-	mvcmerger.styleoption.openedOptionDialog.remove();
-	delete mvcmerger.styleoption.openedOptionDialog;
-};
+
 /* ----------------------------------- */
 
 jquery(function(){
@@ -475,6 +653,7 @@ jquery(function(){
 				
 				var config = mvcmerger.exportConfig() ;
 				console.log(config) ;
+				return; ////////////////////////
 				if( !config || !config.length )
 				{
 					jquery('#mvc_merger-view_layout_setting_controlPanel_messages').html('配置无效') ;
@@ -508,19 +687,15 @@ jquery(function(){
 	});
 	
 	// "放置"工具按钮
-	jquery(document.body).append('<div id="mvc_merger-layout-dropping-buttons-box">'
-			
+	jquery(document.body).append(jQuery('<div id="mvc_merger-layout-dropping-buttons-box">'
 			+ '<div id="mvc_merger-layout-dropping-before" class="mvc_merger-layout-dropping-button">前</div>'
 			+ '<div id="mvc_merger-layout-dropping-after" class="mvc_merger-layout-dropping-button">后</div>'
-
 			+ '<div id="mvc_merger-layout-dropping-h-before" class="mvc_merger-layout-dropping-button">横向左</div>'
 			+ '<div id="mvc_merger-layout-dropping-h-after" class="mvc_merger-layout-dropping-button">横向右</div>'
 			+ '<div id="mvc_merger-layout-dropping-v-before" class="mvc_merger-layout-dropping-button">竖向上</div>'
 			+ '<div id="mvc_merger-layout-dropping-v-after" class="mvc_merger-layout-dropping-button">竖向下</div>'
-			
 			+ '<div id="mvc_merger-layout-dropping-cannel" class="mvc_merger-layout-dropping-button">取消</div>'
-			
-			+ '</div>'
+			+ '</div>')
 	) ;
 	
 	// 取消按钮

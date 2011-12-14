@@ -12,6 +12,7 @@
 #mvc_merger-layout-dropping-buttons-box{
 	position: absolute;
 	z-index: 2000;
+	display:none;
 }
 #mvc_merger-layout-dropping-buttons-box .mvc_merger-layout-dropping-button{
 	float: left;
@@ -28,7 +29,6 @@
 }
 
 .optionBtnsContainer{
-	display:none;
 	height:20px;
 	position: absolute;
 	left:3px;
@@ -38,6 +38,29 @@
 	width:20px;
 	height:20px;
 	margin:0 2px;
-	float:right;
+	float:left;
+}
+
+.jc-view-btn-item{
+	background:red;
+}
+.jc-view-btn-vertical{
+	background:green;
+}
+.jc-view-btn-horizontal{
+	background:blue;
+}
+.jc-view-btn-tab{
 	background:black;
 }
+.highLightFrame{
+	background:gray;
+}
+.styleoption_margin_u,.styleoption_margin_r,.styleoption_margin_b,.styleoption_margin_l,
+.styleoption_padding_r ,.styleoption_padding_l , .styleoption_padding_u,.styleoption_padding_b,
+.styleoption_border_top,.styleoption_border_left,.styleoption_border_right,.styleoption_border_bottom,
+.styleoption_border_color_top,.styleoption_border_color_left,.styleoption_border_color_right,.styleoption_border_color_bottom
+{
+	width:35px;
+}
+
