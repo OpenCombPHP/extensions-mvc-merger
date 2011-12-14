@@ -277,7 +277,7 @@ mvcmerger.exportLayoutConfig = function(layout)
 			, name: jquery(layout.element).attr('name')
 			, items : []
 			, properties: jquery(layout.element).data("properties")
-			, attributes : mvcmerger.getStyle(jquery(layout.element))
+			, attributes : jquery(layout.element).data("attributes")
 	} ;
 	
 	jquery(layout.element).find('>.mvcmerger-viewlayout').each(function(){
@@ -317,7 +317,7 @@ mvcmerger.exportLayoutConfig = function(layout)
 					//, name: jquery(this).attr('name') 
 					, xpath: jquery(this).data('xpath')
 					, properties: jquery(this).data("properties")
-					, attributes: mvcmerger.getStyle(jquery(this))
+					, attributes: jquery(this).data("attributes")
 				}) ;
 			}
 		}
@@ -335,19 +335,35 @@ mvcmerger.getStyle = function(frame){
 	jQuery.each(styleListForSave,function(i,v){
 		if(v == "margin"){
 			var arrMargin = [];
-			arrMargin.push(styleData['styleoption_margin_u']);
-			arrMargin.push(styleData['styleoption_margin_r']);
-			arrMargin.push(styleData['styleoption_margin_b']);
-			arrMargin.push(styleData['styleoption_margin_l']);
+			if(styleData['styleoption_margin_u']){
+				arrMargin.push(styleData['styleoption_margin_u']);
+			}
+			if(styleData['styleoption_margin_r']){
+				arrMargin.push(styleData['styleoption_margin_r']);
+			}
+			if(styleData['styleoption_margin_b']){
+				arrMargin.push(styleData['styleoption_margin_b']);
+			}
+			if(styleData['styleoption_margin_l']){
+				arrMargin.push(styleData['styleoption_margin_l']);
+			}
 			if(jQuery.trim(arrMargin.join(" ")) != ""){
 				attributes['style'] += v+":"+jQuery.trim(arrMargin.join(" "))+";";
 			}
 		}else if(v == 'padding'){
 			var arrPadding = [];
-			arrPadding.push(styleData['styleoption_padding_u']);
-			arrPadding.push(styleData['styleoption_padding_r']);
-			arrPadding.push(styleData['styleoption_padding_b']);
-			arrPadding.push(styleData['styleoption_padding_l']);
+			if(styleData['styleoption_padding_u']){
+				arrPadding.push(styleData['styleoption_padding_u']);
+			}
+			if(styleData['styleoption_padding_r']){
+				arrPadding.push(styleData['styleoption_padding_r']);
+			}
+			if(styleData['styleoption_padding_b']){
+				arrPadding.push(styleData['styleoption_padding_b']);
+			}
+			if(styleData['styleoption_padding_l']){
+				arrPadding.push(styleData['styleoption_padding_l']);
+			}
 			if(jQuery.trim(arrPadding.join(" ")) != ""){
 				attributes['style'] += v+":"+jQuery.trim(arrPadding.join(" "))+";";
 			}
@@ -357,27 +373,35 @@ mvcmerger.getStyle = function(frame){
 			var colorClassName = 'styleoption_border_color_';
 			var arrParts = ['top','right','bottom','left'];
 			jQuery.each(arrParts,function(ii,vv){
-				var onePartOfBorder = styleData[typeClassName + vv] + ' ';
-				if(jQuery.trim(styleData[widthClassName + vv]) != ""){
-					onePartOfBorder += styleData[widthClassName + vv] + "px ";
+				var onePartOfBorder = "";
+				if(styleData[typeClassName + vv]){
+					onePartOfBorder += styleData[typeClassName + vv] ? styleData[typeClassName + vv] + ' ' : '';
 				}
-				onePartOfBorder += styleData[colorClassName + vv];
+				if(jQuery.trim(styleData[widthClassName + vv]) && jQuery.trim(styleData[widthClassName + vv]) != ""){
+					onePartOfBorder += styleData[widthClassName + vv] ? styleData[widthClassName + vv] + ' ' : ' ';
+				}
+				onePartOfBorder += styleData[colorClassName + vv] ? styleData[colorClassName + vv] : '';
 				if(jQuery.trim(onePartOfBorder) != "" && jQuery.trim(onePartOfBorder) != "none"){
 					attributes['style'] += "border-"+vv+":"+jQuery.trim(onePartOfBorder)+";";
 				}
 			});
 		}else if(v == 'background'){
-			var background = jQuery.trim(styleData['styleoption_background_img']
-								+ " " +styleData['styleoption_background_color']
-								+ " " +styleData['styleoption_background_position']
-								+ " " +styleData['styleoption_repeat']);
-			if(background != ""){
+			var backgroundCode = styleData['styleoption_background_img'] ? styleData['styleoption_background_img']+' ' : '';
+			backgroundCode += styleData['styleoption_background_color'] ? styleData['styleoption_background_color'] + ' ' : ' ';
+			backgroundCode += styleData['styleoption_background_position'] ? styleData['styleoption_background_position'] + ' ': ' ';
+			backgroundCode += (styleData['styleoption_repeat'] && styleData['styleoption_repeat'] != 'repeat') ? styleData['styleoption_repeat'] : '';
+			var background = jQuery.trim(backgroundCode);
+			if(background && background != ""){
 				attributes['style'] += v+":"+background+";";
 			}
-		}else if(v == 'width' || v == 'height'){
-			attributes['style'] += v+":"+jQuery.trim(styleData['styleoption_'+ v])+"px;";
+		}else if(v == 'width'  || v == 'height'){
+			if(jQuery.trim(styleData['styleoption_'+ v]) != ''){
+				attributes['style'] += v+":"+jQuery.trim(styleData['styleoption_'+ v])+";";
+			}
 		}else{
-			attributes[v] = jQuery.trim(styleData['styleoption_'+ v]);
+			if(jQuery.trim(styleData['styleoption_'+ v]) != ''){
+				attributes[v] = jQuery.trim(styleData['styleoption_'+ v]);
+			}
 		}
 	});
 	if(styleData['styleoption_style']){
@@ -585,19 +609,24 @@ mvcmerger.styleoption.open = function(openbtn){
 		}
 		var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
 		inputAndSelect.each(function(index){
-			if((jQuery(this).hasClass("styleoption_border_type_bottom")
-			   || jQuery(this).hasClass("styleoption_border_type_left")
-			   || jQuery(this).hasClass("styleoption_border_type_top")
-			   || jQuery(this).hasClass("styleoption_border_type_right")
-				) && jQuery(this).val() != "none"){
-				style[jQuery(this).attr("class")] = jQuery(this).val();
-			}else if(jQuery(this).hasClass("styleoption_repeat") && jQuery(this).val() != "repeat"){
-				style[jQuery(this).attr("class")] = jQuery.trim(jQuery(this).val());
+			if(jQuery(this).hasClass("styleoption_border_type_top")
+					|| jQuery(this).hasClass("styleoption_border_type_right")
+					|| jQuery(this).hasClass("styleoption_border_type_bottom")
+					|| jQuery(this).hasClass("styleoption_border_type_left")){
+				if(jQuery(this).val() != "none"){
+					style[jQuery(this).attr("class")] = jQuery(this).val();
+				}
+			}else if(jQuery(this).hasClass("styleoption_repeat")){
+				if(jQuery(this).val() != "repeat"){
+					style[jQuery(this).attr("class")] = jQuery.trim(jQuery(this).val());
+				}
 			}else if(jQuery.trim(jQuery(this).val()) != ""){
 				style[jQuery(this).attr("class")] = jQuery.trim(jQuery(this).val());
 			}
 		});
 		view.data( "properties" , style);
+		view.data( "attributes" , mvcmerger.getStyle(view));
+		view.attr("style",view.attr("style")+view.data( "attributes" )['style']);
 		console.log(view.data("properties"));
 		mvcmerger.styleoption.cancel();
 	};
@@ -631,9 +660,10 @@ mvcmerger.styleoption.open = function(openbtn){
 	
 	//取得view的数据(还原表单)
 	var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
-	if(view.data("layout_properties")){
-		view.data("properties",view.data("layout_properties"));
-		view.removeData("layout_properties");
+	console.log(view);
+	if(view.data("layout-properties")){
+		view.data("properties",view.data("layout-properties")['properties']);
+		view.removeData("layout-properties");
 	}
 	var styleForFrame = view.data("properties");
 	if(styleForFrame){
