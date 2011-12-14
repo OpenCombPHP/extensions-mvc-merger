@@ -296,7 +296,15 @@ class ViewLayoutSetting
 	
 	static public function setupLayoutItemAttr(LayoutableView $aView,array &$arrConfig)
 	{
-		//echo print_r($arrConfig) ;
+		if(!empty($arrConfig['attributes']['style']))
+		{
+			$aView->setWrapperStyle($arrConfig['attributes']['style']) ;
+		}
+		
+		if(!empty($arrConfig['attributes']['class']))
+		{
+			$aView->addWrapperCssClass($arrConfig['attributes']['class']) ;
+		}
 	}
 	
 	static public function outputLayoutConfigJson(IView $aView,&$arrConfig,&$sOutput)
