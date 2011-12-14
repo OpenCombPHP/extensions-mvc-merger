@@ -28,8 +28,8 @@ return array(
 					) ,
 					array(
 							'title'=>'视图布局' ,
-							//'link' => '?c=org.opencomb.mvcmerger.merger.ViewLayerout' ,
-							//'quote' => 'c=org.opencomb.mvcmerger.merger.ViewLayerout' ,
+							'link' => '?c=org.opencomb.mvcmerger.merger.ViewLayerout' ,
+							'quote' => 'c=org.opencomb.mvcmerger.merger.ViewLayerout' ,
 					) ,
 			) ,
 		) ,
