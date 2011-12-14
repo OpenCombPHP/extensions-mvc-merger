@@ -1,8 +1,10 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
-use org\jecat\framework\mvc\view\ViewLayoutItem;
-use org\jecat\framework\mvc\view\ViewLayoutFrame;
+use org\jecat\framework\mvc\view\layout\LayoutableView;
+
+use org\jecat\framework\mvc\view\layout\ViewLayoutItem;
+use org\jecat\framework\mvc\view\layout\ViewLayoutFrame;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\view\View;
 use org\jecat\framework\mvc\controller\IController;
@@ -77,8 +79,8 @@ class ViewLayoutSetting
 		$this->sJsCode = "\r\n<script>\r\n" ;
 		
 		// view id,xpath mapping
-		$sMainViewIdEsc = addslashes(\org\jecat\framework\mvc\view\ViewLayoutItem::htmlWrapperId($this->mainView())) ;
-		$this->sJsCode.= "jquery('#{$sMainViewIdEsc}').data('xpath',\"/\").addClass('mvcmerger-viewlayout') ;\r\n" ;
+		$this->sJsCode.= \org\opencomb\mvcmerger\aspect\ViewLayoutSetting::outputViewInfo($this->mainView(),'/') ;
+		
 		foreach($this->mainView()->iterator() as $aView)
 		{
 			$this->sJsCode.= \org\opencomb\mvcmerger\aspect\ViewLayoutSetting::outputViewInfoForLayoutSetting($aView) ;
@@ -127,12 +129,11 @@ class ViewLayoutSetting
 		{
 			$sName = $aView->name() ;
 		}
+
 		$sXPath = $sXPathPrefix.'/'.$sName ;
-		$sXPathEsc = addslashes($sXPath) ;
 		
-		$sIdEsc = addslashes(ViewLayoutItem::htmlWrapperId($aView)) ;
+		$sJsCode = self::outputViewInfo($aView, $sXPath) ;
 		
-		$sJsCode = "jquery('#{$sIdEsc}').data('xpath',\"{$sXPath}\").addClass('mvcmerger-viewlayout') ;\r\n" ;
 		foreach($aView->iterator() as $aChildView)
 		{
 			$sJsCode.= self::outputViewInfoForLayoutSetting($aChildView,$sXPath) ;
@@ -140,6 +141,16 @@ class ViewLayoutSetting
 		
 		return $sJsCode ;
 	} 
+	
+	static public function outputViewInfo($aView,$sXPath)
+	{		
+		$sIdEsc = addslashes(ViewLayoutItem::htmlWrapperId($aView)) ;
+		$sXPathEsc = addslashes($sXPath) ;
+		
+		return "jquery('#{$sIdEsc}').data('xpath',\"{$sXPathEsc}\").addClass('mvcmerger-viewlayout') ;\r\n" ;
+		
+		//__mvcmerger_layout_setting
+	}
 	
 	
 	// -------------------------------------------------------------------------------------- //
@@ -174,14 +185,36 @@ class ViewLayoutSetting
 		$arrControllers = $aSetting->item('/merge/view_layout','controllers',array()) ;
 		if( !empty($arrControllers[__CLASS__]) )
 		{
+			$this->sLayoutConfigCode = '' ;
+			if( $is_mvcmerger_layout_setting = $this->params->bool('mvcmerger_layout_setting') )
+			{			
+				$this->sLayoutConfigCode.= "\r\n<script>\r\n" ;
+			}
+		
 			foreach ($arrControllers[__CLASS__] as $arrFrame)
 			{
-				$aLayoutFrame = \org\opencomb\mvcmerger\aspect\ViewLayoutSetting::layout( $this, $arrFrame ) ;
+				$aLayoutFrame = \org\opencomb\mvcmerger\aspect\ViewLayoutSetting::layout( $this, $arrFrame, $this->sLayoutConfigCode ) ;
+			}
+			
+			if( $is_mvcmerger_layout_setting )
+			{
+				$this->sLayoutConfigCode.= "</script>\r\n" ;
 			}
 		}
 	}
+	/**
+	 * @advice after
+	 * @for pointcutDisplayMainView
+	 */
+	public function afterDisplayMainView(IView $aMainView)
+	{
+		if($this->params->bool('mvcmerger_layout_setting'))
+		{
+			echo $this->sLayoutConfigCode ;
+		}
+	}
 	
-	static public function layout(IController $aController,&$arrFrameConfig)
+	static public function layout(IController $aController,&$arrFrameConfig,&$sLayoutConfigOutput=null)
 	{
 		if( !empty($arrFrameConfig['xpath']) )
 		{
@@ -209,6 +242,15 @@ class ViewLayoutSetting
 			self::addFrameClass($aLayoutFrame,'mvcmerger-tmp-frame') ;
 		}
 		
+		// 在 frame view 记录布局配置
+		if($sLayoutConfigOutput)
+		{
+			self::outputLayoutConfigJson($aLayoutFrame,$arrFrameConfig,$sLayoutConfigOutput) ;
+		}
+		
+		// frame 上的样式
+		self::setupLayoutItemAttr($aLayoutFrame,$arrFrameConfig) ;
+		
 		$aLayoutFrame->setType($arrFrameConfig['type']) ;
 				
 		$arrChildViews = array() ;
@@ -216,7 +258,7 @@ class ViewLayoutSetting
 		{
 			if( $arrItem['class']=='frame' )
 			{
-				if( $aView  = self::layout($aController,$arrItem) )
+				if( $aView  = self::layout($aController,$arrItem,$sLayoutConfigOutput) )
 				{
 					$arrChildViews[] = $aView ;
 				}
@@ -226,7 +268,15 @@ class ViewLayoutSetting
 				$aView = View::xpath($aController->mainView(),$arrItem['xpath']) ;
 				if($aView)
 				{
-					$arrChildViews[] = $aView ;
+					$arrChildViews[] = $aViewItem = new ViewLayoutItem($aView) ;
+					
+					// 在 frame view 记录布局配置
+					if($sLayoutConfigOutput)
+					{
+						self::outputLayoutConfigJson($aView,$arrItem,$sLayoutConfigOutput) ;
+					}
+					
+					self::setupLayoutItemAttr($aViewItem, $arrItem) ;
 				}
 			}
 		}
@@ -236,12 +286,25 @@ class ViewLayoutSetting
 		
 		foreach($arrChildViews as $aView)
 		{
-			$aLayoutFrame->add($aView) ;
+			$aViewItem = $aLayoutFrame->add($aView) ;
 		}
 		
 		$aLayoutFrame->render(true) ;
 		
 		return $aLayoutFrame ;
+	}
+	
+	static public function setupLayoutItemAttr(LayoutableView $aView,array &$arrConfig)
+	{
+		//echo print_r($arrConfig) ;
+	}
+	
+	static public function outputLayoutConfigJson(IView $aView,&$arrConfig,&$sOutput)
+	{
+		$sLayoutConfig = json_encode($arrConfig,true) ;
+		$sIdEsc = addslashes(ViewLayoutItem::htmlWrapperId($aView)) ;
+		
+		$sOutput.= "jquery('#{$sIdEsc}').data('layout-properties',{$sLayoutConfig}) ;\r\n" ;
 	}
 	
 	static public function addFrameClass(ViewLayoutFrame $aFrame,$sClass)
