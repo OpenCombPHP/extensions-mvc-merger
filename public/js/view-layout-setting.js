@@ -671,7 +671,6 @@ jquery(function(){
 				
 				var config = mvcmerger.exportConfig() ;
 				console.log(config) ;
-				return; ////////////////////////
 				if( !config || !config.length )
 				{
 					jquery('#mvc_merger-view_layout_setting_controlPanel_messages').html('配置无效') ;
