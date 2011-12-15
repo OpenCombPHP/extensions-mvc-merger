@@ -7,7 +7,7 @@ use org\jecat\framework\lang\oop\ClassLoader;
 use org\opencomb\mvcmerger\struct\ui\filter\UILinkHrefFilter;
 use org\jecat\framework\lang\aop\AOP;
 use org\jecat\framework\system\Request;
-use org\opencomb\ext\Extension ;
+use org\opencomb\platform\ext\Extension ;
 use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ; 
 

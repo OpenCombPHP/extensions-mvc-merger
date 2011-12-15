@@ -1,9 +1,9 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
-use org\opencomb\Platform;
+use org\opencomb\platform\Platform;
 
-use org\opencomb\system\PlatformFactory;
+use org\opencomb\platform\system\PlatformFactory;
 
 use org\opencomb\mvcmerger\MvcMerger;
 
