@@ -3,8 +3,8 @@ namespace org\opencomb\mvcmerger\merger ;
 
 use org\opencomb\mvcmerger\MvcMerger;
 
-use org\opencomb\system\PlatformFactory;
-use org\opencomb\Platform;
+use org\opencomb\platform\system\PlatformFactory;
+use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Type;
 use org\jecat\framework\message\Message;
