@@ -325,7 +325,7 @@ mvcmerger.exportLayoutConfig = function(layout)
 	
 	return config.items.length? config: null ;
 };
-mvcmerger.getStyle = function(frame){
+mvcmerger.getAttributes = function(frame){
 	var styleData = frame.data("properties");
 	if(jQuery.type(styleData) == "undefined"){
 		return {};
@@ -432,21 +432,21 @@ JSON.stringify = JSON.stringify || function (obj) {
 mvcmerger.styleoption = {
 	optionDialog:jQuery('<div class="styleoption" title="视图属性">'
 			+ '<ul>'
-				+ '<li><label>class<input type="text" class="styleoption_class" value=""/></label></li>'
-				+ '<li><label>width<input type="text" class="styleoption_width" value=""/></label></li>'
-				+ '<li><label>height<input type="text" class="styleoption_height" value=""/></label></li>'
-				+ '<li><label>margin<input type="text" class="styleoption_margin_u" title="外边距:上"/></label>'
+				+ '<li><label title="class">css类<input type="text" class="styleoption_class" value=""/></label></li>'
+				+ '<li><label title="width">宽度<input type="text" class="styleoption_width" value=""/></label></li>'
+				+ '<li><label title="height">高度<input type="text" class="styleoption_height" value=""/></label></li>'
+				+ '<li><label title="margin">外边距<input type="text" class="styleoption_margin_u" title="外边距:上"/></label>'
 					+ '<input type="text" class="styleoption_margin_r" title="外边距:右"/>'
 					+ '<input type="text" class="styleoption_margin_b" title="外边距:下"/>'
 					+ '<input type="text" class="styleoption_margin_l" title="外边距:左"/>'
 				+ '</li>'
-				+ '<li><label>padding<input type="text" class="styleoption_padding_u" title="内边距:上"/></label>'
+				+ '<li><label title="padding">内边距<input type="text" class="styleoption_padding_u" title="内边距:上"/></label>'
 					+ '<input type="text" class="styleoption_padding_r" title="内边距:右"/>'
 					+ '<input type="text" class="styleoption_padding_b" title="内边距:下"/>'
 					+ '<input type="text" class="styleoption_padding_l" title="内边距:左"/>'
 				+ '</li>'
-				+ '<li><label>border</label><br/>'
-					+ '<label>上<select class="styleoption_border_type_top">'
+				+ '<li><label title="border">边框</label><br/>'
+					+ '<label title="border-top">上<select class="styleoption_border_type_top">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -462,7 +462,7 @@ mvcmerger.styleoption = {
 					+ '<input type="text" class="styleoption_border_top" title="宽度:上"/>'
 					+ '<input type="text" class="styleoption_border_color_top" title="颜色:上"/><br/>'
 					
-					+ '<label>下<select class="styleoption_border_type_bottom">'
+					+ '<label title="border-bottom">下<select class="styleoption_border_type_bottom">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -478,7 +478,7 @@ mvcmerger.styleoption = {
 					+ '<input type="text" class="styleoption_border_bottom" title="宽度:下"/>'
 					+ '<input type="text" class="styleoption_border_color_bottom" title="颜色:下"/><br/>'
 					
-					+ '<label>左<select class="styleoption_border_type_left">'
+					+ '<label title="border-left">左<select class="styleoption_border_type_left">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -494,7 +494,7 @@ mvcmerger.styleoption = {
 					+ '<input type="text" class="styleoption_border_left" title="宽度:左"/>'
 					+ '<input type="text" class="styleoption_border_color_left" title="颜色:左"/><br/>'
 					
-					+ '<label>右<select class="styleoption_border_type_right">'
+					+ '<label title="border-right">右<select class="styleoption_border_type_right">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -510,20 +510,20 @@ mvcmerger.styleoption = {
 					+ '<input type="text" class="styleoption_border_right" title="宽度:右"/>'
 					+ '<input type="text" class="styleoption_border_color_right" title="颜色:右"/><br/>'
 				+ '</li>'
-				+ '<li><label>background</label><br/>'
-				+ '<label>img<input class="styleoption_background_img"/></label><br/>'
-				+ '<label>color<input class="styleoption_background_color"/></label><br/>'
-				+ '<label>position<input class="styleoption_background_position"/></label>'
-				+ '<label>repeat<select class="styleoption_repeat">'
+				+ '<li><label title="background">背景</label><br/>'
+				+ '<label title="background-img">背景图路径<input class="styleoption_background_img"/></label><br/>'
+				+ '<label title="background-color">背景颜色<input class="styleoption_background_color"/></label><br/>'
+				+ '<label title="background-position">偏移<input class="styleoption_background_position"/></label><br/>'
+				+ '<label title="background-repeat">重复<select class="styleoption_repeat">'
 					+ '<option value="repeat">repeat</option>'
 					+ '<option value="no-repeat">no-repeat</option>'
 					+ '<option value="repeat-x">repeat-x</option>'
 					+ '<option value="repeat-y">repeat-y</option>'
 					+ '<option value="inherit">inherit</option>'
 				+ '</select></label></li>'
-				+ '<li><label>style<textarea class="styleoption_style"/></label></li>'
-				+ '<li><label>title<input type="text" class="styleoption_title"/></label></li>'
-				+ '<li><label>type'
+				+ '<li><label title="style">样式<textarea class="styleoption_style"/></label></li>'
+				+ '<li><label title="title">标题<input type="text" class="styleoption_title"/></label></li>'
+				+ '<li><label title="layout-type">布局类型'
 					+ '<select class="styleoption_type">'
 						+ '<option value="v">竖向</option>'
 						+ '<option value="h">横向</option>'
@@ -625,11 +625,10 @@ mvcmerger.styleoption.open = function(openbtn){
 			}
 		});
 		view.data( "properties" , style);
-		view.data( "attributes" , mvcmerger.getStyle(view));
-		view.attr("style",view.attr("style")+view.data( "attributes" )['style']);
-		console.log(view.data("properties"));
-		mvcmerger.styleoption.cancel();
+		view.data( "attributes" , mvcmerger.getAttributes(view));
+		view.attr( "style" , view.data( "attributes" )['style']);//view.attr("style")+view.data( "attributes" )['style']);
 	};
+	mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea").change(mvcmerger.styleoption.save);
 
 	//关闭菜单的方法
 	mvcmerger.styleoption.cancel = function(){
@@ -639,8 +638,8 @@ mvcmerger.styleoption.open = function(openbtn){
 	
 	mvcmerger.styleoption.openedOptionDialog.dialog({
 		buttons:{
-			'取消':mvcmerger.styleoption.cancel
-			, '确定':mvcmerger.styleoption.save
+			'还原':mvcmerger.styleoption.reset ,
+			'关闭':mvcmerger.styleoption.cancel
 		}
 		, width:400
 		, height:600
@@ -663,6 +662,9 @@ mvcmerger.styleoption.open = function(openbtn){
 	console.log(view);
 	if(view.data("layout-properties")){
 		view.data("properties",view.data("layout-properties")['properties']);
+		//备份原始数据,提供还原功能
+		view.data("origin_properties",view.data("layout-properties")['properties']);
+		//经过数据还原的表单不再依赖原始数据,为了节省内存而清理
 		view.removeData("layout-properties");
 	}
 	var styleForFrame = view.data("properties");
@@ -711,7 +713,6 @@ jquery(function(){
 				} ) ; 
 			}
 			, '保存':function(){
-				
 				var config = mvcmerger.exportConfig() ;
 				if( !config || !config.length )
 				{
