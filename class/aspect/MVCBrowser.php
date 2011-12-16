@@ -37,8 +37,8 @@ class MVCBrowser
 		}
 		
 		$sJsCode = "\r\n<script>\r\n" ;
+		$sJsCode.= "var _mvcstruct = " . \org\opencomb\mvcmerger\aspect\MVCBrowser::generateControllerStructJcCode($this) . "; \r\n" ;
 		$sJsCode.= "if( parent && typeof(parent.structBrowser)!='undefined' ){\r\n" ;
-		$sJsCode.= "	var _mvcstruct = " . \org\opencomb\mvcmerger\aspect\MVCBrowser::generateControllerStructJcCode($this) . "; \r\n" ;
 		$sJsCode.= "	parent.structBrowser.setMvcStruct(_mvcstruct) ;\r\n" ;
 		$sJsCode.= "}\r\n" ;
 		$sJsCode.= "</script>\r\n" ;
@@ -104,6 +104,12 @@ class MVCBrowser
 		{
 			$sName = $aController->name()?: $sClass ;
 		}
+		
+		$arrParams = array() ;
+		$aController->params()->exportToArray($arrParams) ;
+		unset($arrParams['mvcmerger_browser']) ;
+		unset($arrParams['c']) ;
+		
 		$sNameEsc = addslashes($sName) ;
 		$sClassEsc = addslashes($sClass) ;
 		$sTitleEsc = addslashes($aController->title()) ;
@@ -114,6 +120,7 @@ class MVCBrowser
 		$sJsCode.= $sIndent."	, class: \"{$sClassEsc}\"\r\n" ;
 		$sJsCode.= $sIndent."	, params: \"\"\r\n" ;
 		$sJsCode.= $sIndent."	, title: \"{$sTitleEsc}\"\r\n" ;
+		$sJsCode.= $sIndent."	, params: \"".http_build_query($arrParams)."\"\r\n" ;
 		
 		// models
 		$sJsCode.= $sIndent."	, models: [ " ;
