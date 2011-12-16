@@ -140,7 +140,7 @@ class MVCBrowser
 		$sJsCode.= $sIndent." ]\r\n" ;
 		
 		// controllers
-		$sJsCode.= $sIndent."	, controller: [ " ;
+		$sJsCode.= $sIndent."	, controllers: [ " ;
 		foreach($aController->nameIterator() as $idx=>$sChildControllerName)
 		{
 			if($idx)

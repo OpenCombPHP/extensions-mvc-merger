@@ -9,10 +9,19 @@
 	color:blue;
 	font-weight:bold;
 }
+.structBrowser_left{
+	width:100px;
+	height:100%;
+	overflow: auto;
+	float:left;
+}
+.structBrowser_right{
+	width:600px;
+	height:100%;
+	overflow: auto;
+	float:left;
+}
 </style>
-
-<ul id="browser" class="filetree"></ul>
-
 <script type="text/javascript">
 var structBrowser = {
 	_mvcstruct:null,
@@ -31,9 +40,7 @@ structBrowser.log = function(text)
 structBrowser.setMvcStruct = function(struct)
 {
 	structBrowser._mvcstruct = struct ;
-	var li = jQuery("<li></li>");
-	li.append(structBrowser._loadController(structBrowser._mvcstruct)) ;
-	jQuery("#browser").empty().append(li).treeview();
+	jQuery("#browser").empty().append(structBrowser._loadController(structBrowser._mvcstruct)).treeview();
 }
 structBrowser._loadModel = function(aModel)
 {
@@ -86,13 +93,34 @@ structBrowser._loadViewList = function(arrViews)
 }
 structBrowser._loadController = function(aController)
 {
+	if(!aController){
+		return;
+	}
 	var source = jQuery('<li><span class="folder controller">[C] '+aController.name+'</span></li>') ;
 	source.append(structBrowser._loadModelList(aController.models))
-			.append(structBrowser._loadViewList(aController.views)) ;		
+			.append(structBrowser._loadViewList(aController.views))
+			.append(structBrowser._loadControllerList(aController.controllers));
 	source.find('.controller:first').data("class",aController.class)
 								.data("params",aController.params)
 								.data("title",aController.title);
 	return source ;
+}
+structBrowser._loadControllerList = function(arrControllers)
+{
+	if(arrControllers.length)
+	{
+		var source = jQuery('<ul></ul>') ;
+		for(var i=0;i<arrControllers.length;i++)
+		{
+			source.append(structBrowser._loadController(arrControllers[i])) ;
+		}
+		
+		return source ;
+	}
+	else
+	{
+		return '' ;
+	}
 }
 structBrowser.setCurrentUrl = function(sUrl)
 {
@@ -180,15 +208,25 @@ jQuery(function(){
 		jQuery(".folder").removeClass("selectClass");
 		that.addClass("selectClass");
 		jQuery("#classname").val(that.data("class"));
+		jQuery("#name").val(that.data("name"));
+		jQuery("#args").val(that.data("params"));
+		jQuery("#title").val(that.data("title"));
 	});
 });
 </script>
-<label for="classname">类名<input type="text" id="classname" value="" style="width:400px" /></label><br/>
-<label for="args">参数<input type="text" id="args" value="" style="width:400px" /></label><br/>
-<label for="title">标题<input type="text" id="title" value="" style="width:400px" /></label><br/>
-<input type="button" id="submitClassInfo" value="提交" /><br/>
+<div class="structBrowser_left">
+	<ul id="browser" class="filetree"></ul>
+</div>
 
-<input type="text" id="current_url" value="" style="width:400px" /> 
-<input type="button" value="打开网页" onclick="structBrowser.location()" /><br/>
-
-<iframe id="iframe-browser" src="{/*.url.path}?mvcmerger_browser=1" width="100%" height="600px" />
+<div class="structBrowser_right">
+	<label for="classname">类名<input type="text" id="classname" value="" style="width:400px" /></label><br/>
+	<label for="name">名称<input type="text" id="name" value="" style="width:400px" /></label><br/>
+	<label for="args">参数<input type="text" id="args" value="" style="width:400px" /></label><br/>
+	<label for="title">标题<input type="text" id="title" value="" style="width:400px" /></label><br/>
+	<input type="button" id="submitClassInfo" value="提交" /><br/>
+	
+	<input type="text" id="current_url" value="" style="width:400px" /> 
+	<input type="button" value="打开网页" onclick="structBrowser.location()" /><br/>
+	
+	<iframe id="iframe-browser" src="{/*.url.path}?mvcmerger_browser=1" width="100%" height="600px" />
+</div>

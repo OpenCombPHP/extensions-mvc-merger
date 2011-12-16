@@ -33,7 +33,7 @@ class ControllerMerge
 		$aSetting = \org\jecat\framework\system\Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		
 		// for 控制器融合
-		$arrControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrControllers = $aSetting->item('/merge/controller','controller',array()) ;
 		if( !empty($arrControllers[__CLASS__]) )
 		{
 			foreach($arrControllers[__CLASS__] as $arrMerge)
