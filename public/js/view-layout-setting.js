@@ -325,9 +325,9 @@ mvcmerger.exportLayoutConfig = function(layout)
 	
 	return config.items.length? config: null ;
 };
-mvcmerger.getStyle = function(frame){
-	var styleData = frame.data("properties");
-	if(jQuery.type(styleData) == "undefined"){
+mvcmerger.getAttributes = function(frame){
+	var propertiesData = frame.data("properties");
+	if(jQuery.type(propertiesData) == "undefined"){
 		return {};
 	}
 	var styleListForSave = ['class','width','height','margin','padding','border','background','title','type'];
@@ -335,34 +335,34 @@ mvcmerger.getStyle = function(frame){
 	jQuery.each(styleListForSave,function(i,v){
 		if(v == "margin"){
 			var arrMargin = [];
-			if(styleData['styleoption_margin_u']){
-				arrMargin.push(styleData['styleoption_margin_u']);
+			if(propertiesData['styleoption_margin_u']){
+				arrMargin.push(propertiesData['styleoption_margin_u']);
 			}
-			if(styleData['styleoption_margin_r']){
-				arrMargin.push(styleData['styleoption_margin_r']);
+			if(propertiesData['styleoption_margin_r']){
+				arrMargin.push(propertiesData['styleoption_margin_r']);
 			}
-			if(styleData['styleoption_margin_b']){
-				arrMargin.push(styleData['styleoption_margin_b']);
+			if(propertiesData['styleoption_margin_b']){
+				arrMargin.push(propertiesData['styleoption_margin_b']);
 			}
-			if(styleData['styleoption_margin_l']){
-				arrMargin.push(styleData['styleoption_margin_l']);
+			if(propertiesData['styleoption_margin_l']){
+				arrMargin.push(propertiesData['styleoption_margin_l']);
 			}
 			if(jQuery.trim(arrMargin.join(" ")) != ""){
 				attributes['style'] += v+":"+jQuery.trim(arrMargin.join(" "))+";";
 			}
 		}else if(v == 'padding'){
 			var arrPadding = [];
-			if(styleData['styleoption_padding_u']){
-				arrPadding.push(styleData['styleoption_padding_u']);
+			if(propertiesData['styleoption_padding_u']){
+				arrPadding.push(propertiesData['styleoption_padding_u']);
 			}
-			if(styleData['styleoption_padding_r']){
-				arrPadding.push(styleData['styleoption_padding_r']);
+			if(propertiesData['styleoption_padding_r']){
+				arrPadding.push(propertiesData['styleoption_padding_r']);
 			}
-			if(styleData['styleoption_padding_b']){
-				arrPadding.push(styleData['styleoption_padding_b']);
+			if(propertiesData['styleoption_padding_b']){
+				arrPadding.push(propertiesData['styleoption_padding_b']);
 			}
-			if(styleData['styleoption_padding_l']){
-				arrPadding.push(styleData['styleoption_padding_l']);
+			if(propertiesData['styleoption_padding_l']){
+				arrPadding.push(propertiesData['styleoption_padding_l']);
 			}
 			if(jQuery.trim(arrPadding.join(" ")) != ""){
 				attributes['style'] += v+":"+jQuery.trim(arrPadding.join(" "))+";";
@@ -374,38 +374,38 @@ mvcmerger.getStyle = function(frame){
 			var arrParts = ['top','right','bottom','left'];
 			jQuery.each(arrParts,function(ii,vv){
 				var onePartOfBorder = "";
-				if(styleData[typeClassName + vv]){
-					onePartOfBorder += styleData[typeClassName + vv] ? styleData[typeClassName + vv] + ' ' : '';
+				if(propertiesData[typeClassName + vv]){
+					onePartOfBorder += propertiesData[typeClassName + vv] ? propertiesData[typeClassName + vv] + ' ' : '';
 				}
-				if(jQuery.trim(styleData[widthClassName + vv]) && jQuery.trim(styleData[widthClassName + vv]) != ""){
-					onePartOfBorder += styleData[widthClassName + vv] ? styleData[widthClassName + vv] + ' ' : ' ';
+				if(jQuery.trim(propertiesData[widthClassName + vv]) && jQuery.trim(propertiesData[widthClassName + vv]) != ""){
+					onePartOfBorder += propertiesData[widthClassName + vv] ? propertiesData[widthClassName + vv] + ' ' : ' ';
 				}
-				onePartOfBorder += styleData[colorClassName + vv] ? styleData[colorClassName + vv] : '';
+				onePartOfBorder += propertiesData[colorClassName + vv] ? propertiesData[colorClassName + vv] : '';
 				if(jQuery.trim(onePartOfBorder) != "" && jQuery.trim(onePartOfBorder) != "none"){
 					attributes['style'] += "border-"+vv+":"+jQuery.trim(onePartOfBorder)+";";
 				}
 			});
 		}else if(v == 'background'){
-			var backgroundCode = styleData['styleoption_background_img'] ? styleData['styleoption_background_img']+' ' : '';
-			backgroundCode += styleData['styleoption_background_color'] ? styleData['styleoption_background_color'] + ' ' : ' ';
-			backgroundCode += styleData['styleoption_background_position'] ? styleData['styleoption_background_position'] + ' ': ' ';
-			backgroundCode += (styleData['styleoption_repeat'] && styleData['styleoption_repeat'] != 'repeat') ? styleData['styleoption_repeat'] : '';
+			var backgroundCode = propertiesData['styleoption_background_img'] ? propertiesData['styleoption_background_img']+' ' : '';
+			backgroundCode += propertiesData['styleoption_background_color'] ? propertiesData['styleoption_background_color'] + ' ' : ' ';
+			backgroundCode += propertiesData['styleoption_background_position'] ? propertiesData['styleoption_background_position'] + ' ': ' ';
+			backgroundCode += (propertiesData['styleoption_repeat'] && propertiesData['styleoption_repeat'] != 'repeat') ? propertiesData['styleoption_repeat'] : '';
 			var background = jQuery.trim(backgroundCode);
 			if(background && background != ""){
 				attributes['style'] += v+":"+background+";";
 			}
 		}else if(v == 'width'  || v == 'height'){
-			if(jQuery.trim(styleData['styleoption_'+ v]) != ''){
-				attributes['style'] += v+":"+jQuery.trim(styleData['styleoption_'+ v])+";";
+			if(jQuery.trim(propertiesData['styleoption_'+ v]) != ''){
+				attributes['style'] += v+":"+jQuery.trim(propertiesData['styleoption_'+ v])+";";
 			}
 		}else{
-			if(jQuery.trim(styleData['styleoption_'+ v]) != ''){
-				attributes[v] = jQuery.trim(styleData['styleoption_'+ v]);
+			if(jQuery.trim(propertiesData['styleoption_'+ v]) != ''){
+				attributes[v] = jQuery.trim(propertiesData['styleoption_'+ v]);
 			}
 		}
 	});
-	if(styleData['styleoption_style']){
-		attributes['style'] += styleData['styleoption_style'];
+	if(propertiesData['styleoption_style']){
+		attributes['style'] += propertiesData['styleoption_style'];
 	}
 	return attributes;
 };
@@ -429,24 +429,24 @@ JSON.stringify = JSON.stringify || function (obj) {
     }
 };
 /* -----------------风格菜单------------------ */
-mvcmerger.styleoption = {
-	optionDialog:jQuery('<div class="styleoption" title="视图属性">'
+mvcmerger.propertiesDialog = function(view){
+	this.optionDialog=jQuery('<div class="propertiesDialog" title="视图属性">'
 			+ '<ul>'
-				+ '<li><label>class<input type="text" class="styleoption_class" value=""/></label></li>'
-				+ '<li><label>width<input type="text" class="styleoption_width" value=""/></label></li>'
-				+ '<li><label>height<input type="text" class="styleoption_height" value=""/></label></li>'
-				+ '<li><label>margin<input type="text" class="styleoption_margin_u" title="外边距:上"/></label>'
-					+ '<input type="text" class="styleoption_margin_r" title="外边距:右"/>'
-					+ '<input type="text" class="styleoption_margin_b" title="外边距:下"/>'
-					+ '<input type="text" class="styleoption_margin_l" title="外边距:左"/>'
+				+ '<li><label title="class">css类<input type="text" class="propertiesDialog_class" value=""/></label></li>'
+				+ '<li><label title="width">宽度<input type="text" class="propertiesDialog_width" value=""/></label></li>'
+				+ '<li><label title="height">高度<input type="text" class="propertiesDialog_height" value=""/></label></li>'
+				+ '<li><label title="margin">外边距<input type="text" class="propertiesDialog_margin_u" title="外边距:上"/></label>'
+					+ '<input type="text" class="propertiesDialog_margin_r" title="外边距:右"/>'
+					+ '<input type="text" class="propertiesDialog_margin_b" title="外边距:下"/>'
+					+ '<input type="text" class="propertiesDialog_margin_l" title="外边距:左"/>'
 				+ '</li>'
-				+ '<li><label>padding<input type="text" class="styleoption_padding_u" title="内边距:上"/></label>'
-					+ '<input type="text" class="styleoption_padding_r" title="内边距:右"/>'
-					+ '<input type="text" class="styleoption_padding_b" title="内边距:下"/>'
-					+ '<input type="text" class="styleoption_padding_l" title="内边距:左"/>'
+				+ '<li><label title="padding">内边距<input type="text" class="propertiesDialog_padding_u" title="内边距:上"/></label>'
+					+ '<input type="text" class="propertiesDialog_padding_r" title="内边距:右"/>'
+					+ '<input type="text" class="propertiesDialog_padding_b" title="内边距:下"/>'
+					+ '<input type="text" class="propertiesDialog_padding_l" title="内边距:左"/>'
 				+ '</li>'
-				+ '<li><label>border</label><br/>'
-					+ '<label>上<select class="styleoption_border_type_top">'
+				+ '<li><label title="border">边框</label><br/>'
+					+ '<label title="border-top">上<select class="propertiesDialog_border_type_top">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -459,10 +459,10 @@ mvcmerger.styleoption = {
 						+ '<option value="ridge">ridge</option>'
 						+ '<option value="inherit">inherit</option>'
 					+ '</select></label>'
-					+ '<input type="text" class="styleoption_border_top" title="宽度:上"/>'
-					+ '<input type="text" class="styleoption_border_color_top" title="颜色:上"/><br/>'
+					+ '<input type="text" class="propertiesDialog_border_top" title="宽度:上"/>'
+					+ '<input type="text" class="propertiesDialog_border_color_top" title="颜色:上"/><br/>'
 					
-					+ '<label>下<select class="styleoption_border_type_bottom">'
+					+ '<label title="border-bottom">下<select class="propertiesDialog_border_type_bottom">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -475,10 +475,10 @@ mvcmerger.styleoption = {
 						+ '<option value="ridge">ridge</option>'
 						+ '<option value="inherit">inherit</option>'
 					+ '</select></label>'
-					+ '<input type="text" class="styleoption_border_bottom" title="宽度:下"/>'
-					+ '<input type="text" class="styleoption_border_color_bottom" title="颜色:下"/><br/>'
+					+ '<input type="text" class="propertiesDialog_border_bottom" title="宽度:下"/>'
+					+ '<input type="text" class="propertiesDialog_border_color_bottom" title="颜色:下"/><br/>'
 					
-					+ '<label>左<select class="styleoption_border_type_left">'
+					+ '<label title="border-left">左<select class="propertiesDialog_border_type_left">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -491,10 +491,10 @@ mvcmerger.styleoption = {
 						+ '<option value="ridge">ridge</option>'
 						+ '<option value="inherit">inherit</option>'
 					+ '</select></label>'
-					+ '<input type="text" class="styleoption_border_left" title="宽度:左"/>'
-					+ '<input type="text" class="styleoption_border_color_left" title="颜色:左"/><br/>'
+					+ '<input type="text" class="propertiesDialog_border_left" title="宽度:左"/>'
+					+ '<input type="text" class="propertiesDialog_border_color_left" title="颜色:左"/><br/>'
 					
-					+ '<label>右<select class="styleoption_border_type_right">'
+					+ '<label title="border-right">右<select class="propertiesDialog_border_type_right">'
 						+ '<option value="none">none</option>'
 						+ '<option value="solid">solid</option>'
 						+ '<option value="inset">inset</option>'
@@ -507,24 +507,24 @@ mvcmerger.styleoption = {
 						+ '<option value="ridge">ridge</option>'
 						+ '<option value="inherit">inherit</option>'
 					+ '</select></label>'
-					+ '<input type="text" class="styleoption_border_right" title="宽度:右"/>'
-					+ '<input type="text" class="styleoption_border_color_right" title="颜色:右"/><br/>'
+					+ '<input type="text" class="propertiesDialog_border_right" title="宽度:右"/>'
+					+ '<input type="text" class="propertiesDialog_border_color_right" title="颜色:右"/><br/>'
 				+ '</li>'
-				+ '<li><label>background</label><br/>'
-				+ '<label>img<input class="styleoption_background_img"/></label><br/>'
-				+ '<label>color<input class="styleoption_background_color"/></label><br/>'
-				+ '<label>position<input class="styleoption_background_position"/></label>'
-				+ '<label>repeat<select class="styleoption_repeat">'
+				+ '<li><label title="background">背景</label><br/>'
+				+ '<label title="background-img">背景图路径<input class="propertiesDialog_background_img"/></label><br/>'
+				+ '<label title="background-color">背景颜色<input class="propertiesDialog_background_color"/></label><br/>'
+				+ '<label title="background-position">偏移<input class="propertiesDialog_background_position"/></label><br/>'
+				+ '<label title="background-repeat">重复<select class="propertiesDialog_repeat">'
 					+ '<option value="repeat">repeat</option>'
 					+ '<option value="no-repeat">no-repeat</option>'
 					+ '<option value="repeat-x">repeat-x</option>'
 					+ '<option value="repeat-y">repeat-y</option>'
 					+ '<option value="inherit">inherit</option>'
 				+ '</select></label></li>'
-				+ '<li><label>style<textarea class="styleoption_style"/></label></li>'
-				+ '<li><label>title<input type="text" class="styleoption_title"/></label></li>'
-				+ '<li><label>type'
-					+ '<select class="styleoption_type">'
+				+ '<li><label title="style">样式<textarea class="propertiesDialog_style"/></label></li>'
+				+ '<li><label title="title">标题<input type="text" class="propertiesDialog_title"/></label></li>'
+				+ '<li><label title="layout-type">布局类型'
+					+ '<select class="propertiesDialog_type">'
 						+ '<option value="v">竖向</option>'
 						+ '<option value="h">横向</option>'
 						+ '<option value="tab">选项卡</option>'
@@ -532,24 +532,51 @@ mvcmerger.styleoption = {
 					+ '</label>'
 				+ '</li>'
 			+ '</ul>'
-			+ '</div>'),
-	openedOptionDialog:null,
+			+ '</div>'
+		);
+
+	this.optionDialog.dialog({
+		buttons:{
+			'还原':function(event){
+				mvcmerger.propertiesDialog.reset(event);
+			} ,
+			'关闭':function(event){
+				mvcmerger.propertiesDialog.cancel(event);
+			},
+		}
+		, width:450
+		, height:600
+		, closeOnEscape: true
+		, show: 'slide'
+	});
+	
+	//是横向layout还是纵向,还是tab?也可能哪个也不是:all false
+	var isH = view.hasClass('jc-view-layout-frame-horizontal') ? true : null;
+	var isV = view.hasClass('jc-view-layout-frame-vertical') ? true : null;
+	var isT = view.hasClass('jc-view-layout-frame-tab') ? true : null;
+	
+	//只有layout才有type属性
+	if(!isH  && !isV && !isT){
+		mvcmerger.propertiesDialog.openedOptionDialog.find('.propertiesDialog_type').closest('li').remove();
+	}
+	
+	view.append(mvcmerger.propertiesDialog.openedOptionDialog);
 };
-//给view添加打开styleoption的按钮
-mvcmerger.styleoption.optionbtn = function(view){
+
+//静态方法,放置每个view的设置按钮
+mvcmerger.propertiesDialog.dialogOpenBtn = function(view){
+	//给view绑定事件,当鼠标在上方时扫描dom树,建立对应框体的按钮,每次都重新扫描是为了适应时时变化的页面布局
 	view.hover(function(e){
 		var openbtns =jQuery("<div class='optionBtnsContainer'></div>");
 		view.append(openbtns);
-		mvcmerger.styleoption.buildParentOptionbtns(view,openbtns);
-//		e.stopPropagation() ;
+		mvcmerger.propertiesDialog.buildParentOptionbtns(view,openbtns);
 	},function(e){
 		view.find(".optionBtnsContainer").remove();
-//		e.stopPropagation() ;
 	});
 };
-
-mvcmerger.styleoption.buildParentOptionbtns = function(view,btnContainer){
-	var openbtn =jQuery("<div class='styleoption_open_btn'></div>");
+//静态方法,放置若干按钮,用来代表view的父级layout,分不同类型给予不同的class
+mvcmerger.propertiesDialog.buildParentOptionbtns = function(view,btnContainer){
+	var openbtn =jQuery("<div class='propertiesDialog_open_btn'></div>");
 	btnContainer.append(openbtn.data("frame",view).attr('title',view.get(0).id));
 	//设置btntype,btntype指的是btn对应frame的类型,这个class用来显示不同的按钮样式
 	if(view.hasClass("jc-view-layout-item")){
@@ -562,7 +589,7 @@ mvcmerger.styleoption.buildParentOptionbtns = function(view,btnContainer){
 		openbtn.addClass("jc-view-btn-tab");
 	}
 	openbtn.click(function(){
-		mvcmerger.styleoption.open(jQuery(this));
+		mvcmerger.propertiesDialog.openDialog(jQuery(this));
 	});
 	openbtn.hover(function(){
 		jQuery(this).data("frame").addClass("highLightFrame");
@@ -573,104 +600,12 @@ mvcmerger.styleoption.buildParentOptionbtns = function(view,btnContainer){
 	if(parentFrame.length == 0){
 		return;
 	}else{
-		mvcmerger.styleoption.buildParentOptionbtns(parentFrame,btnContainer);
+		mvcmerger.propertiesDialog.buildParentOptionbtns(parentFrame,btnContainer);
 	}
 };
 
-//打开菜单的方法
-mvcmerger.styleoption.open = function(openbtn){
-	var view = openbtn.data("frame");
-	//表单唯一
-	if(jQuery.type(mvcmerger.styleoption.openedOptionDialog) == 'object'){
-		mvcmerger.styleoption.openedOptionDialog.remove();
-	}
-	
-	mvcmerger.styleoption.openedOptionDialog = mvcmerger.styleoption.optionDialog.clone();
-	
-	//是横向layout还是纵向,还是tab?也可能哪个也不是:all false
-	var isH = view.hasClass('jc-view-layout-frame-horizontal') ? true : null;
-	var isV = view.hasClass('jc-view-layout-frame-vertical') ? true : null;
-	var isT = view.hasClass('jc-view-layout-frame-tab') ? true : null;
-	
-	//只有layout才有type属性
-	if(!isH  && !isV && !isT){
-		mvcmerger.styleoption.openedOptionDialog.find('.styleoption_type').closest('li').remove();
-	}
-	
-	view.append(mvcmerger.styleoption.openedOptionDialog);
-	
-	//保存事件
-	mvcmerger.styleoption.save = function(){
-		var style  = {};
-		if(jQuery.type(view.data("properties")) != "object"){
-			view.data("properties",{});
-		}else{
-			style = view.data("properties");
-		}
-		var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
-		inputAndSelect.each(function(index){
-			if(jQuery(this).hasClass("styleoption_border_type_top")
-					|| jQuery(this).hasClass("styleoption_border_type_right")
-					|| jQuery(this).hasClass("styleoption_border_type_bottom")
-					|| jQuery(this).hasClass("styleoption_border_type_left")){
-				if(jQuery(this).val() != "none"){
-					style[jQuery(this).attr("class")] = jQuery(this).val();
-				}
-			}else if(jQuery(this).hasClass("styleoption_repeat")){
-				if(jQuery(this).val() != "repeat"){
-					style[jQuery(this).attr("class")] = jQuery.trim(jQuery(this).val());
-				}
-			}else if(jQuery.trim(jQuery(this).val()) != ""){
-				style[jQuery(this).attr("class")] = jQuery.trim(jQuery(this).val());
-			}
-		});
-		view.data( "properties" , style);
-		view.data( "attributes" , mvcmerger.getStyle(view));
-		view.attr("style",view.attr("style")+view.data( "attributes" )['style']);
-		console.log(view.data("properties"));
-		mvcmerger.styleoption.cancel();
-	};
-
-	//关闭菜单的方法
-	mvcmerger.styleoption.cancel = function(){
-		mvcmerger.styleoption.openedOptionDialog.remove();
-		delete mvcmerger.styleoption.openedOptionDialog;
-	};
-	
-	mvcmerger.styleoption.openedOptionDialog.dialog({
-		buttons:{
-			'取消':mvcmerger.styleoption.cancel
-			, '确定':mvcmerger.styleoption.save
-		}
-		, width:400
-		, height:600
-		, closeText: 'hide'
-		, closeOnEscape: true
-		, show: 'slide'
-	});
-	
-	//体现layout 的type类型到.styleoption_type中
-	if(isH && !view.data('type')){
-		view.data("type","h");
-	}else if(isV && !view.data('type')){
-		view.data("type","v");
-	}else if(isT && !view.data('type')){
-		view.data("type","tab");
-	}
-	
-	//取得view的数据(还原表单)
-	var inputAndSelect = mvcmerger.styleoption.openedOptionDialog.find("select,input,textarea");
-	console.log(view);
-	if(view.data("layout-properties")){
-		view.data("properties",view.data("layout-properties")['properties']);
-		view.removeData("layout-properties");
-	}
-	var styleForFrame = view.data("properties");
-	if(styleForFrame){
-		inputAndSelect.each(function(index){
-			jQuery(this).val(styleForFrame[jQuery(this).attr("class")]);
-		});
-	}
+mvcmerger.propertiesDialog.openDialog = function(openBtn){
+	var dialogForView = new mvcmerger.propertiesDialog(openbtn.data("frame"));
 };
 
 /* ----------------------------------- */
@@ -686,8 +621,8 @@ jquery(function(){
 		{
 			var aMvcmergerView = new mvcmerger.View(view) ;
 		}
-		//添加styleoption的打开按钮
-		mvcmerger.styleoption.optionbtn(jQuery(view));
+		//添加propertiesDialog的打开按钮
+		mvcmerger.propertiesDialog.dialogOpenBtn(jQuery(view));
 	}) ;
 	
 	// 操作界面
@@ -711,7 +646,6 @@ jquery(function(){
 				} ) ; 
 			}
 			, '保存':function(){
-				
 				var config = mvcmerger.exportConfig() ;
 				if( !config || !config.length )
 				{
@@ -828,6 +762,4 @@ jquery(function(){
 		// 清理多余的 layout frame
 		mvcmerger.LayoutFrame.clearAllInvalidLayoutFrame() ;
 	}) ;
-	
-	
 }) ;

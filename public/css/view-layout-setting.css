@@ -25,7 +25,7 @@
 	background-color: #E4F4FF;
 }
 
-.styleoption{
+.propertiesDialog{
 }
 
 .optionBtnsContainer{
@@ -34,7 +34,7 @@
 	left:3px;
 	top:3px;
 }
-.styleoption_open_btn{
+.propertiesDialog_open_btn{
 	width:20px;
 	height:20px;
 	margin:0 2px;
@@ -56,11 +56,11 @@
 .highLightFrame{
 	background:gray;
 }
-.styleoption_margin_u,.styleoption_margin_r,.styleoption_margin_b,.styleoption_margin_l,
-.styleoption_padding_r ,.styleoption_padding_l , .styleoption_padding_u,.styleoption_padding_b,
-.styleoption_border_top,.styleoption_border_left,.styleoption_border_right,.styleoption_border_bottom,
-.styleoption_border_color_top,.styleoption_border_color_left,.styleoption_border_color_right,.styleoption_border_color_bottom
+.propertiesDialog_margin_u,.propertiesDialog_margin_r,.propertiesDialog_margin_b,.propertiesDialog_margin_l,
+.propertiesDialog_padding_r ,.propertiesDialog_padding_l , .propertiesDialog_padding_u,.propertiesDialog_padding_b,
+.propertiesDialog_border_top,.propertiesDialog_border_left,.propertiesDialog_border_right,.propertiesDialog_border_bottom,
+.propertiesDialog_border_color_top,.propertiesDialog_border_color_left,.propertiesDialog_border_color_right,.propertiesDialog_border_color_bottom
 {
-	width:35px;
+	width:45px;
 }
 
