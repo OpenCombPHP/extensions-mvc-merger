@@ -10,7 +10,7 @@
 	font-weight:bold;
 }
 .structBrowser_left{
-	width:100px;
+	width:200px;
 	height:100%;
 	overflow: auto;
 	float:left;
@@ -208,6 +208,7 @@ jQuery(function(){
 		jQuery(".folder").removeClass("selectClass");
 		that.addClass("selectClass");
 		jQuery("#classname").val(that.data("class"));
+		console.log(that.data("name"));
 		jQuery("#name").val(that.data("name"));
 		jQuery("#args").val(that.data("params"));
 		jQuery("#title").val(that.data("title"));
