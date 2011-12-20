@@ -1,0 +1,53 @@
+<lib name="jquery" />
+
+<h2>模板编织</h2>
+
+
+<p>
+在任意网页启动”模板编织“后，会列出该网页用到的所有模板文件及其结构。你可以在在模板文件中找到一个”对像“，在这个对像上”编织“进一段模板代码。
+</p>
+<br />
+
+<div>
+	<input type='text' id='url' style="width:600px" />
+	<button onclick="locate()">打开网页</button>
+	<button onclick="layout()">启动模板编织</button>
+	<a id='lnk-open-new-window' href="javascript:void" target='_blank'>在新窗口打开</a>
+</div>
+
+<iframe id="iframe-browser" src='?=index' width='100%' height='400px' onload="onIFrameLoad()"></iframe>
+
+
+<script>
+function locate (sUrl)
+{
+	var sUrl = jquery('#url').val() ;
+	jquery('#iframe-browser').get(0).contentWindow.location = sUrl ;
+}
+function layout()
+{
+	var sUrl = attachQuery(jquery('#iframe-browser').get(0).contentWindow.location.toString()) ;
+	jquery('#iframe-browser').get(0).contentWindow.location = sUrl ;
+}
+function attachQuery(sUrl)
+{
+	if(sUrl.search('\\?')<0)
+	{
+		sUrl+= '?' ;
+	}
+	if(sUrl.search('mvcmerger_ui_browser')<0)
+	{
+		sUrl+= '&mvcmerger_ui_browser=1' ;
+	}
+	
+	return sUrl ;
+}
+
+function onIFrameLoad ()
+{
+	var sUrl = jquery('#iframe-browser').get(0).contentWindow.location.toString() ;
+
+	jquery('#url').val(sUrl) ;
+	jquery('#lnk-open-new-window').attr('href',attachQuery(sUrl)) ;
+}
+</script>

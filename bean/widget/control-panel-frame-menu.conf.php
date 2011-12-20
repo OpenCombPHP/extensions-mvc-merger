@@ -23,8 +23,8 @@ return array(
 					) ,
 					array(
 							'title'=>'模板编织' ,
-							//'link' => '?c=org.opencomb.mvcmerger.merger.TemplateWeaver' ,
-							//'query' => 'c=org.opencomb.mvcmerger.merger.TemplateWeaver' ,
+							'link' => '?c=org.opencomb.mvcmerger.merger.UITemplateWeave' ,
+							'query' => 'c=org.opencomb.mvcmerger.merger.UITemplateWeave' ,
 					) ,
 					array(
 							'title'=>'视图布局' ,
