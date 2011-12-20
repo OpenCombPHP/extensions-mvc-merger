@@ -1,1 +1,53 @@
-xxxxxxxxxxx
+<lib name="jquery" />
+
+<h2>视图布局</h2>
+
+
+<p>
+你可以对蜂巢系统中任意网页进行视图布局设定。
+</p>
+<br />
+
+<div>
+	<input type='text' id='url' style="width:600px" />
+	<button onclick="locate()">打开网页</button>
+	<button onclick="layout()">开始视图布局</button>
+	<a id='lnk-open-new-window' href="javascript:void" target='_blank'>在新窗口打开</a>
+</div>
+
+<iframe id="iframe-browser" src='?=index' width='100%' height='400px' onload="onIFrameLoad()"></iframe>
+
+
+<script>
+function locate (sUrl)
+{
+	var sUrl = jquery('#url').val() ;
+	jquery('#iframe-browser').get(0).contentWindow.location = sUrl ;
+}
+function layout()
+{
+	var sUrl = attachQuery(jquery('#iframe-browser').get(0).contentWindow.location.toString()) ;
+	jquery('#iframe-browser').get(0).contentWindow.location = sUrl ;
+}
+function attachQuery(sUrl)
+{
+	if(sUrl.search('\\?')<0)
+	{
+		sUrl+= '?' ;
+	}
+	if(sUrl.search('mvcmerger_layout_setting')<0)
+	{
+		sUrl+= '&mvcmerger_layout_setting=1' ;
+	}
+	
+	return sUrl ;
+}
+
+function onIFrameLoad ()
+{
+	var sUrl = jquery('#iframe-browser').get(0).contentWindow.location.toString() ;
+
+	jquery('#url').val(sUrl) ;
+	jquery('#lnk-open-new-window').attr('href',attachQuery(sUrl)) ;
+}
+</script>
