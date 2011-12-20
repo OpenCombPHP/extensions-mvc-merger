@@ -179,7 +179,7 @@ structBrowser.search = function(name){
 
 jQuery(function(){
 	structBrowser.getArgumentFromParent();
-	structBrowser.closeArgsAndTitleInputByNeed();
+	//structBrowser.closeArgsAndTitleInputByNeed();
 	
 	jQuery("#submitClassInfo").click(function(){
 		if(jQuery('.selectClass').length == 0){
@@ -188,10 +188,13 @@ jQuery(function(){
 		}
 		if(structBrowser.selectType == "handle"){
 			jQuery(structBrowser.parentObject.document).find("#source_controller_class").val(jQuery("#classname").val());
+			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_name']").val(jQuery("#name").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_params']").val(jQuery("#args").val());
-			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_comment']").val(jQuery("#title").val());
+			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");
 		}else{
 			jQuery(structBrowser.parentObject.document).find("#target_controller_class").val(jQuery("#classname").val());
+			jQuery(structBrowser.parentObject.document).find("input[name='target_controller_params']").val(jQuery("#args").val());
+			jQuery(structBrowser.parentObject.document).find("input[name='target_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");
 		}
 		window.close();
 	});
