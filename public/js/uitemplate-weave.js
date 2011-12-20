@@ -15,17 +15,19 @@ ub = {
 			+ '</div>'
 			+ '<div id="ub_right">'
 				+ '<div id="ub_edit">'
-					+ '<label>模板:<input id="ub_template" value="" disabled/></label></br>'
-					+ '<label>位置:<input id="ub_xpath" value="" disabled/></label></br>'
-					+ '<label>方式:<select id="ub_position">'
-						+ '<option value="insertBefore">insertBefore</option>'
-						+ '<option value="insertAfter">insertAfter</option>'
-						+ '<option value="appendBefore">appendBefore</option>'
-						+ '<option value="appendAfter">appendAfter</option>'
-						+ '<option value="replace">replace</option>'
+					+ '<label>在右边的模板结构中选择“编织目标”</label></br>'
+					+ '<label>目标模板:<input id="ub_template" value="" disabled/></label></br>'
+					+ '<label>目标位置:<input id="ub_xpath" value="" disabled/></label></br>'
+					+ '<label>织入方式:<select id="ub_position">'
+						+ '<option value="appendBefore">目标前面(appendBefore)</option>'
+						+ '<option value="appendAfter">目标后面(appendAfter)</option>'
+						+ '<option value="insertBefore">目标内部开头(insertBefore)</option>'
+						+ '<option value="insertAfter">目标内部结尾(insertAfter)</option>'
+						+ '<option value="replace">替换目标(replace)</option>'
 					+ '</select></label>'
 					+ '<textarea id="ub_source"></textarea></br>'
-					+ '<a id="ub_savebtn" href="#">织入</a>'
+					+ '<div id="ub_save_message" href="#"></div>'
+					+ '<button id="ub_savebtn" onclick="ub.saveSetting()">织入代码</button>'
 				+ '</div>'
 				+ '<div id="ub_merge_list">'
 					+ '<ul>'
@@ -69,9 +71,9 @@ ub = {
 			var arrKeys = sKey.split(':');
 			var templateName = sKey;
 			if(arrKeys.length == 2){
-				templateName = arrKeys[1]+"("+arrKeys[0]+")";
+				templateName = arrKeys[1]+"<span class='mvcmerger_template_namespace'>("+arrKeys[0]+")</span>";
 			}
-			var aLi = jQuery("<li><span>"+templateName+"</span></li>");
+			var aLi = jQuery("<li><span>模板："+templateName+"</span></li>");
 			aLi.append(ub.initChildrenTagList(aTemplate['children']));
 			jQuery("#ub_template_list>ul").append(aLi);
 		});
@@ -213,6 +215,30 @@ ub = {
 		var dom = jQuery("*[xpath='"+tag.attr('tagxpath')+"']");
 		dom.addClass("highlight");
 		setTimeout(function(){dom.removeClass("highlight")} , sec*1000);
+	},
+	saveSetting:function() {
+		
+		jquery('#ub_save_message').html('正在保存 ... ...') ;
+		
+		jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostTemplateWeave&only_msg_queue=1&act=save',{
+			data: {
+				template: jquery('#ub_template').val()
+				, xpath: jquery('#ub_xpath').val()
+				, position: jquery('#ub_position').val()
+				, source: jquery('#ub_source').val()
+			}
+			, type: 'POST'
+			, complete: function(jqXHR, textStatus){
+				if(textStatus=='success')
+				{
+					jquery('#ub_save_message').html(jqXHR.responseText) ;
+				}
+				else
+				{
+					jquery('#ub_save_message').html('保存操作遇到网络错误。') ;
+				}
+			}
+		} ) ;
 	},
 	//*********end 选择tag按钮**********
 	
