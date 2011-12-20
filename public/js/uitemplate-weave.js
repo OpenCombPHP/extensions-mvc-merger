@@ -75,6 +75,7 @@ ub = {
 			}
 			var aLi = jQuery("<li><span>模板："+templateName+"</span></li>");
 			aLi.append(ub.initChildrenTagList(aTemplate['children']));
+			aLi.data('templateNameAndNameSpace',sKey);
 			jQuery("#ub_template_list>ul").append(aLi);
 		});
 		jQuery("#ub_template_list>ul").treeview({collapsed: true});
@@ -107,7 +108,7 @@ ub = {
 	
 	//**************点中tag后 编辑属性**************
 	sentTagInfoToEditForm:function(tag){
-		jQuery('#ub_template').val(tag.parents("li:last").find("span:first").text());
+		jQuery('#ub_template').val(tag.parents("li:last").data('templateNameAndNameSpace'));
 		jQuery('#ub_xpath').val(tag.data("data")['xpath']);
 	},
 	clearEditForm:function(){
