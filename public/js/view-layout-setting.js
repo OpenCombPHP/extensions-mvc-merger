@@ -717,10 +717,12 @@ jquery(function(){
 				"<span id='mvc_merger-view_layout_setting_controlPanel_messages'></span><br/>" +
 				"<label><input name='save_type' type='radio' value='current'/>仅当前网页</label><br/>" +
 				"<label><input name='save_type' type='radio' value='type'/>所有类型网页</label><br/>" +
-				"<label><input name='save_type' type='radio' value='special'/>指定条件</label>" +
+				"<label><input id='save_option_special' name='save_type' type='radio' value='special'/>指定条件</label>" +
 				"<input type='text' value=''/><br/>" +
 			"</div>"
 			) ;
+	jQuery('#save_option_special').val(window.location.search);
+	
 	jquery('#mvc_merger-view_layout_setting_controlPanel').dialog({
 		buttons:{
 			'清理设置':function(){
