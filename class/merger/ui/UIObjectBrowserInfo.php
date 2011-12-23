@@ -1,8 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger\ui ;
 
+use org\jecat\framework\ui\xhtml\weave\PatchSlotPath;
 use org\jecat\framework\ui\xhtml\Text;
-
 use org\jecat\framework\ui\IObject;
 use org\jecat\framework\ui\xhtml\AttributeValue;
 use org\jecat\framework\ui\xhtml\Attributes;
@@ -20,11 +20,14 @@ class UIObjectBrowserInfo implements IInterpreter
 		$sTemplate = $aObjectContainer->ns().':'.$aObjectContainer->templateName() ;
 		$sTemplateEsc = addslashes($sTemplate) ;
 		
-		// xpath
+		// 反射 xpath 
+		PatchSlotPath::reflectXPath($aObjectContainer) ;
+		
+		// output struct
 		$sStructJson = "<script>\r\n" ;
 		$sStructJson.= "if(typeof(__uitemplates)=='undefined'){ var __uitemplates = {} ;}\r\n" ;
 		$sStructJson.= "__uitemplates[\"{$sTemplateEsc}\"] = " ;
-		$sStructJson.= $this->buildUIObjectXPath($aObjectContainer,0) ;
+		$sStructJson.= $this->buildUIObjectXPath($aObjectContainer) ;
 		$sStructJson.= "\r\n</script>\r\n" ;
 		
 		// ----------------------
@@ -46,7 +49,7 @@ class UIObjectBrowserInfo implements IInterpreter
 		$aObjectContainer->add( new Text(0,0,0,$sStructJson) ) ;
 	}
 	
-	public function buildUIObjectXPath(IObject $aObject,$nIdx=0,$nIndent=0)
+	public function buildUIObjectXPath(IObject $aObject,$nIndent=0)
 	{
 		$sIndent = str_repeat("\t",$nIndent) ;
 		$sStructJson = "{\r\n" ;
@@ -54,7 +57,7 @@ class UIObjectBrowserInfo implements IInterpreter
 		
 		if( $aObject instanceof Node )
 		{
-			$sXPath = $this->parentNodeXPath($aObject) . '/' . strtolower($aObject->tagName()) . '@' . $nIdx ;
+			$sXPath = $aObject->properties()->get('xpath') ;
 			$aObject->attributes()->add( AttributeValue::createInstance('xpath',$sXPath) ) ;
 		
 			$sStructJson.= "{$sIndent}	, tag:'".$aObject->tagName()."'\r\n" ;
@@ -63,11 +66,11 @@ class UIObjectBrowserInfo implements IInterpreter
 		
 		$sStructJson.= "{$sIndent}	, children:[" ;
 		$arrChildJsons = array() ;
-		foreach($aObject->iterator() as $nChildIdx=>$aChildObject)
+		foreach($aObject->iterator() as $aChildObject)
 		{
 			if( $aChildObject instanceof Node )
 			{
-				$arrChildJsons[] = $this->buildUIObjectXPath($aChildObject,$nChildIdx,$nIndent+1) ;
+				$arrChildJsons[] = $this->buildUIObjectXPath($aChildObject,$nIndent+1) ;
 			}
 		}
 		$sStructJson.= implode(",\r\n{$sIndent}\t",$arrChildJsons)."]\r\n" ;

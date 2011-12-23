@@ -1,8 +1,11 @@
 <?php 
 namespace org\opencomb\mvcmerger ;
 
+use org\jecat\framework\fs\FSIterator;
+use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\ui\xhtml\weave\WeaveManager;
+use org\opencomb\mvcmerger\merger\UITemplateWeave;
 use org\opencomb\mvcmerger\merger\ui\UIObjectBrowserInfo;
-
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\opencomb\mvcmerger\struct\ui\filter\UILinkHrefFilter;
 use org\jecat\framework\lang\aop\AOP;
@@ -22,10 +25,35 @@ class MvcMerger extends Extension
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerMerge') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ViewLayoutSetting') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser') ;
+		
+		// 模板编织
+		$this->setupTemplateWeaver() ;
+	}
+	
+	private function setupTemplateWeaver()
+	{
+		$aWeaveMgr = WeaveManager::singleton() ;
+		foreach($this->setting()->key("/merge/uiweave",true)->keyIterator() as $aNsKey)
+		{
+			$sNamespace = $aNsKey->name() ;
+			foreach($aNsKey->keyIterator() as $aTemplateKey)
+			{
+				$sTemplate = $aTemplateKey->name() ;
+				$arrAllPatchs = $aTemplateKey->item('arrPatchs',array()) ;
+
+				foreach($arrAllPatchs as $sXPath=>$arrPatchList)
+				{
+					foreach($arrPatchList as $arrPatch)
+					{
+						$aWeaveMgr->registerCode( $sNamespace.':'.$sTemplate, $sXPath, $arrPatch[1], $arrPatch[0] ) ;
+					}
+				}
+			}
+		}
 	}
 
 	public function active()
-	{
+	{		
 		// for MVC Browser ---------
 		if(Request::singleton()->bool('mvcmerger_browser'))
 		{
@@ -33,7 +61,7 @@ class MvcMerger extends Extension
 			UILinkHrefFilter::setupUiFilter(UIFactory::singleton()) ;
 			UILinkHrefFilter::setupUiFilter(MvcUIFactory::singleton()) ;
 		}
-		
+
 		// for UI Object Browser ---------
 		if(Request::singleton()->bool('mvcmerger_ui_browser'))
 		{
@@ -59,5 +87,23 @@ class MvcMerger extends Extension
 		{
 			$aClassFile->delete() ;
 		}
-	} 
+	}
+	static public function clearTemplateCompiled($sTemplate,$sNamespace)
+	{
+		$aSrcMgr = MvcUIFactory::singleton()->sourceFileManager() ;
+		
+		if( !$aFolder = FileSystem::singleton()->findFolder($aSrcMgr->compiledFolderPath()) )
+		{
+			return false ;
+		}
+		foreach($aFolder->iterator(FSIterator::FOLDER) as $sFolderName)
+		{
+			$sCompiledPath = $sFolderName . '/' .$sNamespace . '/' . $sTemplate . '.php' ;
+			if( $aCompiled=$aFolder->findFile($sCompiledPath) )
+			{
+				$aCompiled->delete() ;
+			}
+		}
+		
+	}
 }
