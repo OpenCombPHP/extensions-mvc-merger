@@ -238,6 +238,13 @@ class ViewLayoutSetting
 					return ;
 				}
 			}
+			else
+			{
+				if( !($aLayoutFrame instanceof ViewLayoutFrame) )
+				{
+					return ;
+				}
+			}
 		}
 		else
 		{
