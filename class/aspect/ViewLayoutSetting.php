@@ -153,16 +153,18 @@ class ViewLayoutSetting
 	 * @pointcut
 	 */
 	public function pointcutDisplayMainView()
-	{		
+	{	
 		$arrJointPoints = array() ;
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		
-		// for 视图布局
-		foreach(array_keys($aSetting->item('/merge/view_layout','controllers',array())) as $sControllerClass)
-		{
-			$arrJointPoints[] = new JointPointMethodDefine($sControllerClass,'displayMainView')  ;
+		$aKey = $aSetting->key('/merge/view_layout');
+		if($aKey){
+			// for 视图布局
+			foreach($aKey->itemIterator() as $aSubKey)
+			{
+				$sSubKey = str_replace('\\','.',$aSubKey->name());
+				$arrJointPoints[] = new JointPointMethodDefine($sSubKey,'displayMainView')  ;
+			}
 		}
-		
 		return $arrJointPoints ;
 	}
 	
@@ -182,7 +184,7 @@ class ViewLayoutSetting
 		$sControllerClass = get_class($aController) ;
 		
 		// for 视图布局
-		$arrControllers = $aSetting->item('/merge/view_layout','controllers',array()) ;
+		$arrControllers = $aSetting->item('/merge/view_layout','layout',array()) ;
 		if( !empty($arrControllers[$sControllerClass]) )
 		{
 			$sLayoutConfigCode = '' ;

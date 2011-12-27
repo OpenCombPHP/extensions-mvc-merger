@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\jecat\framework\util\DataSrc;
+
 use org\opencomb\platform\Platform;
 
 use org\opencomb\platform\system\PlatformFactory;
@@ -25,13 +27,13 @@ class PostViewLayoutSetting extends ControlPanel
 			$this->createMessage(Message::error,"缺少参数 controller") ;
 			return ;
 		}
-		
+		$sClassName = str_replace('\\','.',$this->params['controller']);
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrLayoutControllers = $aSetting->item('/merge/view_layout','controllers',array()) ;
+		$arrLayoutControllers = $aSetting->item('/merge/view_layout/'.$sClassName,'layout',array()) ;
 		
 		unset($arrLayoutControllers[$this->params['controller']]) ;
 		
-		$aSetting->setItem('/merge/view_layout','controllers',$arrLayoutControllers) ;
+		$aSetting->setItem('/merge/view_layout/'.$sClassName,'layout',$arrLayoutControllers) ;
 		
 		// 清理类编译缓存
 		MvcMerger::clearClassCompiled($this->params['controller']) ;
@@ -54,6 +56,11 @@ class PostViewLayoutSetting extends ControlPanel
 			$this->createMessage(Message::error,"缺少参数 controller") ;
 			return ;
 		}
+		if( empty($this->params['saveType']) )
+		{
+			$this->createMessage(Message::error,"缺少参数 saveType") ;
+			return ;
+		}
 		
 		$arrConfig = json_decode($this->params['config'],true) ;
 		if(!$arrConfig)
@@ -61,12 +68,15 @@ class PostViewLayoutSetting extends ControlPanel
 			$this->createMessage(Message::error,"config 数据无效") ;
 			return ;
 		}
+		$sClassName = str_replace('\\','.',$this->params['controller']);
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrLayoutControllers = $aSetting->item('/merge/view_layout','controllers',array()) ;
 		
-		$arrLayoutControllers[$this->params['controller']] = $arrConfig ;
-		$aSetting->setItem('/merge/view_layout','controllers',$arrLayoutControllers) ;
+		if($this->params['saveType'] == 'type'){
+			$aSetting->setItem('/merge/view_layout/'.$sClassName,'*',$arrConfig) ;
+		}else{
+			$aSetting->setItem('/merge/view_layout/'.$sClassName,DataSrc::sortQuery($this->params['params']),$arrConfig) ;
+		}
 		
 		// 清理类编译缓存
 		MvcMerger::clearClassCompiled($this->params['controller']) ;

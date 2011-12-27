@@ -715,13 +715,30 @@ jquery(function(){
 	jquery(document.body).append(
 			"<div id='mvc_merger-view_layout_setting_controlPanel' title='视图布局'>" +
 				"<span id='mvc_merger-view_layout_setting_controlPanel_messages'></span><br/>" +
+				"<label><input name='save_type' type='radio' value='type' checked/>所有类型网页</label><br/>" +
 				"<label><input name='save_type' type='radio' value='current'/>仅当前网页</label><br/>" +
-				"<label><input name='save_type' type='radio' value='type'/>所有类型网页</label><br/>" +
-				"<label><input id='save_option_special' name='save_type' type='radio' value='special'/>指定条件</label>" +
-				"<input type='text' value=''/><br/>" +
+				"<label><input name='save_type' type='radio' value='special'/>指定条件</label>" +
+				"<input id='save_special_params' type='text' value=''/><br/>" +
 			"</div>"
 			) ;
-	jQuery('#save_option_special').val(window.location.search);
+	
+	jQuery('#save_special_params').val(getUrlPamars());  //?c=index&mvcmerger_layout_setting=1
+	function getUrlPamars(){
+		var arrSearch = window.location.search.split('?');
+		if(!jQuery.isArray(arrSearch)){
+			return '';
+		}
+		var arrUrlParams = arrSearch[1].split('&');
+		var arrUrlParamsResult= [];
+		for(var i = 0 ; i < arrUrlParams.length ; i++){
+			var arrOneParam = arrUrlParams[i].split('=');
+			if(arrOneParam[0] == 'c' || arrOneParam[0] == 'mvcmerger_layout_setting'){
+				continue;
+			}
+			arrUrlParamsResult.push(arrUrlParams[i]);
+		}
+		return arrUrlParamsResult.join('&');
+	}
 	
 	jquery('#mvc_merger-view_layout_setting_controlPanel').dialog({
 		buttons:{
@@ -751,10 +768,17 @@ jquery(function(){
 				
 				jquery('#mvc_merger-view_layout_setting_controlPanel_messages').html('正在保存视图布局的配置 ... ...') ;
 				
+				var saveType = jQuery('input:checked').val();
+				var specialParams = '';
+				if(saveType == 'special'){
+					specialParams = jQuery('#save_special_params').val();
+				}
 				jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&only_msg_queue=1&act=save',{
 					data:{
 						controller: currentControllerClass
 						, config: JSON.stringify(config)
+						, saveType: saveType
+						, params: specialParams ? specialParams : getUrlPamars()
 					}
 					, type: 'POST'
 					, complete: function(jqXHR, textStatus){
