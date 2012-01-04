@@ -6,6 +6,7 @@ mvcmerger.stopDragging = function() {
 	mvcmerger.draggingView = null ;
 	mvcmerger.droppingToView = null ;
 }
+mvcmerger.draggingMouseoverPos = {x:0,y:0} ;
 
 // 视图类 ------------------------
 mvcmerger.View = function(element)
@@ -23,11 +24,25 @@ mvcmerger.View.prototype.bindEvents = function()
 {
 	// 视图的鼠标效果
 	jquery(this.element).mouseover(function(e){
+
+		console.log('mouseover:'+this.id+' ('+e.pageX+','+e.pageY+')') ;
+		
 		// 先把所有其它的视图 mouseover 效果移除
-		jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
+		//jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
 		// 加上mouseover
-		jquery(this).addClass('mvc_merger-layout_settable_view_mouseover') ;
-		e.stopPropagation() ;
+		//jquery(this).addClass('mvc_merger-layout_settable_view_mouseover') ;
+		
+		// 正在进行拖拽操作
+		if(mvcmerger.draggingView)
+		{
+		}
+		
+		// 非拖拽操作触发的 mouseover
+		else
+		{
+			console.log('非拖拽操作触发的 mouseover') ;
+			e.stopPropagation() ;
+		}
 	}) ;
 	jquery(this.element).mouseleave(function(e){
 		jquery(this).removeClass('mvc_merger-layout_settable_view_mouseover') ;
@@ -38,7 +53,7 @@ mvcmerger.View.prototype.bindEvents = function()
 		zIndex: 1000
 		// , cursor: 'crosshair'
 		, cursorAt: { left:10, top:10 }
-		, distance: 10 // 拖动生效所需的 鼠标移动距离
+		, distance: 1 // 拖动生效所需的 鼠标移动距离
 		, start: function(event,ui) {
 
 			if( jquery(this).hasClass('mvcmerger-viewlayout') )
@@ -58,40 +73,28 @@ mvcmerger.View.prototype.bindEvents = function()
 				mvcmerger.View.obj(this).startDragging() ;
 			}
 		}
-		, drag: function(event,ui) {
-			jquery(this) ;
-		}
 	}) ;
 	jquery(this.element).droppable({
 		tolerance: 'pointer'
+		, greedy: true
 		//, hoverClass: 'mvc_merger-layout_settable_view_mouseover'
 		, over: function(event,ui) {
-			if( jquery(ui.draggable).hasClass('mvcmerger-viewlayout') )
-			{
-				// 先把所有其它的视图 mouseover 效果移除
-				jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
-				jquery(this).addClass('mvc_merger-layout_settable_view_mouseover') ;
-				
-//				console.log('dropping:over '+this.id) ;
-			}
+			mvcmerger.droppingToView = mvcmerger.View.obj(this) ;
+			console.log("droppable.over:"+this.id+' ('+window.event.pageX+','+window.event.pageY+')') ;
+			//event.originalEvent.originalEvent.stopPropagation() ;
+			//return false ;
+			//console.log(event) ;
 		}
-		, out: function(event,ui) {
-			if( jquery(ui.draggable).hasClass('mvcmerger-viewlayout') )
-			{
-				// 移除 mouseover 效果
-				jquery(this).removeClass('mvc_merger-layout_settable_view_mouseover') ;
-				
-//				console.log('dropping:out '+this.id) ;
-			}
-		}
+		//, activeClass: 'mvc_merger-layout_settable_view_mouseover'
+		//, hoverClass: 'mvc_merger-layout_settable_view_mouseover'
 		, drop: function(event,ui) {
 
 			if( jquery(ui.draggable).hasClass('mvcmerger-viewlayout') )
 			{
 				// 对保留 mouseover 效果的元素进行操作
-				mvcmerger.droppingToView = jquery('.mvc_merger-layout_settable_view_mouseover').data('view') ;
+				mvcmerger.draggingView = mvcmerger.View.obj(ui.draggable) ;
+				mvcmerger.droppingToView = mvcmerger.View.obj(this) ;
 				
-//				console.log('drop '+mvcmerger.droppingToView.element.id) ;
 				jquery('#mvc_merger-layout-dropping-buttons-box').css('left',event.originalEvent.pageX) ;
 				jquery('#mvc_merger-layout-dropping-buttons-box').css('top',event.originalEvent.pageY) ;
 				jquery('#mvc_merger-layout-dropping-buttons-box').show() ;

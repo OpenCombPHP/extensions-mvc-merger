@@ -157,11 +157,12 @@ class ViewLayoutSetting
 		$arrJointPoints = array() ;
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$aKey = $aSetting->key('/merge/view_layout');
-		if($aKey){
+		if($aKey)
+		{
 			// for 视图布局
-			foreach($aKey->itemIterator() as $aSubKey)
+			foreach($aKey->keyIterator() as $aSubKey)
 			{
-				$sSubKey = str_replace('\\','.',$aSubKey->name());
+				echo $sSubKey = str_replace('.','\\',$aSubKey->name());
 				$arrJointPoints[] = new JointPointMethodDefine($sSubKey,'displayMainView')  ;
 			}
 		}
@@ -184,28 +185,60 @@ class ViewLayoutSetting
 		$sControllerClass = get_class($aController) ;
 		
 		// for 视图布局
-		$arrControllers = $aSetting->item('/merge/view_layout','layout',array()) ;
-		if( !empty($arrControllers[$sControllerClass]) )
+		$sSubKey = str_replace('\\', '.', $sControllerClass) ;
+		if( !$aSettingKey = $aSetting->key('/merge/view_layout/'.$sSubKey) )
 		{
-			$sLayoutConfigCode = '' ;
-			if( $is_mvcmerger_layout_setting = $aController->params()->bool('mvcmerger_layout_setting') )
-			{			
-				$sLayoutConfigCode.= "\r\n<script>\r\n" ;
-			}
+			return ;
+		}
 		
-			// 重构视图布局结构
-			foreach ($arrControllers[$sControllerClass] as $arrFrame)
+		$bHasDefaultQeury = false ;
+		foreach($aSettingKey->itemIterator() as $sQuery)
+		{
+			if($sQuery=='*')
 			{
-				self::layout( $aMainView, $arrFrame, null, $sLayoutConfigCode ) ;
+				$bHasDefaultQeury = true ;
 			}
-			
-			if( $is_mvcmerger_layout_setting )
+			else
 			{
-				$sLayoutConfigCode.= "</script>\r\n" ;
-				$aController->properties()->set('__scriptLayoutConfig',$sLayoutConfigCode) ;
+				if( DataSrc::compare($aController->params(),$sQuery) )
+				{
+					self::applySetting($aController,$aMainView,$aSettingKey->item($sQuery)) ;
+					return ;
+				}
 			}
 		}
+		
+		if($bHasDefaultQeury)
+		{
+			self::applySetting($aController,$aMainView,$aSettingKey->item('*')) ;
+		}
 	}
+	
+	static public function applySetting(IController $aController,IView $aMainView,$arrSetting)
+	{
+		if( empty($arrSetting) )
+		{
+			return ;
+		}
+		$sLayoutConfigCode = '' ;
+		if( $is_mvcmerger_layout_setting = $aController->params()->bool('mvcmerger_layout_setting') )
+		{
+			$sLayoutConfigCode.= "\r\n<script>\r\n" ;
+		}
+		
+		// 重构视图布局结构
+		foreach ($arrSetting as $arrFrame)
+		{
+			self::layout( $aMainView, $arrFrame, null, $sLayoutConfigCode ) ;
+		}
+		
+		if( $is_mvcmerger_layout_setting )
+		{
+			$sLayoutConfigCode.= "</script>\r\n" ;
+			$aController->properties()->set('__scriptLayoutConfig',$sLayoutConfigCode) ;
+		}
+	}
+	
 	
 	/**
 	 * @advice after
