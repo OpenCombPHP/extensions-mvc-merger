@@ -9,7 +9,7 @@ use org\opencomb\coresystem\mvc\controller\Controller;
 class TestView extends Controller
 {
 	public function createBeanConfig()
-	{
+	{throw new Exception("",0,new Exception("")) ;
 		return array(
 				
 			'views' => array(

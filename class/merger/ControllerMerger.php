@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\platform\system\PlatformSerializer;
+
 use org\opencomb\mvcmerger\MvcMerger;
 
 use org\opencomb\platform\system\PlatformFactory;
@@ -75,7 +77,7 @@ class ControllerMerger extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['target_controller_class']) ;
 		
 		// 清理平台缓存
-		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
+		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton());
 	
 		$this->form->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
 	}
