@@ -8,30 +8,38 @@ ub = {
 				+ '</div>'
 			+ '</div>'
 			+ '<div id="ub_left">'
-				+ '<div id="ub_template_list">'
-					+ '<ul>'
-					+ '</ul>'
+				+ '<div id="ub_template_list" class="ztree">'
 				+ '</div>'
 			+ '</div>'
 			+ '<div id="ub_right">'
-				+ '<div id="ub_edit">'
-					+ '<label>在右边的模板结构中选择“编织目标”</label></br>'
-					+ '<label>目标模板:<input id="ub_template" value="" disabled/></label></br>'
-					+ '<label>目标位置:<input id="ub_xpath" value="" disabled/></label></br>'
-					+ '<label>织入方式:<select id="ub_position">'
-						+ '<option value="appendBefore">目标前面(appendBefore)</option>'
-						+ '<option value="appendAfter">目标后面(appendAfter)</option>'
-						+ '<option value="insertBefore">目标内部开头(insertBefore)</option>'
-						+ '<option value="insertAfter">目标内部结尾(insertAfter)</option>'
-						+ '<option value="replace">替换目标(replace)</option>'
-					+ '</select></label>'
-					+ '<textarea id="ub_source"></textarea></br>'
-					+ '<div id="ub_save_message" href="#"></div>'
-					+ '<button id="ub_savebtn" onclick="ub.saveSetting()">织入代码</button>'
-				+ '</div>'
-				+ '<div id="ub_merge_list">'
+				+ '<div id="tabs">'
 					+ '<ul>'
+						+ '<li><a href="#tabs-1">编织模板</a></li>'
+						+ '<li><a href="#tabs-2">补丁设置</a></li>'
 					+ '</ul>'
+					+ '<div id="tabs-1">'
+						+ '<div id="ub_edit">'
+							+ '<label>在右边的模板结构中选择“编织目标”</label></br>'
+							+ '<label>目标模板:<input id="ub_template" value="" disabled/></label></br>'
+							+ '<label>目标位置:<input id="ub_xpath" value="" disabled/></label></br>'
+							+ '<label>织入方式:<select id="ub_position">'
+								+ '<option value="appendBefore">目标前面(appendBefore)</option>'
+								+ '<option value="appendAfter">目标后面(appendAfter)</option>'
+								+ '<option value="insertBefore">目标内部开头(insertBefore)</option>'
+								+ '<option value="insertAfter">目标内部结尾(insertAfter)</option>'
+								+ '<option value="replace">替换目标(replace)</option>'
+							+ '</select></label>'
+							+ '<textarea id="ub_source"></textarea></br>'
+							+ '<div id="ub_save_message" href="#"></div>'
+							+ '<button id="ub_savebtn" onclick="ub.saveSetting()">织入代码</button>'
+						+ '</div>'
+					+ '</div>'
+					+ '<div id="tabs-2">'
+						+ '<div id="ub_merge_list">'
+							+ '<ul>'
+							+ '</ul>'
+						+ '</div>'
+					+ '</div>'
 				+ '</div>'
 			+ '</div>'
 		+ '</div>'	
@@ -64,33 +72,61 @@ ub = {
 			, closeOnEscape: true
 			, show: 'slide'
 		});
+		jQuery( "#tabs" ).tabs({ selected: 0});
 	},
 	//************初始化tag列表************
 	initTagList:function(){
+		var arrZtreeData = [];
 		jQuery.each(ub.aTemplates ,function(sKey,aTemplate){
 			var arrKeys = sKey.split(':');
+			
+			//TODO 这里隐藏了织入的模板,应该显示出来让用户有递归编织的机会,但是目前没有完成
+			if(arrKeys[1] == ''){
+				return;
+			}
+			
 			var templateName = sKey;
 			if(arrKeys.length == 2){
-				templateName = arrKeys[1]+"<span class='mvcmerger_template_namespace'>("+arrKeys[0]+")</span>";
+				templateName = "模板：" + arrKeys[1] + "(" + arrKeys[0] + ")" ;
+//				templateName = arrKeys[1]+"<span class='mvcmerger_template_namespace'>("+arrKeys[0]+")</span>";
 			}
-			var aLi = jQuery("<li><span>模板："+templateName+"</span></li>");
-			aLi.append(ub.initChildrenTagList(aTemplate['children']));
-			aLi.data('templateNameAndNameSpace',sKey);
-			jQuery("#ub_template_list>ul").append(aLi);
+			var aTreeTop = {name: templateName, childs: []};
+			arrZtreeData.push(aTreeTop);
+			aTreeTop['childs'] = ub.initChildrenTagList(aTemplate['children']) ;
+			aTreeTop['templateNameAndNameSpace'] = sKey ;
+//			var aLi = jQuery("<li><span>模板："+templateName+"</span></li>");
+//			aLi.append(ub.initChildrenTagList(aTemplate['children']));
+//			aLi.data('templateNameAndNameSpace',sKey);
+//			jQuery("#ub_template_list>ul").append(aLi);
 		});
-		jQuery("#ub_template_list>ul").treeview({collapsed: true});
+		//初始化树
+		jQuery.fn.zTree.init(jQuery("#ub_template_list"), {
+			view: {
+				expandSpeed: 0
+			},
+			check:{
+				enable:true,
+				chkboxType:{ "Y": "", "N": "" }
+			},
+		}, arrZtreeData);
+		
+		var aRunningZTree = jQuery.fn.zTree.getZTreeObj("classTree");
+		
+//		jQuery("#ub_template_list").treeview({collapsed: true});
 	},
 	initChildrenTagList:function(aTags){
 		if(aTags.length <= 0){
 			return;
 		}
-		var aUl = jQuery("<ul></ul>");
+		var arrChilds = [];
 		jQuery.each(aTags,function(nKey,aTag){
-			var aLi = jQuery("<li><span>&lt;"+aTag['tag']+"&gt;</span></li>");
-			aLi.append(ub.initChildrenTagList(aTag['children']));
-			aUl.append(aLi.attr('tagxpath',aTag['xpath']).data("data",aTag));
+			var aLi = {name: "<"+aTag['tag']+">" , childs:[]};
+			aLi['childs'] = ub.initChildrenTagList(aTag['children']);
+			aLi['tagxpath'] = aTag['xpath'];
+			aLi['data'] = aTag;
+			arrChilds.push(aLi);
 		});
-		return aUl;
+		return arrChilds;
 	},
 	//************end 初始化tag列表************
 	
