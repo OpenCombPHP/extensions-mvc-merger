@@ -104,10 +104,9 @@ ub = {
 			view: {
 				expandSpeed: 0
 			},
-			check:{
-				enable:true,
-				chkboxType:{ "Y": "", "N": "" }
-			},
+			callback: {
+				onClick: ub.selectTag
+			}
 		}, arrZtreeData);
 		
 		var aRunningZTree = jQuery.fn.zTree.getZTreeObj("classTree");
@@ -131,31 +130,27 @@ ub = {
 	//************end 初始化tag列表************
 	
 	//**************选择tag列表中的元素**************
-	selectTag:function(e){
-		ub.highLightSelect(jQuery(this));
-		ub.sentTagInfoToEditForm(jQuery(this));
-		e.stopPropagation();
-	},
-	highLightSelect:function(tag){
-		jQuery('#ub_template_list ul,#ub_template_list li').removeClass("selectTag");
-		jQuery(tag).addClass("selectTag");
+	selectTag:function(event, treeId, treeNode){
+		ub.sentTagInfoToEditForm(treeNode);
+		event.stopPropagation();
 	},
 	//**************end 选择tag列表中的元素********
 	
 	//**************点中tag后 编辑属性**************
-	sentTagInfoToEditForm:function(tag){
-		jQuery('#ub_template').val(tag.parents("li:last").data('templateNameAndNameSpace'));
-		jQuery('#ub_xpath').val(tag.data("data")['xpath']);
+	sentTagInfoToEditForm:function(treeNode){
+		ub.clearEditForm();
+		jQuery('#ub_template').val(treeNode.templateNameAndNameSpace);
+		jQuery('#ub_xpath').val(treeNode.data.xpath);
 	},
 	clearEditForm:function(){
-		jQuery('#ub_edit').find('input textarea').val('');
+		jQuery('#ub_edit').find('input,textarea').val('');
 	},
 	//**************end 点中tag后 编辑属性**************
 	
 	//绑定事件
 	bindEvent:function(){
 		//选择标签
-		jQuery('#ub_template_list>ul>li').find("ul , li").click(ub.selectTag);
+//		jQuery('#ub_template_list>ul>li').find("ul , li").click(ub.selectTag);
 		
 		//选取dom模式开关
 		jQuery("#ub_select_dom").click(function(){
