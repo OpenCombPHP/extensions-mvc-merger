@@ -1,5 +1,6 @@
 //uibrowser
 ub = {
+	aRunningZTree:null,
 	aTemplates:null,
 	aDialog:jQuery(
 		'<div id="ub_dialog" title="模板编织">'
@@ -88,16 +89,11 @@ ub = {
 			var templateName = sKey;
 			if(arrKeys.length == 2){
 				templateName = "模板：" + arrKeys[1] + "(" + arrKeys[0] + ")" ;
-//				templateName = arrKeys[1]+"<span class='mvcmerger_template_namespace'>("+arrKeys[0]+")</span>";
 			}
 			var aTreeTop = {name: templateName, childs: []};
 			arrZtreeData.push(aTreeTop);
 			aTreeTop['childs'] = ub.initChildrenTagList(aTemplate['children']) ;
 			aTreeTop['templateNameAndNameSpace'] = sKey ;
-//			var aLi = jQuery("<li><span>模板："+templateName+"</span></li>");
-//			aLi.append(ub.initChildrenTagList(aTemplate['children']));
-//			aLi.data('templateNameAndNameSpace',sKey);
-//			jQuery("#ub_template_list>ul").append(aLi);
 		});
 		//初始化树
 		jQuery.fn.zTree.init(jQuery("#ub_template_list"), {
@@ -109,9 +105,7 @@ ub = {
 			}
 		}, arrZtreeData);
 		
-		var aRunningZTree = jQuery.fn.zTree.getZTreeObj("classTree");
-		
-//		jQuery("#ub_template_list").treeview({collapsed: true});
+		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("classTree");
 	},
 	initChildrenTagList:function(aTags){
 		if(aTags.length <= 0){
@@ -131,6 +125,9 @@ ub = {
 	
 	//**************选择tag列表中的元素**************
 	selectTag:function(event, treeId, treeNode){
+		if(!treeNode.getParentNode()){
+			return;
+		}
 		ub.sentTagInfoToEditForm(treeNode);
 		event.stopPropagation();
 	},
@@ -139,7 +136,16 @@ ub = {
 	//**************点中tag后 编辑属性**************
 	sentTagInfoToEditForm:function(treeNode){
 		ub.clearEditForm();
-		jQuery('#ub_template').val(treeNode.templateNameAndNameSpace);
+		var parentNode = treeNode.getParentNode();
+		do{
+			parentNodeTemp = parentNode.getParentNode();
+			if(!parentNodeTemp){
+				break;
+			}else{
+				parentNode = parentNodeTemp;
+			}
+		}while(true);
+		jQuery('#ub_template').val(parentNode.templateNameAndNameSpace);
 		jQuery('#ub_xpath').val(treeNode.data.xpath);
 	},
 	clearEditForm:function(){
@@ -149,9 +155,6 @@ ub = {
 	
 	//绑定事件
 	bindEvent:function(){
-		//选择标签
-//		jQuery('#ub_template_list>ul>li').find("ul , li").click(ub.selectTag);
-		
 		//选取dom模式开关
 		jQuery("#ub_select_dom").click(function(){
 			if(jQuery(this).hasClass("toolBtnSelect")){
