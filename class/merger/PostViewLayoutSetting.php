@@ -1,14 +1,11 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\platform\system\PlatformSerializer;
 use org\jecat\framework\util\DataSrc;
-
 use org\opencomb\platform\Platform;
-
 use org\opencomb\platform\system\PlatformFactory;
-
 use org\opencomb\mvcmerger\MvcMerger;
-
 use org\jecat\framework\system\Application;
 use org\jecat\framework\message\Message;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
@@ -39,7 +36,7 @@ class PostViewLayoutSetting extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['controller']) ;
 		
 		// 清理平台缓存
-		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
+		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
 		
 		$this->createMessage(Message::success,"视图设置已经清空。") ;
 	}
@@ -82,7 +79,7 @@ class PostViewLayoutSetting extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['controller']) ;
 		
 		// 清理平台缓存
-		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
+		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
 		
 		$this->createMessage(Message::success,"配置已经保存。") ;
 	}

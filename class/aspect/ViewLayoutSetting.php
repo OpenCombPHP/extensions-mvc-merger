@@ -162,7 +162,7 @@ class ViewLayoutSetting
 			// for 视图布局
 			foreach($aKey->keyIterator() as $aSubKey)
 			{
-				echo $sSubKey = str_replace('.','\\',$aSubKey->name());
+				$sSubKey = str_replace('.','\\',$aSubKey->name());
 				$arrJointPoints[] = new JointPointMethodDefine($sSubKey,'displayMainView')  ;
 			}
 		}

@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\platform\system\PlatformSerializer;
+
 use org\opencomb\platform\ext\Extension;
 
 use org\opencomb\platform\Platform;
@@ -63,7 +65,7 @@ class PostTemplateWeave extends ControlPanel
 		$this->createMessage(Message::success,"配置已经保存。") ;
 		
 		// 清理系统缓存
-		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
+		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
 		
 		// 清理模板编译缓存
 		MvcMerger::clearTemplateCompiled($sTemplate,$sNamespace) ;
