@@ -101,7 +101,7 @@ ub = {
 				onClick: ub.selectTag
 			}
 		}, arrZtreeData);
-		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("classTree");
+		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("ub_template_list");
 	},
 	initChildrenTagList:function(aTags){
 		if(aTags.length <= 0){
@@ -159,25 +159,17 @@ ub = {
 				ub.openSelectDomMode();
 			}
 		});
-		
-		//选取tag按钮
-//		jQuery("#showDom",ub.aTagToolBtns).click(function(){
-//			ub.highLightDomForSec(jQuery(this).closest("li"),4);
-//			return false;
-//		});
-//		jQuery("#ub_template_list>li li").hover(function(){
-//			ub.addTagToolBtns(jQuery(this));
-//		},function(){
-//			ub.removeTagToolBtns(jQuery(this));
-//		});
 	},
 	addHoverDom:function(treeId, treeNode){
+		if(!treeNode.getParentNode()){
+			return;
+		}
 		var aObj = jQuery("#" + treeNode.tId);
 		if (jQuery("#showDom_"+treeNode.tId).length>0) return;
 		var editStr = "<button type='button' id='showDom_" +treeNode.tId
-						+ "' title='"+treeNode.name+"' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/patch.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>"
+						+ "' title='编织模板' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/patch.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>"
 						+ "<button type='button' id='showConf_" +treeNode.tId
-						+ "' title='"+treeNode.name+"' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>";
+						+ "' title='显示DOM节点' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>";
 		aObj.append(editStr);
 		jQuery("#showDom_"+treeNode.tId).on("click", function(){});
 		jQuery("#showConf_"+treeNode.tId).on("click", function(){
@@ -207,17 +199,14 @@ ub = {
 		var dom = jQuery(e.target);
 		dom.removeClass("highlight");
 		var xpath = dom.attr("xpath");
-		var treeview = jQuery("#ub_template_list .treeview");
 		//收起已经展开的tag
 		ub.closeTree();
 		//需要显示的节点
-		var target = treeview.find("li[tagxpath='"+xpath+"']").first();
+		var target = ub.aRunningZTree.getNodesByParamFuzzy("tagxpath" , xpath , null);
 		//展开父节点
-		target.parents('.expandable').find("span:first").click();
+		ub.aRunningZTree.expandNode(target[0],true,false,true);
 		//选中目标节点
-		target.click();
-		//滚动到用户可见
-		ub.scrollToSeeTag(target,jQuery("#ub_left"));
+		ub.aRunningZTree.selectNode(target[0]);
 		//关闭选择模式
 		ub.closeSelectDomMode();
 		e.stopPropagation();
@@ -238,8 +227,7 @@ ub = {
 		e.stopPropagation();
 	},
 	closeTree:function(){
-		jQuery("#ub_collapseAll").click();
-		jQuery("#ub_treecontrol ul").css({display:"none"});
+		ub.aRunningZTree.expandAll(false);
 	},
 	//*********end 选择dom模式**********
 	
