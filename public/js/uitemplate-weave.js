@@ -45,11 +45,6 @@ ub = {
 			+ '</div>'
 		+ '</div>'	
 	),
-	aTagToolBtns:jQuery(
-		'<div id="tagToolbtns">'
-			+ '<a id="showDom" href="#">显</a>'
-		+ '</div>'
-	),
 	//初始化
 	init:function(){
 		//加载模板信息
@@ -98,13 +93,14 @@ ub = {
 		//初始化树
 		jQuery.fn.zTree.init(jQuery("#ub_template_list"), {
 			view: {
-				expandSpeed: 0
+				addHoverDom : ub.addHoverDom ,
+				removeHoverDom : ub.removeHoverDom ,
+				expandSpeed : 0
 			},
 			callback: {
 				onClick: ub.selectTag
 			}
 		}, arrZtreeData);
-		
 		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("classTree");
 	},
 	initChildrenTagList:function(aTags){
@@ -165,18 +161,33 @@ ub = {
 		});
 		
 		//选取tag按钮
-		jQuery("#showDom",ub.aTagToolBtns).click(function(){
-			ub.highLightDomForSec(jQuery(this).closest("li"),4);
-			return false;
-		});
-		jQuery("#ub_template_list .treeview li li").hover(function(){
-			ub.addTagToolBtns(jQuery(this));
-		},function(){
-			ub.removeTagToolBtns(jQuery(this));
-		});
-		
+//		jQuery("#showDom",ub.aTagToolBtns).click(function(){
+//			ub.highLightDomForSec(jQuery(this).closest("li"),4);
+//			return false;
+//		});
+//		jQuery("#ub_template_list>li li").hover(function(){
+//			ub.addTagToolBtns(jQuery(this));
+//		},function(){
+//			ub.removeTagToolBtns(jQuery(this));
+//		});
 	},
-	
+	addHoverDom:function(treeId, treeNode){
+		var aObj = jQuery("#" + treeNode.tId);
+		if (jQuery("#showDom_"+treeNode.tId).length>0) return;
+		var editStr = "<button type='button' id='showDom_" +treeNode.tId
+						+ "' title='"+treeNode.name+"' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/patch.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>"
+						+ "<button type='button' id='showConf_" +treeNode.tId
+						+ "' title='"+treeNode.name+"' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>";
+		aObj.append(editStr);
+		jQuery("#showDom_"+treeNode.tId).on("click", function(){});
+		jQuery("#showConf_"+treeNode.tId).on("click", function(){
+			ub.highLightDomForSec(treeNode,4);
+		});
+	},
+	removeHoverDom:function(treeId, treeNode){
+		jQuery("#showDom_"+treeNode.tId).off().remove();
+		jQuery("#showConf_"+treeNode.tId).off().remove();
+	},
 	//*********选择dom模式**********
 	openSelectDomMode:function(){
 		jQuery("#ub_select_dom").addClass("toolBtnSelect");
@@ -247,12 +258,11 @@ ub = {
 		container.scrollTop(dom.position().top-toHeight);
 	},
 	highLightDomForSec:function(tag,sec){
-		var dom = jQuery("*[xpath='"+tag.attr('tagxpath')+"']");
+		var dom = jQuery("*[xpath='"+tag.tagxpath+"']");
 		dom.addClass("highlight");
 		setTimeout(function(){dom.removeClass("highlight")} , sec*1000);
 	},
 	saveSetting:function() {
-		
 		jquery('#ub_save_message').html('正在保存 ... ...') ;
 		
 		jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostTemplateWeave&only_msg_queue=1&act=save',{
