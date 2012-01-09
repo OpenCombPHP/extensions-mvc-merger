@@ -170,7 +170,7 @@ ub = {
 						+ "' title='编织模板' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/patch.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>"
 						+ "<button type='button' id='showConf_" +treeNode.tId
 						+ "' title='显示DOM节点' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>";
-		aObj.append(editStr);
+		aObj.find('>a').after(editStr);
 		jQuery("#showDom_"+treeNode.tId).on("click", function(){});
 		jQuery("#showConf_"+treeNode.tId).on("click", function(){
 			ub.highLightDomForSec(treeNode,4);
