@@ -25,7 +25,7 @@ mvcmerger.View.prototype.bindEvents = function()
 	// 视图的鼠标效果
 	jquery(this.element).mouseover(function(e){
 
-		console.log('mouseover:'+this.id+' ('+e.pageX+','+e.pageY+')') ;
+		//console.log('mouseover:'+this.id+' ('+e.pageX+','+e.pageY+')') ;
 		
 		// 先把所有其它的视图 mouseover 效果移除
 		//jquery(".mvc_merger-layout_settable_view_mouseover").removeClass('mvc_merger-layout_settable_view_mouseover') ;
@@ -40,7 +40,7 @@ mvcmerger.View.prototype.bindEvents = function()
 		// 非拖拽操作触发的 mouseover
 		else
 		{
-			console.log('非拖拽操作触发的 mouseover') ;
+			//console.log('非拖拽操作触发的 mouseover') ;
 			e.stopPropagation() ;
 		}
 	}) ;
@@ -80,7 +80,7 @@ mvcmerger.View.prototype.bindEvents = function()
 		//, hoverClass: 'mvc_merger-layout_settable_view_mouseover'
 		, over: function(event,ui) {
 			mvcmerger.droppingToView = mvcmerger.View.obj(this) ;
-			console.log("droppable.over:"+this.id+' ('+window.event.pageX+','+window.event.pageY+')') ;
+			//console.log("droppable.over:"+this.id+' ('+window.event.pageX+','+window.event.pageY+')') ;
 			//event.originalEvent.originalEvent.stopPropagation() ;
 			//return false ;
 			//console.log(event) ;
