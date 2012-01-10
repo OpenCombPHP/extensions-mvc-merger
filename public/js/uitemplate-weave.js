@@ -43,7 +43,7 @@ ub = {
 					+ '</div>'
 				+ '</div>'
 			+ '</div>'
-		+ '</div>'	
+		+ '</div>'
 	),
 	//初始化
 	init:function(){
@@ -85,9 +85,9 @@ ub = {
 			if(arrKeys.length == 2){
 				templateName = "模板：" + arrKeys[1] + "(" + arrKeys[0] + ")" ;
 			}
-			var aTreeTop = {name: templateName, childs: []};
+			var aTreeTop = {name: templateName, children: []};
 			arrZtreeData.push(aTreeTop);
-			aTreeTop['childs'] = ub.initChildrenTagList(aTemplate['children']) ;
+			aTreeTop['children'] = ub.initChildrenTagList(aTemplate['children']) ;
 			aTreeTop['templateNameAndNameSpace'] = sKey ;
 		});
 		//初始化树
@@ -107,15 +107,15 @@ ub = {
 		if(aTags.length <= 0){
 			return;
 		}
-		var arrChilds = [];
+		var arrChildren = [];
 		jQuery.each(aTags,function(nKey,aTag){
-			var aLi = {name: "<"+aTag['tag']+">" , childs:[]};
-			aLi['childs'] = ub.initChildrenTagList(aTag['children']);
+			var aLi = {name: "<"+aTag['tag']+">" , children:[]};
+			aLi['children'] = ub.initChildrenTagList(aTag['children']);
 			aLi['tagxpath'] = aTag['xpath'];
 			aLi['data'] = aTag;
-			arrChilds.push(aLi);
+			arrChildren.push(aLi);
 		});
-		return arrChilds;
+		return arrChildren;
 	},
 	//************end 初始化tag列表************
 	
