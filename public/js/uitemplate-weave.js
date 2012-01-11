@@ -37,8 +37,7 @@ ub = {
 					+ '</div>'
 					+ '<div id="tabs-2">'
 						+ '<div id="ub_merge_list">'
-							+ '<ul>'
-							+ '</ul>'
+							+ '<img src="extensions/mvc-merger/0.1/public/image/loading.gif" width=250 height=180>'
 						+ '</div>'
 					+ '</div>'
 				+ '</div>'
@@ -132,6 +131,14 @@ ub = {
 	//**************点中tag后 编辑属性**************
 	sentTagInfoToEditForm:function(treeNode){
 		ub.clearEditForm();
+		var parentNode = ub.getTopNode(treeNode);
+		jQuery('#ub_template').val(parentNode.templateNameAndNameSpace);
+		jQuery('#ub_xpath').val(treeNode.data.xpath);
+	},
+	clearEditForm:function(){
+		jQuery('#ub_edit').find('input,textarea').val('');
+	},
+	getTopNode:function(treeNode){
 		var parentNode = treeNode.getParentNode();
 		do{
 			parentNodeTemp = parentNode.getParentNode();
@@ -141,11 +148,6 @@ ub = {
 				parentNode = parentNodeTemp;
 			}
 		}while(true);
-		jQuery('#ub_template').val(parentNode.templateNameAndNameSpace);
-		jQuery('#ub_xpath').val(treeNode.data.xpath);
-	},
-	clearEditForm:function(){
-		jQuery('#ub_edit').find('input,textarea').val('');
 	},
 	//**************end 点中tag后 编辑属性**************
 	
@@ -171,7 +173,31 @@ ub = {
 						+ "<button type='button' id='showConf_" +treeNode.tId
 						+ "' title='显示DOM节点' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>";
 		aObj.find('>a').after(editStr);
-		jQuery("#showDom_"+treeNode.tId).on("click", function(){});
+		jQuery("#showDom_"+treeNode.tId).on("click", function(){
+			//切换tab
+			jQuery( "#tabs" ).tabs( "select" , 1);
+			var parentNode = ub.getTopNode(treeNode);
+			var templateNamespace = parentNode.templateNameAndNameSpace;
+			var xpath = treeNode.data.xpath;
+			//个tab页面填充信息
+			console.log("namespace::"+tempalteNamespace);
+			console.log("xpath::"+xpath);
+			jQuery.ajax( {
+				uil: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList'
+				, data:{namespace:templateNamespace , xpath : xpath}
+				, type: 'POST'
+				, complete: function(jqXHR, textStatus){
+					if(textStatus=='success')
+					{
+						jquery('#ub_save_message').html(jqXHR.responseText) ;
+					}
+					else
+					{
+						jquery('#ub_save_message').html('保存操作遇到网络错误。') ;
+					}
+				}
+			});
+		});
 		jQuery("#showConf_"+treeNode.tId).on("click", function(){
 			ub.highLightDomForSec(treeNode,4);
 		});
