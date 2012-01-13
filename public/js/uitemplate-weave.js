@@ -37,7 +37,6 @@ ub = {
 					+ '</div>'
 					+ '<div id="tabs-2">'
 						+ '<div id="ub_merge_list">'
-							+ '<img src="extensions/mvc-merger/0.1/public/image/loading.gif" width=250 height=180>'
 						+ '</div>'
 					+ '</div>'
 				+ '</div>'
@@ -148,6 +147,7 @@ ub = {
 				parentNode = parentNodeTemp;
 			}
 		}while(true);
+		return parentNode;
 	},
 	//**************end 点中tag后 编辑属性**************
 	
@@ -180,21 +180,17 @@ ub = {
 			var templateNamespace = parentNode.templateNameAndNameSpace;
 			var xpath = treeNode.data.xpath;
 			//个tab页面填充信息
-			console.log("namespace::"+tempalteNamespace);
-			console.log("xpath::"+xpath);
 			jQuery.ajax( {
-				uil: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList'
-				, data:{namespace:templateNamespace , xpath : xpath}
+				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&only_msg_queue=1&act=list'
+				, data:{ namespace:templateNamespace , xpath : xpath }
 				, type: 'POST'
-				, complete: function(jqXHR, textStatus){
-					if(textStatus=='success')
-					{
-						jquery('#ub_save_message').html(jqXHR.responseText) ;
-					}
-					else
-					{
-						jquery('#ub_save_message').html('保存操作遇到网络错误。') ;
-					}
+				, dataType: 'json'
+				, beforeSend: function (){
+					//loading图标
+					jQuery('#ub_merge_list').html('<img src="extensions/mvc-merger/0.1/public/image/loading.gif" width=250 height=180>');
+				}
+				, success: function(data){
+					ub.buildWeaveList(data) ;
 				}
 			});
 		});
@@ -202,6 +198,39 @@ ub = {
 			ub.highLightDomForSec(treeNode,4);
 		});
 	},
+	buildWeaveList:function(json){
+		jQuery('#ub_merge_list').html(
+			'<ul></ul>'
+		);
+		for(var b in json){
+			jQuery('#ub_merge_list').find('ul').first().append(
+						'<li><div style="position:relative;"><h4 style="margin-left:16px;">'+json[b][0]+'</h4>'
+						+'<a class="delPatch" style="display:block;position:absolute;top:0;left:0;" href="#"><img src="extensions/mvc-merger/0.1/public/image/delete.png"/></a></div>'
+						+'<div>'+ub.html_encode(json[b][1])+'</div></li>'
+					);
+		}
+		jQuery('#ub_merge_list').find('.delPatch').click(function(){
+			if(!confirm('删除这个编织节点吗?')){
+				return false;
+			}
+			//删除编织节点
+			
+			return false;
+		});
+	},
+	html_encode: function (str)   
+	{   
+	  var s = "";   
+	  if (str.length == 0) return "";   
+	  s = str.replace(/&/g, "&gt;");   
+	  s = s.replace(/</g, "&lt;");   
+	  s = s.replace(/>/g, "&gt;");   
+	  s = s.replace(/ /g, "&nbsp;");   
+	  s = s.replace(/\'/g, "&#39;");   
+	  s = s.replace(/\"/g, "&quot;");   
+	  s = s.replace(/\n/g, "<br>");   
+	  return s;   
+	} ,
 	removeHoverDom:function(treeId, treeNode){
 		jQuery("#showDom_"+treeNode.tId).off().remove();
 		jQuery("#showConf_"+treeNode.tId).off().remove();
