@@ -181,7 +181,7 @@ ub = {
 			var xpath = treeNode.data.xpath;
 			//个tab页面填充信息
 			jQuery.ajax( {
-				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&only_msg_queue=1&act=list'
+				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=list'
 				, data:{ namespace:templateNamespace , xpath : xpath }
 				, type: 'POST'
 				, dataType: 'json'
@@ -308,7 +308,7 @@ ub = {
 	saveSetting:function() {
 		jquery('#ub_save_message').html('正在保存 ... ...') ;
 		
-		jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostTemplateWeave&only_msg_queue=1&act=save',{
+		jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostTemplateWeave&rspn=msgqueue&act=save',{
 			data: {
 				template: jquery('#ub_template').val()
 				, xpath: jquery('#ub_xpath').val()

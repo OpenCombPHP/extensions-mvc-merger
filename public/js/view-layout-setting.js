@@ -748,7 +748,7 @@ jquery(function(){
 			'清理设置':function(){
 				jquery('#mvc_merger-view_layout_setting_controlPanel_messages').html('正在清理视图布局的配置 ... ...') ;
 				
-				jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&only_msg_queue=1&act=clear&controller='+currentControllerClass,{
+				jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=clear&controller='+currentControllerClass,{
 					complete: function(jqXHR, textStatus){
 						if(textStatus=='success')
 						{
@@ -776,7 +776,7 @@ jquery(function(){
 				if(saveType == 'special'){
 					specialParams = jQuery('#save_special_params').val();
 				}
-				jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&only_msg_queue=1&act=save',{
+				jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=save',{
 					data:{
 						controller: currentControllerClass
 						, config: JSON.stringify(config)
