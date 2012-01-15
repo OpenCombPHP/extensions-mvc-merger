@@ -182,15 +182,26 @@ ub = {
 			//个tab页面填充信息
 			jQuery.ajax( {
 				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=list'
-				, data:{ namespace:templateNamespace , xpath : xpath }
+				, data:{ 
+					namespace:templateNamespace
+					,xpath : xpath
+				}
 				, type: 'POST'
 				, dataType: 'json'
 				, beforeSend: function (){
 					//loading图标
 					jQuery('#ub_merge_list').html('<img src="extensions/mvc-merger/0.1/public/image/loading.gif" width=250 height=180>');
 				}
-				, success: function(data){
-					ub.buildWeaveList(data) ;
+				, complete: function(jqXHR, textStatus){
+					if(textStatus=='success')
+					{
+						ub.buildWeaveList(jQuery.parseJSON(jqXHR.responseText) );
+					}
+					else
+					{
+						jQuery('#ub_merge_list').html('没有节点');
+						return;
+					}
 				}
 			});
 		});
@@ -213,8 +224,33 @@ ub = {
 			if(!confirm('删除这个编织节点吗?')){
 				return false;
 			}
+			var position = jQuery(this).prev().text();
+			var source = jQuery(this).parent('div').next().text();
 			//删除编织节点
-			
+			jQuery.ajax( {
+				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=delete'
+				, data:{ 
+					template: jquery('#ub_template').val()
+					, xpath: jquery('#ub_xpath').val()
+					, position: position
+					, source: source
+				}
+				, type: 'POST'
+				, dataType: 'json'
+				, complete: function(jqXHR, textStatus){
+					if(textStatus=='success')
+					{
+						if(confirm('删除节点成功,需要刷新页面才能看到删除后效果,点击\"确定\"刷新页面,点击\"取消\"停留在现在的页面')){
+							window.location.reload();
+						}
+					}
+					else
+					{
+						alert('删除节点失败');
+						return;
+					}
+				}
+			});
 			return false;
 		});
 	},

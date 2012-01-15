@@ -24,28 +24,58 @@ class TemplateWeaveList extends ControlPanel
 		list($sNamespace,$sTemplate) = explode(':',$this->params['namespace']) ;
 		$sXpath = $this->params->get('xpath');
 		
-		// 保存配置
+		// 提取配置
 		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
 		$arrPatchs = $aKey->item('arrPatchs',array()) ;
 		if(!array_key_exists($sXpath,$arrPatchs)){
 			return;
 		}else{
 			echo json_encode($arrPatchs[$sXpath]);
-			exit;
+			exit(1);
 		}
+	}
+	
+	protected function actionDelete(){
+		if(!$this->params->has('template') OR !$this->params->has('xpath') OR !$this->params->has('position') OR !$this->params->has('source')){
+			return;
+		}
+		list($sNamespace,$sTemplate) = explode(':',$this->params['template']) ;
+		$sXpath = $this->params->get('xpath');
+		$sPostion =  $this->params->get('position');
+		$sSource =  $this->params->get('source');
 		
-// 		$arrPatchs = $aKey->item('arrPatchs',array()) ;
-// 		$arrPatchs[$this->params['xpath']][] = array(
-// 				$this->params['position'] , 
-// 				$this->params['source'] , 
-// 		) ;
-// 		$aKey['arrPatchs'] = $arrPatchs ;
+		// 在setting中搜寻配置
+		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
+		$arrPatchs = $aKey->item('arrPatchs',array()) ;
 		
-		// 清理系统缓存
-// 		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
-		
-// 		// 清理模板编译缓存
-// 		MvcMerger::clearTemplateCompiled($sTemplate,$sNamespace) ;
+		if(!array_key_exists($sXpath,$arrPatchs)){
+			return;
+		}else{
+			$arrPatchKeys = array_keys($arrPatchs[$sXpath]);
+			
+			foreach($arrPatchKeys as $nKey){
+				if($arrPatchs[$sXpath][$nKey][0] == $sPostion && $arrPatchs[$sXpath][$nKey][1] == $sSource){
+					unset($arrPatchs[$sXpath][$nKey]);
+				}
+			}
+			
+			if(count($arrPatchs[$sXpath])==0){
+				unset($arrPatchs[$sXpath]);
+				if(count($arrPatchs)==0){
+					Extension::flyweight('mvc-merger')->setting()->deleteKey("/merge/uiweave/{$sNamespace}/{$sTemplate}") ;
+				}
+			}else{
+				$aKey['arrPatchs'] = $arrPatchs ;
+			}
+			
+			//清理系统缓存
+			PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
+				
+			// 清理模板编译缓存
+			MvcMerger::clearTemplateCompiled($sTemplate,$sNamespace) ;
+			
+			exit(1);
+		}
 	}
 }
 ?>
