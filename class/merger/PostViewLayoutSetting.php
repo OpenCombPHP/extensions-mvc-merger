@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\platform\ext\Extension;
 use org\opencomb\platform\system\PlatformSerializer;
 use org\jecat\framework\util\DataSrc;
 use org\opencomb\platform\Platform;
@@ -25,12 +26,8 @@ class PostViewLayoutSetting extends ControlPanel
 			return ;
 		}
 		$sClassName = str_replace('\\','.',$this->params['controller']);
-		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrLayoutControllers = $aSetting->item('/merge/view_layout/'.$sClassName,'layout',array()) ;
-		
-		unset($arrLayoutControllers[$this->params['controller']]) ;
-		
-		$aSetting->setItem('/merge/view_layout/'.$sClassName,'layout',$arrLayoutControllers) ;
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		$arrLayoutControllers = $aSetting->deleteKey('/merge/view_layout/'.$sClassName) ;
 		
 		// 清理类编译缓存
 		MvcMerger::clearClassCompiled($this->params['controller']) ;
