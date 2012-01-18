@@ -9,7 +9,7 @@ use org\opencomb\mvcmerger\merger\ui\UIObjectBrowserInfo;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\opencomb\mvcmerger\struct\ui\filter\UILinkHrefFilter;
 use org\jecat\framework\lang\aop\AOP;
-use org\jecat\framework\system\Request;
+use org\jecat\framework\mvc\controller\Request;
 use org\opencomb\platform\ext\Extension ;
 use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ; 
