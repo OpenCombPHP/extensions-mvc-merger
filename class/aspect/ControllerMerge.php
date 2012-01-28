@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
+use org\opencomb\platform\ext\Extension;
+
 use org\jecat\framework\util\DataSrc;
 use org\jecat\framework\system\Application;
 use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
@@ -9,14 +11,21 @@ class ControllerMerge
 {
 	/**
 	 * @pointcut
+	 * @exmaple /配置/读取item
+	 * @forwiki /配置
 	 */
 	public function pointcutInit()
 	{
 		$arrJointPoints = array() ;
-		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		
-		// for 控制器融合		
-		foreach(array_keys($aSetting->item('/merge/controller','controllers',array())) as $sControllerClass)
+		// 扩展 mvc-merger 的 Setting对象
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		// 取得 item 数据
+		$arrMergeSetting = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrControllerClasses = array_keys($arrMergeSetting) ;
+		
+		// for 控制器融合
+		foreach($arrControllerClasses as $sControllerClass)
 		{
 			$arrJointPoints[] = new JointPointMethodDefine($sControllerClass,'init')  ;
 		}
@@ -30,7 +39,8 @@ class ControllerMerge
 	 */
 	public function init()
 	{
-		$aSetting = \org\jecat\framework\system\Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
+		// 扩展 mvc-merger 的 Setting对象
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
 		
 		// for 控制器融合
 		$arrControllers = $aSetting->item('/merge/controller','controller',array()) ;
