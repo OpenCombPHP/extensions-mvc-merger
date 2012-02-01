@@ -9,19 +9,16 @@ use org\opencomb\coresystem\mvc\controller\Controller;
 class TestView extends Controller
 {
 	public function createBeanConfig()
-	{throw new Exception("",0,new Exception("")) ;
+	{
 		return array(
 				
-			'views' => array(
-				'A'=>array('template'=>'TestView.html') ,		
-				'B'=>array('template'=>'TestView.html') ,		
-				'C'=>array('template'=>'TestView.html') ,		
-				'D'=>array('template'=>'TestView.html') ,		
-				'e'=>array('template'=>'TestView.html') ,		
-				'f'=>array('template'=>'TestView.html') ,		
-				'g'=>array('template'=>'TestView.html') ,		
-				'h'=>array('template'=>'TestView.html') ,		
-			)
+			'frame' => array(
+				'frameview' => array(
+					'template'=>'TestFrame.html'
+				) ,	
+			) ,
+			
+			'view' => array( 'template'=>'TestView.html' ) ,
 		) ;
 	}
 }

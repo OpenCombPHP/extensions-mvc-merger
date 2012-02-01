@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\mvcmerger\struct ;
 
+use org\jecat\framework\mvc\controller\Controller;
 use org\jecat\framework\mvc\controller\WebpageFrame;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 
@@ -15,8 +16,10 @@ class StructBrowser extends ControlPanel
 		) ;
 	}
 
-	public function createFrame()
-	{ return new WebpageFrame() ; }
+    protected function defaultFrameConfig()
+    {
+    	return Controller::defaultFrameConfig() ;
+    }
 
 	public function process()
 	{}
