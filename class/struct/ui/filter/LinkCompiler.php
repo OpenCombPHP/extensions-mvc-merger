@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\mvcmerger\struct\ui\filter ;
 
+use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\ui\xhtml\Node;
 use org\jecat\framework\lang\Assert;
 use org\jecat\framework\ui\ICompiler;
@@ -11,7 +12,7 @@ use org\jecat\framework\ui\xhtml\compiler\NodeCompiler;
 
 class LinkCompiler extends NodeCompiler
 {
-	public function compile(IObject $aObject, TargetCodeOutputStream $aDev, CompilerManager $aCompilerManager)
+	public function compile(IObject $aObject, ObjectContainer $aObjectContainer, TargetCodeOutputStream $aDev, CompilerManager $aCompilerManager)
 	{
 		Assert::type ( "org\\jecat\\framework\\ui\\xhtml\\Node", $aObject, 'aObject' );
 
@@ -26,7 +27,7 @@ class LinkCompiler extends NodeCompiler
 			$aAttributes->add($aHrefLink) ;
 		}
 		
-		return parent::compile($aObject,$aDev,$aCompilerManager) ;
+		return parent::compile($aObject,$aObjectContainer,$aDev,$aCompilerManager) ;
 	}
 }
 
