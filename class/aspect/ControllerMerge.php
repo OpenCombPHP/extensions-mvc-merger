@@ -40,7 +40,7 @@ class ControllerMerge
 	public function init()
 	{
 		// 扩展 mvc-merger 的 Setting对象
-		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		$aSetting = \org\opencomb\platform\ext\Extension::flyweight('mvc-merger')->setting() ;
 		
 		// for 控制器融合
 		$arrControllers = $aSetting->item('/merge/controller','controller',array()) ;
