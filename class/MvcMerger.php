@@ -1,6 +1,9 @@
 <?php 
 namespace org\opencomb\mvcmerger ;
 
+use org\jecat\framework\ui\xhtml\Node;
+use org\jecat\framework\ui\xhtml\weave\Patch;
+use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\fs\FSIterator;
 use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
@@ -30,9 +33,30 @@ class MvcMerger extends Extension
 		$this->setupTemplateWeaver() ;
 	}
 	
+	/**
+	 * @example /MVC模型/视图/模板编织/应用补丁
+	 * @forwiki /MVC模型/视图/模板编织
+	 */
 	private function setupTemplateWeaver()
 	{
 		$aWeaveMgr = WeaveManager::singleton() ;
+		
+		/**
+		 * @example /MVC模型/视图/模板编织/过滤器补丁
+		 * @example /MVC模型/视图/模板编织/改变Html节点类型[1.注册补丁]
+		 * 
+		 * 在 coresystem 扩展的模板 FrontFrame.html 中的第1个<div>下的第1个<p> 上注册一个 filter 类型的补丁
+		 */
+		{
+		$aWeaveMgr->registerFilter( 'coresystem:FrontFrame.html', "/div@0/p@0", array(__CLASS__,'filterForFrontFrameMergeIcon') ) ;
+		}
+		
+		// 将 mvc-merger 扩展提供的模板文件 merger/MergeIconMenu.html 做为补丁，应用到  coresystem 扩展的模板 FrontFrame.html 中的第一个<div>下的第一个<p> 内部的末尾
+		$aWeaveMgr->registerTemplate( 'coresystem:FrontFrame.html', "/div@0/p@0", 'mvc-merger:merger/MergeIconMenu.html', Patch::insertAfter ) ;
+		
+		
+		// -------------------------------------------------
+		// 根据 setting 中保存的信息，应用模板补丁
 		foreach($this->setting()->key("/merge/uiweave",true)->keyIterator() as $aNsKey)
 		{
 			$sNamespace = $aNsKey->name() ;
@@ -51,6 +75,18 @@ class MvcMerger extends Extension
 			}
 		}
 	}
+	
+	/**
+	 * @example /MVC模型/视图/模板编织/改变Html节点类型[2.实现补丁]
+	 * 
+	 * 将传入的模板上的 node对像，改成 div
+	 */
+	static public function filterForFrontFrameMergeIcon(ObjectContainer $aObjectContainer,Node $aTargetObject)
+	{
+		// 将 这个 node 标签改为 div
+		$aTargetObject->headTag()->setName('div') ;		// 头部标签
+		$aTargetObject->tailTag()->setName('div') ;		// 尾部标签
+	} 
 
 	public function active()
 	{		
