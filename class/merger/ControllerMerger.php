@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\coresystem\auth\Id;
+
 use org\opencomb\platform\system\PlatformSerializer;
 
 use org\opencomb\mvcmerger\MvcMerger;
@@ -18,15 +20,25 @@ class ControllerMerger extends ControlPanel
 	public function createBeanConfig()
 	{
 		return array(
+			'title'=>'模板编制',
 			'view:form' => array(
 					'template' => 'ControllerMerger.html' ,
 					'class' => 'form' ,
 			) ,
+			'perms' => array(
+				// 权限类型的许可
+				'perm.purview'=>array(
+					'namespace'=>'coresystem',
+					'name' => Id::PLATFORM_ADMIN,
+				) ,
+			) ,
 		) ;
 	}
-	
+
 	public function process()
 	{
+		$this->checkPermissions('您没有使用这个功能的权限,无法继续浏览',array()) ;
+		
 		$this->doActions() ;
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;

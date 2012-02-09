@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\coresystem\auth\PurviewQuery;
+use org\opencomb\coresystem\auth\Id;
 use org\opencomb\platform\ext\Extension;
 use org\opencomb\platform\system\PlatformSerializer;
 use org\jecat\framework\util\DataSrc;
@@ -15,6 +17,9 @@ class PostViewLayoutSetting extends ControlPanel
 {
 	public function process()
 	{
+		//权限
+		$this->requirePurview(Id::PLATFORM_ADMIN,'coresystem',PurviewQuery::ignore,'您没有这个功能的权限,无法继续浏览');
+		
 		$this->doActions() ;
 	}
 	
