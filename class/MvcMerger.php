@@ -5,7 +5,7 @@ use org\jecat\framework\ui\xhtml\Node;
 use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\fs\FSIterator;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\mvcmerger\merger\UITemplateWeave;
 use org\opencomb\mvcmerger\merger\ui\UIObjectBrowserInfo;
@@ -128,7 +128,7 @@ class MvcMerger extends Extension
 	{
 		$aSrcMgr = MvcUIFactory::singleton()->sourceFileManager() ;
 		
-		if( !$aFolder = FileSystem::singleton()->findFolder($aSrcMgr->compiledFolderPath()) )
+		if( !$aFolder = Folder::singleton()->findFolder($aSrcMgr->compiledFolderPath()) )
 		{
 			return false ;
 		}
