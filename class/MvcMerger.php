@@ -1,6 +1,8 @@
 <?php 
 namespace org\opencomb\mvcmerger ;
 
+use org\jecat\framework\lang\oop\Package;
+
 use org\jecat\framework\ui\xhtml\Node;
 use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\ObjectContainer;
@@ -119,7 +121,7 @@ class MvcMerger extends Extension
 	
 	static public function clearClassCompiled($sClass)
 	{
-		if( $aClassFile = ClassLoader::singleton()->searchClass($sClass,ClassLoader::SEARCH_COMPILED) )
+		if( $aClassFile = ClassLoader::singleton()->searchClass($sClass,Package::compiled) )
 		{
 			$aClassFile->delete() ;
 		}
