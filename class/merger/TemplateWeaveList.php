@@ -1,9 +1,9 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
-use org\opencomb\platform\system\PlatformSerializer;
+use org\opencomb\platform\service\ServiceSerializer;
 use org\opencomb\platform\ext\Extension;
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 use org\opencomb\platform\system\PlatformFactory;
 use org\opencomb\mvcmerger\MvcMerger;
 use org\jecat\framework\system\Application;
@@ -69,7 +69,7 @@ class TemplateWeaveList extends ControlPanel
 			}
 			
 			//清理系统缓存
-			PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
+			ServiceSerializer::singleton()->clearRestoreCache(Service::singleton()) ;
 				
 			// 清理模板编译缓存
 			MvcMerger::clearTemplateCompiled($sTemplate,$sNamespace) ;

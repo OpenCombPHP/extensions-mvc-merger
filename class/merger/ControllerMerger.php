@@ -3,12 +3,12 @@ namespace org\opencomb\mvcmerger\merger ;
 
 use org\opencomb\coresystem\auth\Id;
 
-use org\opencomb\platform\system\PlatformSerializer;
+use org\opencomb\platform\service\ServiceSerializer;
 
 use org\opencomb\mvcmerger\MvcMerger;
 
 use org\opencomb\platform\system\PlatformFactory;
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Type;
 use org\jecat\framework\message\Message;
@@ -89,7 +89,7 @@ class ControllerMerger extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['target_controller_class']) ;
 		
 		// 清理平台缓存
-		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton());
+		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton());
 	
 		$this->form->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
 	}
@@ -145,7 +145,7 @@ class ControllerMerger extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['target']) ;
 		
 		// 清理平台缓存
-		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
+		PlatformFactory::singleton()->clearRestoreCache(Service::singleton()) ;
 	}
 }
 

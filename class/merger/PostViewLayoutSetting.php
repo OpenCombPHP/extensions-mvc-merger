@@ -4,9 +4,9 @@ namespace org\opencomb\mvcmerger\merger ;
 use org\opencomb\coresystem\auth\PurviewQuery;
 use org\opencomb\coresystem\auth\Id;
 use org\opencomb\platform\ext\Extension;
-use org\opencomb\platform\system\PlatformSerializer;
+use org\opencomb\platform\service\ServiceSerializer;
 use org\jecat\framework\util\DataSrc;
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 use org\opencomb\platform\system\PlatformFactory;
 use org\opencomb\mvcmerger\MvcMerger;
 use org\jecat\framework\system\Application;
@@ -38,7 +38,7 @@ class PostViewLayoutSetting extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['controller']) ;
 		
 		// 清理平台缓存
-		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
+		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton()) ;
 		
 		$this->createMessage(Message::success,"视图设置已经清空。") ;
 	}
@@ -81,7 +81,7 @@ class PostViewLayoutSetting extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['controller']) ;
 		
 		// 清理平台缓存
-		PlatformSerializer::singleton()->clearRestoreCache(Platform::singleton()) ;
+		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton()) ;
 		
 		$this->createMessage(Message::success,"配置已经保存。") ;
 	}
