@@ -2,7 +2,6 @@
 namespace org\opencomb\mvcmerger ;
 
 use org\jecat\framework\lang\oop\Package;
-
 use org\jecat\framework\ui\xhtml\Node;
 use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\ObjectContainer;
@@ -18,6 +17,8 @@ use org\jecat\framework\mvc\controller\Request;
 use org\opencomb\platform\ext\Extension ;
 use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ; 
+use org\opencomb\platform\mvc\view\widget\Menu;
+use org\jecat\framework\bean\BeanFactory;
 
 class MvcMerger extends Extension 
 {
@@ -26,13 +27,21 @@ class MvcMerger extends Extension
 	 */
 	public function load()
 	{
-		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControlPanelFrameAspect') ;
+		// 注册 AOP Aspect 
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerMerge') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ViewLayoutSetting') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser') ;
 		
 		// 模板编织
 		$this->setupTemplateWeaver() ;
+
+		// 注册菜单build事件的处理函数
+		Menu::registerBuildHandle(
+				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+				, 'frameView'
+				, 'mainMenu'
+				, array(__CLASS__,'buildControlPanelMenu')
+		) ;
 	}
 	
 	/**
@@ -143,5 +152,15 @@ class MvcMerger extends Extension
 			}
 		}
 		
+	}
+
+	static public function buildControlPanelMenu(array & $arrConfig)
+	{
+		// 合并配置数组，增加菜单
+		BeanFactory::mergeConfig(
+				$arrConfig
+				, BeanFactory::singleton()->findConfig('widget/control-panel-frame-menu', 'mvc-merger')
+		) ;
+	
 	}
 }

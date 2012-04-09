@@ -257,12 +257,12 @@ class ViewLayoutSetting
 		if( !empty($arrFrameConfig['xpath']) )
 		{
 			// 在指定位置创建 frame
-			if( !$aLayoutFrame = View::xpath($aRootView,$arrFrameConfig['xpath']) )
+			if( !$aLayoutFrame = View::findXPath($aRootView,$arrFrameConfig['xpath']) )
 			{
 				$sFrameName = basename($arrFrameConfig['xpath']) ;
 				$sFrameParentPath = dirname($arrFrameConfig['xpath']) ;
 				
-				if( $aParentFrame = View::xpath($aRootView,$sFrameParentPath) )
+				if( $aParentFrame = View::findXPath($aRootView,$sFrameParentPath) )
 				{			
 					$aLayoutFrame = new ViewLayoutFrame($arrFrameConfig['type'],$sFrameName) ;
 					$aParentFrame->add($aLayoutFrame,null,($aParentFrame instanceof ViewLayoutFrame)) ;
@@ -320,7 +320,7 @@ class ViewLayoutSetting
 			}
 			else if( $arrItem['class']=='view' )
 			{
-				$aView = View::xpath($aRootView,$arrItem['xpath']) ;
+				$aView = View::findXPath($aRootView,$arrItem['xpath']) ;
 				if($aView)
 				{					
 					$arrChildViews[] = $aView ;
