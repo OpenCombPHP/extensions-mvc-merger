@@ -24,21 +24,21 @@ class ViewLayoutSetting
 				'org\\jecat\\framework\\mvc\\controller\\Controller::mainRun()' ,
 				// advice
 				array(__CLASS__,'enableViewLayoutSetting_before') ,
-			),__CLASS__)
+			),__FILE__)
 			
 			->registerBean(array(
 				// jointpoint
 				'org\\jecat\\framework\\mvc\\controller\\Controller::renderMainView()' ,
 				// advice
 				array(__CLASS__,'enableViewLayoutSetting_afterRender') ,
-			),__CLASS__) 
+			),__FILE__) 
 			
 			->registerBean(array(
 				// jointpoint
 				'org\\jecat\\framework\\mvc\\controller\\Controller::displayMainView()' ,
 				// advice
 				array(__CLASS__,'enableViewLayoutSetting_afterDisplay') ,
-			),__CLASS__) ;
+			),__FILE__) ;
 			
 			
 		// 从 setting 里建立 jointpoint
@@ -58,7 +58,7 @@ class ViewLayoutSetting
 			$arrBeanConfig[] = array(__CLASS__,'beforeDisplayMainView') ;
 			$arrBeanConfig[] = array(__CLASS__,'afterDisplayMainView') ;
 			
-			AOP::singleton()->registerBean($arrBeanConfig,__CLASS__) ;
+			AOP::singleton()->registerBean($arrBeanConfig,__FILE__) ;
 		}
 	}
 	

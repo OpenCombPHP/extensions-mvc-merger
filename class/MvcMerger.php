@@ -36,7 +36,7 @@ class MvcMerger extends Extension
 						'org\\jecat\\framework\\mvc\\controller\\Controller::mainRun()' ,
 						// advice
 						array('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser','reflectMvc')
-				),__CLASS__) ;
+				),__FILE__) ;
 		
 		
 		// 模板编织

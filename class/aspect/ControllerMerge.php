@@ -29,7 +29,7 @@ class ControllerMerge
 		$arrBeanConfig[] = array(__CLASS__,'init') ;
 		
 		
-		AOP::singleton()->registerBean($arrBeanConfig,__CLASS__) ;
+		AOP::singleton()->registerBean($arrBeanConfig,__FILE__) ;
 	}
 	
 	/**
