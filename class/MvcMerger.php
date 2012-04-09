@@ -30,7 +30,16 @@ class MvcMerger extends Extension
 		// 注册 AOP Aspect 
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerMerge') ;
 		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ViewLayoutSetting') ;
-		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser') ;
+
+		// AOP 注册
+		AOP::singleton()
+				->registerBean(array(
+						// jointpoint
+						'org\\jecat\\framework\\mvc\\controller\\Controller::mainRun()' ,
+						// advice
+						array('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser','reflectMvc')
+				),__CLASS__) ;
+		
 		
 		// 模板编织
 		$this->setupTemplateWeaver() ;

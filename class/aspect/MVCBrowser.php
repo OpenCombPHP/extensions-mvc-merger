@@ -12,16 +12,6 @@ use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
 
 class MVCBrowser
 {
-	/**
-	 * @pointcut
-	 */
-	public function pointcutMainRun()
-	{
-		return array(
-			new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','mainRun') ,
-		) ;
-	}
-	
 	// -------------------------------------------------------------------------------------- //
 	// for MVC Browser----------------------------------------------------------------------- //
 	
