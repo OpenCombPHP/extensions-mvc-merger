@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
+use org\jecat\framework\lang\aop\AOP;
 use org\opencomb\mvcmerger\merger\ViewLayerout;
 use org\jecat\framework\mvc\view\TransparentViewContainer;
 use org\jecat\framework\lang\Type;
@@ -14,19 +15,56 @@ use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
 
 class ViewLayoutSetting
 {
+	static public function registerAOP()
+	{
+		AOP::singleton()
+		
+			->registerBean(array(
+				// jointpoint
+				'org\\jecat\\framework\\mvc\\controller\\Controller::mainRun()' ,
+				// advice
+				array(__CLASS__,'enableViewLayoutSetting_before') ,
+			),__CLASS__)
+			
+			->registerBean(array(
+				// jointpoint
+				'org\\jecat\\framework\\mvc\\controller\\Controller::renderMainView()' ,
+				// advice
+				array(__CLASS__,'enableViewLayoutSetting_afterRender') ,
+			),__CLASS__) 
+			
+			->registerBean(array(
+				// jointpoint
+				'org\\jecat\\framework\\mvc\\controller\\Controller::displayMainView()' ,
+				// advice
+				array(__CLASS__,'enableViewLayoutSetting_afterDisplay') ,
+			),__CLASS__) ;
+			
+			
+		// 从 setting 里建立 jointpoint
+		$arrBeanConfig = array() ;
+		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
+		$aKey = $aSetting->key('/merge/view_layout');
+		if($aKey)
+		{
+			// jointpoint
+			foreach($aKey->keyIterator() as $aSubKey)
+			{
+				$sSubKey = str_replace('.','\\',$aSubKey->name());
+				$arrBeanConfig[] = $sSubKey.'::displayMainView()'  ;
+			}
+			
+			// advice
+			$arrBeanConfig[] = array(__CLASS__,'beforeDisplayMainView') ;
+			$arrBeanConfig[] = array(__CLASS__,'afterDisplayMainView') ;
+			
+			AOP::singleton()->registerBean($arrBeanConfig,__CLASS__) ;
+		}
+	}
+	
 	// -------------------------------------------------------------------------------------- //
 	// 启动视图布局”所见即所得“编辑操作------------------------------------------------------ //
-	
-	/**
-	 * @pointcut
-	 */
-	public function pointcutMainRun()
-	{
-		return array(
-			new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','mainRun') ,
-		) ;
-	}
-		
+			
 	/**
 	 * @advice before
 	 * @for pointcutMainRun
@@ -35,32 +73,12 @@ class ViewLayoutSetting
 	{
 		if($this->params->bool('mvcmerger_layout_setting'))
 		{
-			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery') ;
-			\org\opencomb\advcmpnt\lib\LibManager::singleton()->loadLibrary('jquery.ui') ;
+			\org\opencomb\coresystem\lib\LibManager::singleton()->loadLibrary('jquery') ;
+			\org\opencomb\coresystem\lib\LibManager::singleton()->loadLibrary('jquery.ui') ;
 			
 			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:css/view-layout-setting.css',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_CSS) ;
 			\org\jecat\framework\resrc\HtmlResourcePool::singleton()->addRequire('mvc-merger:js/view-layout-setting.js',\org\jecat\framework\resrc\HtmlResourcePool::RESRC_JS) ;
 		}
-	}
-	
-	
-	/**
-	 * @pointcut
-	 */
-	public function pointcutControllerRenderMainView()
-	{
-		return array(
-				new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','renderMainView') ,
-		) ;
-	}
-	/**
-	 * @pointcut
-	 */
-	public function pointcutControllerDisplayrMainView()
-	{
-		return array(
-				new JointPointMethodDefine('org\\jecat\\framework\\mvc\\controller\\Controller','displayMainView') ,
-		) ;
 	}
 	
 	/**
@@ -99,6 +117,7 @@ class ViewLayoutSetting
 		
 		$aController->properties()->set('__scriptLayoutViewStruct',$sJsCode) ;
 	}
+	
 	
 	/**
 	 * 在 controller 的 displayMainView() 之后以json格式输出视图结构
@@ -148,27 +167,7 @@ class ViewLayoutSetting
 	
 	// -------------------------------------------------------------------------------------- //
 	// 应用视图布局配置 --------------------------------------------------------------------- //
-	
-	/**
-	 * @pointcut
-	 */
-	public function pointcutDisplayMainView()
-	{	
-		$arrJointPoints = array() ;
-		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$aKey = $aSetting->key('/merge/view_layout');
-		if($aKey)
-		{
-			// for 视图布局
-			foreach($aKey->keyIterator() as $aSubKey)
-			{
-				$sSubKey = str_replace('.','\\',$aSubKey->name());
-				$arrJointPoints[] = new JointPointMethodDefine($sSubKey,'displayMainView')  ;
-			}
-		}
-		return $arrJointPoints ;
-	}
-	
+		
 	/**
 	 * 在控制器的 displayMainView() 函数之前根据视图布局设置，重建视图布局结构
 	 * @advice before

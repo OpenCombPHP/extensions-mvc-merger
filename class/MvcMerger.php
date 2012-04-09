@@ -27,11 +27,9 @@ class MvcMerger extends Extension
 	 */
 	public function load()
 	{
-		// 注册 AOP Aspect 
-		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ControllerMerge') ;
-		AOP::singleton()->register('org\\opencomb\\mvcmerger\\aspect\\ViewLayoutSetting') ;
-
 		// AOP 注册
+		aspect\ControllerMerge::registerAOP() ;
+		aspect\ViewLayoutSetting::registerAOP() ;
 		AOP::singleton()
 				->registerBean(array(
 						// jointpoint
@@ -52,7 +50,7 @@ class MvcMerger extends Extension
 				, array(__CLASS__,'buildControlPanelMenu')
 		) ;
 	}
-	
+		
 	/**
 	 * @example /MVC模型/视图/模板编织/应用补丁
 	 * @forwiki /MVC模型/视图/模板编织
