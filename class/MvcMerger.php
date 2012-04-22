@@ -75,13 +75,12 @@ class MvcMerger extends Extension
 		
 		// -------------------------------------------------
 		// 根据 setting 中保存的信息，应用模板补丁
-		foreach($this->setting()->key("/merge/uiweave",true)->keyIterator() as $aNsKey)
+		foreach($this->setting()->keyIterator("/merge/uiweave") as $sNamespace)
 		{
-			$sNamespace = $aNsKey->name() ;
-			foreach($aNsKey->keyIterator() as $aTemplateKey)
+			foreach($this->setting()->keyIterator("/merge/uiweave/".$sNamespace) as $sTemplate)
 			{
-				$sTemplate = $aTemplateKey->name() ;
-				$arrAllPatchs = $aTemplateKey->item('arrPatchs',array()) ;
+				//$sTemplate = $aTemplateKey->name() ;
+				$arrAllPatchs = $this->setting()->item("/merge/uiweave/".$sNamespace.'/'.$sTemplate,'arrPatchs',array()) ;
 
 				foreach($arrAllPatchs as $sXPath=>$arrPatchList)
 				{

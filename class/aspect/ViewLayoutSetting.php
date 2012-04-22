@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
+use org\opencomb\platform\ext\Extension;
+
 use org\jecat\framework\lang\aop\AOP;
 use org\opencomb\mvcmerger\merger\ViewLayerout;
 use org\jecat\framework\mvc\view\TransparentViewContainer;
@@ -43,23 +45,20 @@ class ViewLayoutSetting
 			
 		// 从 setting 里建立 jointpoint
 		$arrBeanConfig = array() ;
-		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$aKey = $aSetting->key('/merge/view_layout');
-		if($aKey)
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		
+		// jointpoint
+		foreach($aSetting->keyIterator('/merge/view_layout') as $sSubKey)
 		{
-			// jointpoint
-			foreach($aKey->keyIterator() as $aSubKey)
-			{
-				$sSubKey = str_replace('.','\\',$aSubKey->name());
-				$arrBeanConfig[] = $sSubKey.'::displayMainView()'  ;
-			}
-			
-			// advice
-			$arrBeanConfig[] = array(__CLASS__,'beforeDisplayMainView') ;
-			$arrBeanConfig[] = array(__CLASS__,'afterDisplayMainView') ;
-			
-			AOP::singleton()->registerBean($arrBeanConfig,__FILE__) ;
+			$sSubKey = str_replace('.','\\',$sSubKey);
+			$arrBeanConfig[] = $sSubKey.'::displayMainView()'  ;
 		}
+		
+		// advice
+		$arrBeanConfig[] = array(__CLASS__,'beforeDisplayMainView') ;
+		$arrBeanConfig[] = array(__CLASS__,'afterDisplayMainView') ;
+		
+		AOP::singleton()->registerBean($arrBeanConfig,__FILE__) ;
 	}
 	
 	// -------------------------------------------------------------------------------------- //
@@ -180,18 +179,12 @@ class ViewLayoutSetting
 	
 	static public function advice_beforeDisplayMainView(IController $aController,IView $aMainView)
 	{
-		$aSetting = \org\jecat\framework\system\Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
 		$sControllerClass = get_class($aController) ;
 		
-		// for 视图布局
-		$sSubKey = str_replace('\\', '.', $sControllerClass) ;
-		if( !$aSettingKey = $aSetting->key('/merge/view_layout/'.$sSubKey) )
-		{
-			return ;
-		}
-		
+		// for 视图布局		
 		$bHasDefaultQeury = false ;
-		foreach($aSettingKey->itemIterator() as $sQuery)
+		foreach($aSetting->itemIterator('/merge/view_layout/'.$sSubKey) as $sQuery)
 		{
 			if($sQuery=='*')
 			{
