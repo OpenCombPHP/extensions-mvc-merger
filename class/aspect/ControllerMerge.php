@@ -2,11 +2,8 @@
 namespace org\opencomb\mvcmerger\aspect ;
 
 use org\jecat\framework\lang\aop\AOP;
-
 use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\util\DataSrc;
-use org\jecat\framework\system\Application;
-use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
 
 class ControllerMerge
 {
@@ -61,5 +58,3 @@ class ControllerMerge
 		}
 	}
 }
-
-?>

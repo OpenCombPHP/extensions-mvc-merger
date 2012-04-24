@@ -2,18 +2,14 @@
 namespace org\opencomb\mvcmerger\merger ;
 
 use org\opencomb\coresystem\auth\Id;
-
 use org\opencomb\platform\service\ServiceSerializer;
-
 use org\opencomb\mvcmerger\MvcMerger;
-
 use org\opencomb\platform\system\PlatformFactory;
 use org\opencomb\platform\service\Service;
-use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Type;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\system\Application;
-use org\opencomb\coresystem\mvc\controller\ControlPanel ;
+use org\opencomb\coresystem\mvc\controller\ControlPanel;
 
 class ControllerMerger extends ControlPanel
 {
@@ -69,7 +65,7 @@ class ControllerMerger extends ControlPanel
 				$this->form->createMessage(Message::error,"输入的%s控制器类不存在：%s",array($sName,$this->params[$sDataName])) ;
 				return ;
 			}
-			if( !Type::hasImplements($this->params[$sDataName],'org\\jecat\\framework\\mvc\\controller\\IController') )
+			if( !Type::hasImplements($this->params[$sDataName],'org\\jecat\\framework\\mvc\\controller\\Controller') )
 			{
 				$this->form->createMessage(Message::error,"输入的%s不是有效的控制器类：%s",array($sName,$this->params[$sDataName])) ;
 				return ;
@@ -148,5 +144,3 @@ class ControllerMerger extends ControlPanel
 		PlatformFactory::singleton()->clearRestoreCache(Service::singleton()) ;
 	}
 }
-
-?>

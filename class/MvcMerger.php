@@ -8,17 +8,16 @@ use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\fs\FSIterator;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
-use org\opencomb\mvcmerger\merger\UITemplateWeave;
 use org\opencomb\mvcmerger\merger\ui\UIObjectBrowserInfo;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\opencomb\mvcmerger\struct\ui\filter\UILinkHrefFilter;
 use org\jecat\framework\lang\aop\AOP;
 use org\jecat\framework\mvc\controller\Request;
-use org\opencomb\platform\ext\Extension ;
-use org\jecat\framework\ui\xhtml\UIFactory ;
-use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ; 
+use org\opencomb\platform\ext\Extension;
+use org\jecat\framework\ui\xhtml\UIFactory;
 use org\opencomb\platform\mvc\view\widget\Menu;
 use org\jecat\framework\bean\BeanFactory;
+use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory;
 
 class MvcMerger extends Extension 
 {

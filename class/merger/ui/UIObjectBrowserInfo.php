@@ -9,7 +9,7 @@ use org\jecat\framework\ui\xhtml\Attributes;
 use org\jecat\framework\ui\xhtml\Tag;
 use org\jecat\framework\ui\xhtml\Node;
 use org\jecat\framework\ui\IInterpreter;
-use org\jecat\framework\ui\ObjectContainer ;
+use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\util\String;
 use org\jecat\framework\ui\UI;
 
@@ -98,5 +98,3 @@ class UIObjectBrowserInfo implements IInterpreter
 	}
 
 }
-
-?>

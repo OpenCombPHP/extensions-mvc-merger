@@ -2,9 +2,7 @@
 namespace org\opencomb\mvcmerger\struct\ui\filter ;
 
 use org\jecat\framework\ui\ObjectContainer;
-use org\jecat\framework\ui\xhtml\Node;
 use org\jecat\framework\lang\Assert;
-use org\jecat\framework\ui\ICompiler;
 use org\jecat\framework\ui\TargetCodeOutputStream;
 use org\jecat\framework\ui\CompilerManager;
 use org\jecat\framework\ui\IObject;
@@ -30,5 +28,3 @@ class LinkCompiler extends NodeCompiler
 		return parent::compile($aObject,$aObjectContainer,$aDev,$aCompilerManager) ;
 	}
 }
-
-?>

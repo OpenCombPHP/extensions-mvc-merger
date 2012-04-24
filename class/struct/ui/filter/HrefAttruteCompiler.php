@@ -4,7 +4,6 @@ namespace org\opencomb\mvcmerger\struct\ui\filter ;
 use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\ui\xhtml\compiler\TextCompiler;
 use org\jecat\framework\lang\Type;
-use org\jecat\framework\ui\ICompiler;
 use org\jecat\framework\ui\TargetCodeOutputStream;
 use org\jecat\framework\ui\CompilerManager;
 use org\jecat\framework\ui\IObject;
@@ -24,5 +23,3 @@ class HrefAttruteCompiler extends TextCompiler
 		$aDev->write("\$aDevice = \$__oriDeviceForLinkHrefStrategy ;") ;
 	}
 }
-
-?>

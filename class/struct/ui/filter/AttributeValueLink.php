@@ -23,5 +23,3 @@ class AttributeValueLink extends AttributeValue
 		}
 	}
 }
-
-?>

@@ -7,7 +7,6 @@ use org\opencomb\platform\ext\Extension;
 use org\opencomb\platform\service\ServiceSerializer;
 use org\jecat\framework\util\DataSrc;
 use org\opencomb\platform\service\Service;
-use org\opencomb\platform\system\PlatformFactory;
 use org\opencomb\mvcmerger\MvcMerger;
 use org\jecat\framework\system\Application;
 use org\jecat\framework\message\Message;
@@ -86,5 +85,3 @@ class PostViewLayoutSetting extends ControlPanel
 		$this->createMessage(Message::success,"配置已经保存。") ;
 	}
 }
-
-?>

@@ -2,16 +2,13 @@
 namespace org\opencomb\mvcmerger\aspect ;
 
 use org\jecat\framework\lang\aop\AOP;
-use org\opencomb\mvcmerger\merger\ViewLayerout;
 use org\jecat\framework\mvc\view\TransparentViewContainer;
-use org\jecat\framework\lang\Type;
 use org\jecat\framework\mvc\view\layout\ViewLayoutFrame;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\view\View;
-use org\jecat\framework\mvc\controller\IController;
+use org\jecat\framework\mvc\controller\Controller;
 use org\jecat\framework\util\DataSrc;
 use org\jecat\framework\system\Application;
-use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
 
 class ViewLayoutSetting
 {
@@ -92,7 +89,7 @@ class ViewLayoutSetting
 		\org\opencomb\mvcmerger\aspect\ViewLayoutSetting::advice_enableViewLayoutSetting_afterRender($this,$aMainView) ;
 	}
 	
-	static function advice_enableViewLayoutSetting_afterRender(IController $aController,IView $aMainView)
+	static function advice_enableViewLayoutSetting_afterRender(Controller $aController,IView $aMainView)
 	{
 		if(!$aController->params()->bool('mvcmerger_layout_setting'))
 		{
@@ -178,7 +175,7 @@ class ViewLayoutSetting
 		\org\opencomb\mvcmerger\aspect\ViewLayoutSetting::advice_beforeDisplayMainView($this,$aMainView) ;
 	}
 	
-	static public function advice_beforeDisplayMainView(IController $aController,IView $aMainView)
+	static public function advice_beforeDisplayMainView(Controller $aController,IView $aMainView)
 	{
 		$aSetting = \org\jecat\framework\system\Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$sControllerClass = get_class($aController) ;
@@ -213,7 +210,7 @@ class ViewLayoutSetting
 		}
 	}
 	
-	static public function applySetting(IController $aController,IView $aMainView,$arrSetting)
+	static public function applySetting(Controller $aController,IView $aMainView,$arrSetting)
 	{
 		if( empty($arrSetting) )
 		{
@@ -379,5 +376,3 @@ class ViewLayoutSetting
 		}
 	}
 }
-
-?>

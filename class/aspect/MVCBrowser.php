@@ -1,14 +1,9 @@
 <?php
 namespace org\opencomb\mvcmerger\aspect ;
 
-use org\jecat\framework\mvc\view\View;
-
 use org\jecat\framework\mvc\model\IModel;
-use org\jecat\framework\mvc\controller\IController;
-use org\jecat\framework\pattern\composite\IContainer;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\controller\Controller;
-use org\jecat\framework\lang\aop\jointpoint\JointPointMethodDefine;
 
 class MVCBrowser
 {
@@ -87,7 +82,7 @@ class MVCBrowser
 		return $sJsCode ;
 	}
 	
-	static public function generateControllerStructJcCode(IController $aController,$sName=null,$nIndent=0)
+	static public function generateControllerStructJcCode(Controller $aController,$sName=null,$nIndent=0)
 	{
 		$sClass = get_class($aController) ;
 		if(!$sName)
@@ -153,5 +148,3 @@ class MVCBrowser
 		return $sJsCode ;
 	}
 }
-
-?>

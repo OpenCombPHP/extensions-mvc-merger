@@ -44,5 +44,3 @@ class UILinkHrefFilter extends Object
 	
 	private $sHrefValue = '' ;
 }
-
-?>

@@ -2,16 +2,9 @@
 namespace org\opencomb\mvcmerger\merger ;
 
 use org\opencomb\platform\service\ServiceSerializer;
-
 use org\opencomb\platform\ext\Extension;
-
 use org\opencomb\platform\service\Service;
-
-use org\opencomb\platform\system\PlatformFactory;
-
 use org\opencomb\mvcmerger\MvcMerger;
-
-use org\jecat\framework\system\Application;
 use org\jecat\framework\message\Message;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 
@@ -100,5 +93,3 @@ class PostTemplateWeave extends ControlPanel
 		$this->response()->output( isset($arrPatchs[$xpath])? json_encode($arrPatchs[$xpath]): '{}' ) ;
 	}
 }
-
-?>
