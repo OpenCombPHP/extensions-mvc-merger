@@ -1,6 +1,16 @@
 <?php 
 namespace org\opencomb\mvcmerger ;
 
+use org\jecat\framework\mvc\view\View;
+
+use org\jecat\framework\ui\UI;
+
+use org\jecat\framework\mvc\controller\Response;
+
+use org\opencomb\mvcmerger\merger\MergePannel;
+
+use org\jecat\framework\mvc\controller\Controller;
+use org\jecat\framework\util\EventManager;
 use org\jecat\framework\lang\oop\Package;
 use org\jecat\framework\ui\xhtml\Node;
 use org\jecat\framework\ui\xhtml\weave\Patch;
@@ -27,7 +37,7 @@ class MvcMerger extends Extension
 	public function load()
 	{
 		// AOP 注册
-		aspect\ControllerMerge::registerAOP() ;
+		/*aspect\ControllerMerge::registerAOP() ;
 		aspect\ViewLayoutSetting::registerAOP() ;
 		AOP::singleton()
 				->registerBean(array(
@@ -35,11 +45,7 @@ class MvcMerger extends Extension
 						'org\\jecat\\framework\\mvc\\controller\\Controller::mainRun()' ,
 						// advice
 						array('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser','reflectMvc')
-				),__FILE__) ;
-		
-		
-		// 模板编织
-		$this->setupTemplateWeaver() ;
+				),__FILE__) ;*/
 
 		// 注册菜单build事件的处理函数
 		Menu::registerBuildHandle(
@@ -49,29 +55,44 @@ class MvcMerger extends Extension
 				, array(__CLASS__,'buildControlPanelMenu')
 		) ;
 	}
-		
+
+	
+	public function initRegisterEvent(EventManager $aEventMgr)
+	{
+		$aEventMgr->registerEventHandle(
+				'org\\jecat\\framework\\mvc\\controller\\Response'
+				, Response::event_afterAssemblyViews
+				, array(__CLASS__,'onAfterAssemblyViews')
+		) ;
+	}
+	
+	static public function onAfterAssemblyViews(Response $aResponse,View $aView,Controller $aController)
+	{		
+		$aMergePannel = new MergePannel($aView) ;
+		$aMergePannel->output($aResponse->printer()) ;
+	}
+
+
 	/**
 	 * @example /MVC模型/视图/模板编织/应用补丁
 	 * @forwiki /MVC模型/视图/模板编织
 	 */
-	private function setupTemplateWeaver()
+	public function initRegisterUITemplateWeave(WeaveManager $aWeaveManager)
 	{
-		$aWeaveMgr = WeaveManager::singleton() ;
-		
 		/**
 		 * @example /MVC模型/视图/模板编织/过滤器补丁
 		 * @example /MVC模型/视图/模板编织/改变Html节点类型[1.注册补丁]
-		 * 
+		 *
 		 * 在 coresystem 扩展的模板 FrontFrame.html 中的第1个<div>下的第1个<p> 上注册一个 filter 类型的补丁
 		 */
 		{
-		$aWeaveMgr->registerFilter( 'coresystem:FrontFrame.html', "/div@0/p@0", array(__CLASS__,'filterForFrontFrameMergeIcon') ) ;
+			$aWeaveManager->registerFilter( 'coresystem:FrontFrame.html', "/div@0/p@0", array(__CLASS__,'filterForFrontFrameMergeIcon') ) ;
 		}
-		
+	
 		// 将 mvc-merger 扩展提供的模板文件 merger/MergeIconMenu.html 做为补丁，应用到  coresystem 扩展的模板 FrontFrame.html 中的第一个<div>下的第一个<p> 内部的末尾
-		$aWeaveMgr->registerTemplate( 'coresystem:FrontFrame.html', "/div@0/p@0", 'mvc-merger:merger/MergeIconMenu.html', Patch::insertAfter ) ;
-		
-		
+		$aWeaveManager->registerTemplate( 'coresystem:FrontFrame.html', "/div@0/p@0", 'mvc-merger:merger/MergeIconMenu.html', Patch::insertAfter ) ;
+	
+	
 		// -------------------------------------------------
 		// 根据 setting 中保存的信息，应用模板补丁
 		foreach($this->setting()->key("/merge/uiweave",true)->keyIterator() as $aNsKey)
@@ -81,12 +102,12 @@ class MvcMerger extends Extension
 			{
 				$sTemplate = $aTemplateKey->name() ;
 				$arrAllPatchs = $aTemplateKey->item('arrPatchs',array()) ;
-
+	
 				foreach($arrAllPatchs as $sXPath=>$arrPatchList)
 				{
 					foreach($arrPatchList as $arrPatch)
 					{
-						$aWeaveMgr->registerCode( $sNamespace.':'.$sTemplate, $sXPath, $arrPatch[1], $arrPatch[0] ) ;
+						$aWeaveManager->registerCode( $sNamespace.':'.$sTemplate, $sXPath, $arrPatch[1], $arrPatch[0] ) ;
 					}
 				}
 			}

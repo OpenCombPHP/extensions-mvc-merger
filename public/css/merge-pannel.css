@@ -1,0 +1,25 @@
+
+.mergepannel-viewtree-item:hover {
+	color:red ;
+	cursor: pointer;
+}
+
+/* 视图列表 拖放时的效果 */
+.mergepannel-viewtree-node .drop-hover {
+	border: 1px solid green;	
+}
+
+/* 视图列表上的层级缩进 */
+#mergepannel-viewlayout .view-container{
+	padding-left:12px ;
+}
+
+/* 视图列表上 展开下级的 按钮 */
+.children-switch {
+	width: 20px ;
+}
+
+/* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 */
+.mergepannel-view-flashing{
+	border: 1px solid red;
+}
