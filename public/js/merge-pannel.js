@@ -3,8 +3,62 @@ var MergerPannel = function()
 	this.viewTree = null ;
 }
 
+jquery(document).ready(function (){
+	var $ = jquery ;
+
+	var mapAllFrames = {} ;
+	var arrRootFrames = [] ;
+
+	// 分析建立 frame 结构
+	$('.jc-layout-frame').each(function (){
+
+		var aFrame = {
+			type : 'frame'
+			, id : this.id
+			, 'ele' : this
+			, 'children' : []
+		}
+		$(this).data('object',aFrame) ;
+		
+		mapAllFrames[this.id] = aFrame ;
+
+		//console.log(this.id+' closest:'+$(this).parents('.jc-layout-frame').size()) ;
+		var eleParentFrame = $(this).parents('.jc-layout-frame').get(0) ;
+		if( !eleParentFrame )
+		{
+			//console.log('root frame:'+this.id) ;
+			
+			arrRootFrames.push(aFrame) ;
+		}
+		else
+		{
+			//console.log(eleParentFrame.id+' <<< '+this.id) ;
+			$(eleParentFrame).data('object').children.push(aFrame) ;
+		}
+	})
+	
+	// 分析视图结构
+	$('.jc-view').each(function (){
+
+		var aView = {
+			type : 'view'
+			, id : this.id
+			, 'ele' : this
+		}
+		var eleParentFrame = $(this).parents('.jc-layout-frame').get(0) ;
+		if( eleParentFrame )
+		{
+			console.log(eleParentFrame.id+' <<< '+this.id) ;
+			$(eleParentFrame).data('object').children.push(aView) ;			
+		}
+	}) ;
+	
+	console.log(arrRootFrames) ;
+	
+})
+
 MergerPannel.prototype.init = function()
-{	
+{
 	var $ = jquery ;
 
 	$('#mergepannel-dialog').dialog() ;

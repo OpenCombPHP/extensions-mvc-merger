@@ -61,12 +61,12 @@ class MvcMerger extends Extension
 	{
 		$aEventMgr->registerEventHandle(
 				'org\\jecat\\framework\\mvc\\controller\\Response'
-				, Response::event_afterAssemblyViews
-				, array(__CLASS__,'onAfterAssemblyViews')
+				, Response::afterRenderViews
+				, array(__CLASS__,'onAfterRenderViews')
 		) ;
 	}
 	
-	static public function onAfterAssemblyViews(Response $aResponse,View $aView,Controller $aController)
+	static public function onAfterRenderViews(Response $aResponse,View $aView,Controller $aController)
 	{		
 		$aMergePannel = new MergePannel($aView) ;
 		$aMergePannel->output($aResponse->printer()) ;
