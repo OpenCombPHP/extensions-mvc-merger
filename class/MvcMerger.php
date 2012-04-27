@@ -68,8 +68,8 @@ class MvcMerger extends Extension
 	
 	static public function onAfterRenderViews(Response $aResponse,View $aView,Controller $aController)
 	{		
-		$aMergePannel = new MergePannel($aView) ;
-		$aMergePannel->output($aResponse->printer()) ;
+		//$aMergePannel = new MergePannel($aView) ;
+		//$aMergePannel->output($aResponse->printer()) ;
 	}
 
 
