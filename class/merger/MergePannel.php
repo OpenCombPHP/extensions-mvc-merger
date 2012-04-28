@@ -17,8 +17,6 @@ class MergePannel extends Object
 {
 	public function __construct(View $aView)
 	{
-		$this->findView( $aView, $this->arrViewTreeRoot ) ;
-		// print_r($this->arrViewTreeRoot) ;
 	}
 
 	protected function findView(View $aView,& $arrView)
@@ -51,7 +49,6 @@ class MergePannel extends Object
 		$aDevice->write("<script>\r\n") ;
 		$aDevice->write("jquery(document).ready(function(){\r\n") ;
 		$aDevice->write("	var mergerpannel = new MergerPannel() ;\r\n") ;
-		$aDevice->write('	mergerpannel.viewTree = '.json_encode($this->arrViewTreeRoot)." ;\r\n") ;
 		$aDevice->write("	mergerpannel.init() ;\r\n") ;
 		$aDevice->write("}) ;") ;
 		$aDevice->write("</script>\r\n") ;

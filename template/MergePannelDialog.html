@@ -1,28 +1,55 @@
 <lib name="jquery.ui" />
+<lib name="jquery.ztree" />
 <script src="mvc-merger:js/merge-pannel.js" />
+<script src="mvc-merger:js/merge-pannel-layout.js" />
 <css src="mvc-merger:css/merge-pannel.css" />
 
 <div id='mergepannel-dialog'>
 
-	<div id='mergepannel-viewlayout'>
-		
-		<ul id='mergepannel-viewtree' class="view-container"></ul>
-		
-		<!-- 用来产生视图li的模板 -->
-		<li id='mergepannel-viewtree-node-template' class="mergepannel-viewtree-node" style="display:none">
-			<div class="mergepannel-viewtree-item">
-			
-				{* open/close样式表示是否展开下级; none样式表示没有下级 *}
-				<a class="children-switch" href="javascript:void(0)" onclick="MergerPannel.childrenSwitch(this)">+</a>
-				
-				<span class='view-title'></span>
-				<div class="move-buttons" style="display:none">
-					前/后/左/右
-				</div>
-			</div>
-			<ul class="view-container"></ul>
-		</li>
+	<div id='mergepannel-layout'>
 	
+	
+		<!-- frame/view 结构树 -->
+		<div id='mergepannel-layout-struct'>
+			<span id='mergepannel-layout-struct-title'>视图布局结构</span>
+			<div id="mergepannel-viewtree" class="ztree"></div>
+		</div>
+		
+		
+		<!-- frame/view 属性面板 -->
+		<div id="mergepannel-properties">
+			<div id="mergepannel-props-type">layout item type</div>
+			<div id="mergepannel-props-id">layout item element id</div>
+			
+			<!-- 用于 frame -->
+			<div id="mergepannel-props-frame-type" style="display:none">
+				框架类型：
+				<lalel>
+					<input id="mergepannel-props-frame-ipt-v" type="radio" value="v" />
+					纵向
+				</lalel>
+				
+				<lalel>
+					<input id="mergepannel-props-frame-ipt-h" type="radio" value="h" />
+					横向
+				</lalel>
+				
+				<lalel>
+					<input id="mergepannel-props-frame-ipt-s" type="radio" value="s" />
+					切换页
+				</lalel>				
+			</div>
+		</div>
+		
+		
 	</div>
 
 </div>
+
+
+<!-- 用于拖拽视图时的提示 -->
+<div id="mergepannel-viewtree-dropping-tip">---------------</div>
+
+<script> 
+var sMvcMergerPublicFolderUrl = '{/mvc-merger:image}' ; 
+</script>

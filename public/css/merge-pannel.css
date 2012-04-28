@@ -1,25 +1,89 @@
-
-.mergepannel-viewtree-item:hover {
-	color:red ;
-	cursor: pointer;
+.mergepannel-viewtree-item-draggable {
+	cursor: move;		
+}
+#mergepannel-viewtree-dropping-tip{
+	z-index: 2000;
+	position: absolute;
+	display:none;
+	border: 1px solid #ccc;
+	padding: 4px 10px ;
+	background-color: #f9f9f9;
 }
 
-/* 视图列表 拖放时的效果 */
-.mergepannel-viewtree-node .drop-hover {
-	border: 1px solid green;	
+
+
+
+
+
+
+
+.mergepannel-viewtree-item {
+	margin-left: 6px ;	
 }
 
-/* 视图列表上的层级缩进 */
-#mergepannel-viewlayout .view-container{
-	padding-left:12px ;
+.view-container{
+}
+.mergepannel-viewtree-space{
+	height: 10px ;
+}
+.mergepannel-viewtree-item{
+}
+
+.mergepannel-viewtree-item-info {
+	cursor: default;
+}
+.mergepannel-viewtree-item-info-draggable:hover{
+	color:red ;	
+	cursor: move;
 }
 
 /* 视图列表上 展开下级的 按钮 */
 .children-switch {
-	width: 20px ;
+	width: 12px ;	
+	height: 12px ;
+	float: left ;
+	cursor: pointer;
+}
+.children-switch-expand {
+	background: url('../image/expand.png') ;
+}
+.children-switch-collapse {
+	background: url('../image/collapse.png') ;	
+}
+.mergepannel-viewtree-item-type-icon{
+	float: left ;
+}
+.view-title{
+	clear: clear:both ;
 }
 
 /* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 */
-.mergepannel-view-flashing{
+.mergepannel-layout-view-flashing {
 	border: 1px solid red;
+background-color : #
+}
+.mergepannel-layout-frame-flashing {
+	border: 1px solid green;
+}
+.mergepannel-viewtree-item .view-description{
+	color: #999 ;	
+}
+
+#mergepannel-layout-struct{
+	float: left ;
+}
+#mergepannel-viewtree{
+	overflow:scroll;
+	overflow-x:scroll;
+}
+#mergepannel-properties{
+	float: left ;
+	width: 240px ;
+}
+
+
+#mergepannel-viewtree-placeholder{
+	border: 1px solid #ccc;	
+	background-color: #efefef;
+	height: 50px ;
 }
