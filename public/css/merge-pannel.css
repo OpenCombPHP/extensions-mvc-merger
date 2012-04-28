@@ -9,8 +9,10 @@
 	padding: 4px 10px ;
 	background-color: #f9f9f9;
 }
-
-
+/*提高移动node时指针的高度*/
+.zTreeDragUL , .tmpzTreeMove_arrow{
+	z-index:100000;
+}
 
 
 
