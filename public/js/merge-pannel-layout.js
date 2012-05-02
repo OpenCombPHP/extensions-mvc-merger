@@ -252,12 +252,12 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame,sType)
 {
 	var $ = jquery ;
 	
-	var aNode = this.aZtree.getNodeByParam('id',frame.id) ;
+	var aNode = this.itemInfoByEleId(frame.id) ;
 	aNode.layout = sType ;
 	
-	this.layoutFrame(frame) ;
+	this.layoutFrame(frame,aNode) ;
 }
-MergerPannel.Layout.prototype.layoutFrame = function(frame)
+MergerPannel.Layout.prototype.layoutFrame = function(frame,node)
 {
 	var $ = jquery ;	
 	// 清理样式
@@ -267,9 +267,12 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame)
 				.removeClass('jc-layout-item-horizontal')
 				.removeClass('jc-layout-item-vertical') ;
 	// 设置样式
-	var sLayout = this.aZtree.getNodeByParam('id',frame.id).layout ;
+	var sLayout = node.layout ;
 	$(frame).addClass( MergerPannel.Layout.mapLayoutFrameStyles[sLayout] )
 			.children('.jc-layout').addClass( MergerPannel.Layout.mapLayoutItemStyles[sLayout] ) ;
+	
+	// 计算成员宽度
+	this.calculateItemsWidth(frame,node) ;
 }
 MergerPannel.Layout.mapLayoutFrameStyles = {
 		h: 'jc-frame-horizontal'
@@ -279,7 +282,22 @@ MergerPannel.Layout.mapLayoutItemStyles = {
 		h: 'jc-layout-item-horizontal'
 		, v: 'jc-layout-item-vertical'
 } ;
+/**
+ * 计算frame内各个item(frame/view)的宽度
+ * 横向布局frame内的item,除去指定宽度的元素,剩下元素平均宽度
+ * 纵向布局frame清除宽度设置(自适应)
+ */
+MergerPannel.Layout.prototype.calculateItemsWidth = function(frame,node)
+{
+}
 
+/**
+ * 通过 frame/view 的id, 得到配置对象
+ */
+MergerPannel.Layout.prototype.itemInfoByEleId = function(eleId)
+{
+	return this.aZtree.getNodeByParam('id',eleId) ;
+}
 
 /**
  * 打开 frame 或 view 的属性界面
