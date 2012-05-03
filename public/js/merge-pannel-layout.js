@@ -62,7 +62,10 @@ MergerPannel.Layout.prototype._initUi = function (){
 	}) ;
 	
 	// 属性
-	$('#mergepannel-props-common>input').blur(function (){
+	$('#mergepannel-props-common input').blur(function (){
+		realThis.applyProperties() ;
+	}) ;
+	$('#mergepannel-props-common select').change(function (){
 		realThis.applyProperties() ;
 	}) ;
 }
@@ -460,11 +463,15 @@ MergerPannel.Layout.prototype.openProperty = function(itemData,itemEle){
 		console.log(itemData.id+'#mergepannel-props-frame-ipt-'+itemData.layout) ;
 		
 		$('#mergepannel-props-frame-delete-btn').attr( 'disabled', $(itemEle).hasClass('cusframe')?false:true ) ;
+		//$('#mergepannel-props-sel-text-align').attr( 'disabled', false ).get(0).selectedIndex=0
+		//$('#mergepannel-props-sel-vertical-align').attr( 'disabled', false ).get(0).selectedIndex=0 ;
 	}
 	else
 	{
 		$('#mergepannel-props-type').html('视图') ;
 		$('#mergepannel-props-frame').hide() ;
+		//$('#mergepannel-props-sel-text-align').attr( 'disabled', true ) ;
+		//$('#mergepannel-props-sel-vertical-align').attr( 'disabled', true ) ;
 	}
 	
 	$('#mergepannel-properties').show() ;
@@ -480,6 +487,8 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 	
 	$('#mergepannel-props-ipt-width').val(this.eleSelectedItem.style.width) ;
 	$('#mergepannel-props-ipt-height').val(this.eleSelectedItem.style.height) ;
+	$('#mergepannel-props-sel-text-align').val(this.eleSelectedItem.style.textAlign) ;
+	$('#mergepannel-props-sel-vertical-align').val(this.eleSelectedItem.style.verticalAlign) ;
 }
 
 /**
@@ -490,6 +499,8 @@ MergerPannel.Layout.prototype.applyProperties = function(){
 	
 	this.eleSelectedItem.style.width = $('#mergepannel-props-ipt-width').val() ;
 	this.eleSelectedItem.style.height = $('#mergepannel-props-ipt-height').val() ;
+	this.eleSelectedItem.style.textAlign = $('#mergepannel-props-sel-text-align').val() ;
+	this.eleSelectedItem.style.verticalAlign = $('#mergepannel-props-sel-vertical-align').val() ;
 }
 /**
  * 删除一个frame（只有用户添加的frame可以被删除）
