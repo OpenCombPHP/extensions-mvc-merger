@@ -267,7 +267,7 @@ MergerPannel.Layout.prototype.saveLayout = function(){
 	
 	// 分析frame/view 结构, 并整理成后端PHP所需的数据格式
 	var mapItemDatas = {} ;
-	var arrRootNodes = [] ;
+	var mapRootNodes = {} ;
 	$('.jc-layout').each(function ()
 	{
 		var aNode = realThis.getDataByEleId(this.id) ;
@@ -293,7 +293,7 @@ MergerPannel.Layout.prototype.saveLayout = function(){
 		var eleParentFrame = $(this).parents('.jc-layout').get(0) ;
 		if( !eleParentFrame || !$(eleParentFrame).hasClass('jc-frame') )
 		{
-			arrRootNodes.push(aLayoutItem) ;
+			mapRootNodes[this.id] = aLayoutItem ;
 		}
 		else
 		{
@@ -301,7 +301,19 @@ MergerPannel.Layout.prototype.saveLayout = function(){
 		}
 	}) ;
 	
-	console.log(arrRootNodes) ;
+	// ajax 提交给PHP
+	$.ajax({
+		type: "POST"
+		, url: '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=save' 
+		, data: { layout: mapRootNodes, controller: sMvcMergerController }
+		, complete: function(req){
+			// 显示操作结果消息队列
+			$('#mergepannel-layout-msgqueue').html(req.responseText) ;
+			// 重新计算ui布局(消息队列可能影响ui界面)
+			realThis.resizeDialog() ;
+		}
+	}) ;
+	
 }
 /**
  * 面板尺寸发生变化时重新计算界面元素的尺寸和位置
@@ -463,15 +475,11 @@ MergerPannel.Layout.prototype.openProperty = function(itemData,itemEle){
 		console.log(itemData.id+'#mergepannel-props-frame-ipt-'+itemData.layout) ;
 		
 		$('#mergepannel-props-frame-delete-btn').attr( 'disabled', $(itemEle).hasClass('cusframe')?false:true ) ;
-		//$('#mergepannel-props-sel-text-align').attr( 'disabled', false ).get(0).selectedIndex=0
-		//$('#mergepannel-props-sel-vertical-align').attr( 'disabled', false ).get(0).selectedIndex=0 ;
 	}
 	else
 	{
 		$('#mergepannel-props-type').html('视图') ;
 		$('#mergepannel-props-frame').hide() ;
-		//$('#mergepannel-props-sel-text-align').attr( 'disabled', true ) ;
-		//$('#mergepannel-props-sel-vertical-align').attr( 'disabled', true ) ;
 	}
 	
 	$('#mergepannel-properties').show() ;

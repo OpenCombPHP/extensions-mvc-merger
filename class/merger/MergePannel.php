@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\platform\service\Service;
+
 use org\jecat\framework\ui\xhtml\UIFactory;
 
 use org\opencomb\coresystem\lib\LibManager;
@@ -41,12 +43,17 @@ class MergePannel extends Object
 		}
 	}
 	
-	public function output(IOutputStream $aDevice)
+	public function output(IOutputStream $aDevice,$sControllerClass)
 	{
 		UIFactory::singleton()->create()->display('mvc-merger:MergePannelDialog.html',null,$aDevice) ;
 		$aDevice->write(HtmlResourcePool::singleton()->__toString()) ;
 		
+		$sControllerClass = str_replace('\\','.',$sControllerClass) ;
+		$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
+		
 		$aDevice->write("<script>\r\n") ;
+		$aDevice->write("var sMvcMergerController = '{$sControllerClass}' ;\r\n") ;
+		$aDevice->write("var sMvcMergerPublicFolderUrl = '{$sImageFolder}' ;\r\n") ;
 		$aDevice->write("jquery(document).ready(function(){\r\n") ;
 		$aDevice->write("	var mergerpannel = new MergerPannel() ;\r\n") ;
 		$aDevice->write("	mergerpannel.init() ;\r\n") ;

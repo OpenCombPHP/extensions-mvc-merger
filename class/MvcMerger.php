@@ -1,6 +1,11 @@
 <?php 
 namespace org\opencomb\mvcmerger ;
 
+
+use org\jecat\framework\util\EventReturnValue;
+
+use org\jecat\framework\mvc\view\ViewAssembler;
+
 use org\jecat\framework\mvc\view\View;
 
 use org\jecat\framework\ui\UI;
@@ -63,7 +68,12 @@ class MvcMerger extends Extension
 				'org\\jecat\\framework\\mvc\\controller\\Response'
 				, Response::afterRenderViews
 				, array(__CLASS__,'onAfterRenderViews')
-		) ;
+			)
+			->registerEventHandle(
+				'org\\jecat\\framework\\mvc\\view\\ViewAssembler'
+				, ViewAssembler::assemble
+				, array(__CLASS__,'onAssemble')
+			) ;
 	}
 	
 	static public function onAfterRenderViews(Response $aResponse,View $aView,Controller $aController)
@@ -71,10 +81,20 @@ class MvcMerger extends Extension
 		if( !Request::singleton()->has('mvcmerger') )
 		{
 			return ;
-		}	
-		
+		}
+
 		$aMergePannel = new MergePannel($aView) ;
-		$aMergePannel->output($aResponse->printer()) ;
+		$aMergePannel->output($aResponse->printer(),get_class($aController)) ;
+	}
+	static public function onAssemble(ViewAssembler $aViewAssembler,Controller $aController)
+	{
+		$sClassName = str_replace('\\','.',get_class($aController)) ;
+		
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		if( $arrLayout=$aSetting->item('/merge/layout/'.$sClassName,'*',null) )
+		{
+			return EventReturnValue::returnByRef($arrLayout) ;
+		}		
 	}
 
 
