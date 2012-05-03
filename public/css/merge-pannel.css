@@ -14,6 +14,13 @@
 	z-index:100000;
 }
 
+/* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 */
+.mergepannel-layout-view-flashing {
+	border: 1px solid red;
+}
+.mergepannel-layout-frame-flashing {
+	border: 1px solid green;
+}
 
 
 
@@ -59,14 +66,6 @@
 	clear: clear:both ;
 }
 
-/* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 */
-.mergepannel-layout-view-flashing {
-	border: 1px solid red;
-background-color : #
-}
-.mergepannel-layout-frame-flashing {
-	border: 1px solid green;
-}
 .mergepannel-viewtree-item .view-description{
 	color: #999 ;	
 }

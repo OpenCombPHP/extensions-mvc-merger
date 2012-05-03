@@ -15,27 +15,29 @@
 		</div>
 		
 		<!-- frame/view 属性面板 -->
-		<div id="mergepannel-properties">
+		<div id="mergepannel-properties" style="display:none">
 			<div id="mergepannel-props-type">layout item type</div>
-			<div id="mergepannel-props-id">layout item element id</div>
+			<div>
+				ID: <span id="mergepannel-props-id">layout item element id</span>
+			</div>
 			
 			<!-- 用于 frame -->
 			<div id="mergepannel-props-frame-type" style="display:none">
-				框架类型：
-				<lalel>
-					<input id="mergepannel-props-frame-ipt-v" type="radio" value="v" />
+				类型：
+				<label>
+					<input id="mergepannel-props-frame-ipt-v" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="v" />
 					纵向
-				</lalel>
+				</label>
 				
-				<lalel>
-					<input id="mergepannel-props-frame-ipt-h" type="radio" value="h" />
+				<label>
+					<input id="mergepannel-props-frame-ipt-h" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="h" />
 					横向
-				</lalel>
+				</label>
 				
-				<lalel>
-					<input id="mergepannel-props-frame-ipt-s" type="radio" value="s" />
+				<label>
+					<input id="mergepannel-props-frame-ipt-s" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="s" disabled />
 					切换页
-				</lalel>				
+				</label>				
 			</div>
 		</div>
 		
