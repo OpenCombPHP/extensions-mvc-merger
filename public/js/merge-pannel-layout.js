@@ -6,19 +6,77 @@ MergerPannel.Layout = function ()
 	this.eleSelectedItem = null ;
 	this.dataSelectedItem = null ;
 	
+	this.nAssignedFrameId = 0 ;
 	// 单件
 	MergerPannel.Layout.singleton = this ;
 }
 
 
 MergerPannel.Layout.prototype.init = function()
-{
+{	
+	// 初始化 ztree
+	this._initZtree() ;
+	
+	// 初始化界面元素
+	this._initUi() ;	
+}
+/**
+ * 初始化界面
+ */
+MergerPannel.Layout.prototype._initUi = function (){
 	var $ = jquery ;
 	var realThis = this ;
-	
-	this.scanFrameViewStruct() ;
-	console.log(this.arrZTreeRootNodes) ;
 
+	// 绑定界面元素事件
+	//  frame 类型单选按钮组
+	$('.mergepannel-props-frame-type').change(function (){
+		if(this.checked)
+		{
+			realThis.setFrameLayout(realThis.eleSelectedItem,$(this).val()) ;
+		}
+	}) ;
+	
+	// 保存按钮
+	$('#mergepannel-layout-savebtn').click(function (){
+		realThis.saveLayout() ;
+	}) ;
+	
+	// frame 按钮事件
+	$('#mergepannel-props-frame-autowidth-btn').click(function(){
+		realThis.autoItemsWidth(realThis.eleSelectedItem,realThis.dataSelectedItem) ;
+	}) ;
+	$('#mergepannel-props-frame-autoheight-btn').click(function(){
+		realThis.autoItemsHeight(realThis.eleSelectedItem,realThis.dataSelectedItem) ;
+	}) ;
+	$('#mergepannel-props-frame-clearwidth-btn').click(function(){
+		$(realThis.eleSelectedItem).children('.jc-layout').width('') ;
+	}) ;
+	$('#mergepannel-props-frame-clearheight-btn').click(function(){
+		$(realThis.eleSelectedItem).children('.jc-layout').height('') ;
+	}) ;
+	$('#mergepannel-props-frame-delete-btn').click(function(){
+		realThis.deleteFrame(realThis.eleSelectedItem,realThis.dataSelectedItem) ;
+	}) ;
+	$('#mergepannel-props-frame-new-btn').click(function(){
+		realThis.addChildFrame(realThis.eleSelectedItem,realThis.dataSelectedItem) ;
+	}) ;
+	
+	// 属性
+	$('#mergepannel-props-common>input').blur(function (){
+		realThis.applyProperties() ;
+	}) ;
+}
+/**
+ * 初始化 ztree
+ */
+MergerPannel.Layout.prototype._initZtree = function (){
+	var $ = jquery ;
+	var realThis = this ;
+
+	// 扫描网页上的 视图布局结构
+	this.scanFrameViewStruct() ;
+	
+	// 创建 ztree
 	this.aZtree = $.fn.zTree.init($('#mergepannel-viewtree'),{
 			view: {
 				showLine: true
@@ -39,13 +97,13 @@ MergerPannel.Layout.prototype.init = function()
 				}
 			}
 			, callback: {
-				//
-				onMouseUp: function(event,treeId,treeNode) {
-					
+				// 鼠标按下
+				onMouseDown: function(event,treeId,treeNode) {
+					$('#'+treeNode.id).addClass('mergepannel-layout-item-dragging-active') ;
 				}
-				//
-				, onMouseDown: function(event,treeId,treeNode) {
-					
+				// 鼠标释放
+				, onMouseUp: function(event,treeId,treeNode) {
+					$('.mergepannel-layout-item-dragging-active').removeClass('mergepannel-layout-item-dragging-active') ;
 				}
 				
 				// 判断是否允许拖动
@@ -101,6 +159,12 @@ MergerPannel.Layout.prototype.init = function()
 			
 				// 点击 frame/view ，打开旁边的属性界面
 				, onClick: function(event, treeId, treeNode) {
+					// 应用上一次打开的属性表单
+					if(realThis.eleSelectedItem!=null)
+					{
+						realThis.applyProperties() ;
+					}
+					
 					realThis.eleSelectedItem = document.getElementById(treeNode.id) ;
 					realThis.dataSelectedItem = treeNode ;
 					realThis.openProperty( treeNode, realThis.eleSelectedItem ) ;
@@ -111,9 +175,16 @@ MergerPannel.Layout.prototype.init = function()
 	// 全部展开
 	this.aZtree.expandAll(true) ;
 		
-	$('li[treenode]>a>span')
+	// ztree node 的样式
+	this._initZtreeNodesStylte() ;
+}
+MergerPannel.Layout.prototype._initZtreeNodesStylte = function (){
+	var $ = jquery ;
+	realThis = this ;
+	$('li[treenode]>a>span:not(.mergepannel-viewtree-item-draggable)')
 		// 添加样式
 		.addClass( 'mergepannel-viewtree-item-draggable' ) 
+		
 		// 补充 zTree 的事件
 		.mouseover( function(){
 			// 鼠标移过 item 时， 对应的 frame/view 闪烁样式
@@ -124,17 +195,12 @@ MergerPannel.Layout.prototype.init = function()
 			// 取消 item 对应的 frame/view 闪烁样式
 			var aNode = realThis.aZtree.getNodeByTId(this.parentNode.parentNode.id) ;
 			$('#'+aNode.id).removeClass('mergepannel-layout-'+aNode.type+'-flashing') ;
+		})
+		.each(function(){
+			console.log(this.id) ;			
 		}) ;
-		
-	
-	// 绑定界面元素事件
-	$('.mergepannel-props-frame-type').change(function (){
-		if(this.checked)
-		{
-			realThis.setFrameLayout(realThis.eleSelectedItem,$(this).val()) ;
-		}
-	}) ;
 }
+
 /**
  * 扫描网页上的视图div，建立frame/view 树形结构
  */
@@ -151,15 +217,17 @@ MergerPannel.Layout.prototype.scanFrameViewStruct = function (){
 		var sType = $(this).hasClass('jc-view')? 'view': 'frame' ;
 		
 		var aLayoutItem = {
+			// ztree的属性
 			name : this.id
 			, icon: sMvcMergerPublicFolderUrl+'/'+sType+'.png'
 			, children : []
 			, drop: sType=='frame'
 			, drag: true
-
+			// 非ztree的属性
 			, type : sType
 			, id : this.id
 			, inframe: inframe
+			, props: {}
 		}
 		// frame 类型
 		if(sType=='frame')
@@ -188,13 +256,61 @@ MergerPannel.Layout.prototype.scanFrameViewStruct = function (){
 	})	
 }
 /**
+ * 保存布局配置
+ */
+MergerPannel.Layout.prototype.saveLayout = function(){
+	var $ = jquery ;
+	var realThis = this ;
+	
+	// 分析frame/view 结构, 并整理成后端PHP所需的数据格式
+	var mapItemDatas = {} ;
+	var arrRootNodes = [] ;
+	$('.jc-layout').each(function ()
+	{
+		var aNode = realThis.getDataByEleId(this.id) ;
+		if(!aNode)
+		{
+			return ;
+		}
+		
+		var aLayoutItem = {
+			type : aNode.type
+			, id : this.id
+			, items: []
+		}
+		
+		// frame 类型
+		if(aNode.type=='frame')
+		{
+			aLayoutItem.layout = aNode.layout ;
+		}
+		
+		mapItemDatas[this.id] = aLayoutItem ;
+
+		var eleParentFrame = $(this).parents('.jc-layout').get(0) ;
+		if( !eleParentFrame || !$(eleParentFrame).hasClass('jc-frame') )
+		{
+			arrRootNodes.push(aLayoutItem) ;
+		}
+		else
+		{
+			mapItemDatas[eleParentFrame.id].items.push(aLayoutItem) ;
+		}
+	}) ;
+	
+	console.log(arrRootNodes) ;
+}
+/**
  * 面板尺寸发生变化时重新计算界面元素的尺寸和位置
  */
 MergerPannel.Layout.prototype.resizeDialog = function ()
 {
 	var $ = jquery ;
 	$('#mergepannel-viewtree').height(
-			$('#mergepannel-dialog').height() - $('#mergepannel-layout-struct-title').height()
+			$('#mergepannel-dialog').height() - $('#mergepannel-layout-struct-title').height() - $('#mergepannel-layout-action').height() - 10
+	) ;
+	$('#mergepannel-properties').height(
+			$('#mergepannel-dialog').height() - $('#mergepannel-layout-action').height() - 5
 	) ;
 	$('#mergepannel-layout-struct').width(
 			$('#mergepannel-dialog').width() - $('#mergepannel-properties').width() - 20
@@ -252,14 +368,20 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame,sType)
 {
 	var $ = jquery ;
 	
-	var aNode = this.itemInfoByEleId(frame.id) ;
+	var aNode = this.getDataByEleId(frame.id) ;
 	aNode.layout = sType ;
 	
 	this.layoutFrame(frame,aNode) ;
 }
 MergerPannel.Layout.prototype.layoutFrame = function(frame,node)
 {
-	var $ = jquery ;	
+	var $ = jquery ;
+	
+	if(typeof(node)!=='undefine')
+	{
+		var node = this.getDataByEleId(frame.id) ;
+	}
+	
 	// 清理样式
 	$(frame).removeClass('jc-frame-horizontal')
 			.removeClass('jc-frame-vertical') 
@@ -270,9 +392,6 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame,node)
 	var sLayout = node.layout ;
 	$(frame).addClass( MergerPannel.Layout.mapLayoutFrameStyles[sLayout] )
 			.children('.jc-layout').addClass( MergerPannel.Layout.mapLayoutItemStyles[sLayout] ) ;
-	
-	// 计算成员宽度
-	this.calculateItemsWidth(frame,node) ;
 }
 MergerPannel.Layout.mapLayoutFrameStyles = {
 		h: 'jc-frame-horizontal'
@@ -283,19 +402,41 @@ MergerPannel.Layout.mapLayoutItemStyles = {
 		, v: 'jc-layout-item-vertical'
 } ;
 /**
- * 计算frame内各个item(frame/view)的宽度
- * 横向布局frame内的item,除去指定宽度的元素,剩下元素平均宽度
- * 纵向布局frame清除宽度设置(自适应)
+ * 平均设置frame内部成员的宽度
  */
-MergerPannel.Layout.prototype.calculateItemsWidth = function(frame,node)
-{
+MergerPannel.Layout.prototype.autoItemsWidth = function(frame,node){
+	if( node.layout==='h' )
+	{
+		var aChildren = $(frame).children('.jc-layout') ;
+		if( aChildren.size() < 1 )
+		{
+			return ;
+		}
+		var nWidth = Math.floor( $(frame).width()/aChildren.size() ) ;
+		aChildren.width(nWidth-5) ;
+	}
+	else if( node.layout==='v' )
+	{
+		$(frame).children('.jc-layout').width('100%') ;
+	}
+}
+/**
+ * frame内部成员的高度相等（都设为原来的最大值）
+ */
+MergerPannel.Layout.prototype.autoItemsHeight = function(frame,node){
+	var nMaxH = 0 ;
+	$(frame).children('.jc-layout').each(function (){
+		if( $(this).height()>nMaxH )
+		{
+			nMaxH = $(this).height() ;
+		}
+	}).height(nMaxH) ;
 }
 
 /**
  * 通过 frame/view 的id, 得到配置对象
  */
-MergerPannel.Layout.prototype.itemInfoByEleId = function(eleId)
-{
+MergerPannel.Layout.prototype.getDataByEleId = function(eleId){
 	return this.aZtree.getNodeByParam('id',eleId) ;
 }
 
@@ -303,12 +444,8 @@ MergerPannel.Layout.prototype.itemInfoByEleId = function(eleId)
  * 打开 frame 或 view 的属性界面
  * itemData 是 frame/view 的数据，itemEle 是 html 元素
  */
-MergerPannel.Layout.prototype.openProperty = function(itemData,itemEle)
-{
+MergerPannel.Layout.prototype.openProperty = function(itemData,itemEle){
 	var $ = jquery ;
-	
-	// 设置选中状态
-	
 	
 	$('#mergepannel-props-id').html(itemData.id) ;
 	
@@ -316,17 +453,82 @@ MergerPannel.Layout.prototype.openProperty = function(itemData,itemEle)
 	if( itemData.type=='frame' )
 	{
 		$('#mergepannel-props-type').html('视图框架') ;
-		$('#mergepannel-props-frame-type').show() ;
+		$('#mergepannel-props-frame').show() ;
 
 		$('.mergepannel-props-frame-type').attr('checked',false) ;
 		$('#mergepannel-props-frame-ipt-'+itemData.layout).attr('checked',true) ;
 		console.log(itemData.id+'#mergepannel-props-frame-ipt-'+itemData.layout) ;
+		
+		$('#mergepannel-props-frame-delete-btn').attr( 'disabled', $(itemEle).hasClass('cusframe')?false:true ) ;
 	}
 	else
 	{
 		$('#mergepannel-props-type').html('视图') ;
-		$('#mergepannel-props-frame-type').hide() ;
+		$('#mergepannel-props-frame').hide() ;
 	}
 	
 	$('#mergepannel-properties').show() ;
+	
+	this.updateProperties();
+}
+
+/**
+ * 显示选中的 frame/view 对应属性表单值
+ */
+MergerPannel.Layout.prototype.updateProperties = function(){
+	var $ = jquery ;
+	
+	$('#mergepannel-props-ipt-width').val(this.eleSelectedItem.style.width) ;
+	$('#mergepannel-props-ipt-height').val(this.eleSelectedItem.style.height) ;
+}
+
+/**
+ * 将属性表单中的值应用到 frame/view 上
+ */
+MergerPannel.Layout.prototype.applyProperties = function(){
+	var $ = jquery ;
+	
+	this.eleSelectedItem.style.width = $('#mergepannel-props-ipt-width').val() ;
+	this.eleSelectedItem.style.height = $('#mergepannel-props-ipt-height').val() ;
+}
+/**
+ * 删除一个frame（只有用户添加的frame可以被删除）
+ */
+MergerPannel.Layout.prototype.deleteFrame = function(itemEle,itemData){
+	if( $(itemEle).children('.jc-layout').size() )
+	{
+		alert('请先移除布局框架下的成员，再删除布局框架。') ;
+		return ;
+	}
+	
+	$(itemEle).remove() ;
+	this.aZtree.removeNode(itemData) ;
+}
+/**
+ * 添加一个下级frame
+ */
+MergerPannel.Layout.prototype.addChildFrame = function(itemEle,itemData){
+	var $ = jquery ;
+	var sEleId = 'frame-' + (this.nAssignedFrameId ++) ;
+	
+	this.aZtree.addNodes(itemData,{
+		// ztree的属性
+		name : 'frame'
+		, icon: sMvcMergerPublicFolderUrl+'/frame.png'
+		, children : []
+		// 非ztree的属性
+		, type : 'frame'
+		, layout : 'v'
+		, id : sEleId
+		, inframe: true
+		, props: {}
+	}) ;
+	// ztree node 的样式
+	this._initZtreeNodesStylte() ;
+	
+	// 创建html元素
+	$(itemEle).append("<div id=\""+sEleId+"\" class=\"jc-layout jc-frame cusframe\"><div class=\"jc-layout-item-end\"></div></div>") ;
+
+	// 移动
+	this.moveIn(document.getElementById(sEleId),itemEle) ;
 }

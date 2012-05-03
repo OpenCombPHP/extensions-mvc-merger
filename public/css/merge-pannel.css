@@ -21,6 +21,11 @@
 .mergepannel-layout-frame-flashing {
 	border: 1px solid green;
 }
+/* 正在拖拽的 frame/item */
+.mergepannel-layout-item-dragging-active {
+	border: 1px solid #666;
+	background-color: #cfcfcf;
+}
 
 
 

@@ -8,40 +8,65 @@
 	<div id='mergepannel-layout'>
 	
 	
-		<!-- frame/view 结构树 -->
-		<div id='mergepannel-layout-struct'>
-			<span id='mergepannel-layout-struct-title'>视图布局结构</span>
-			<div id="mergepannel-viewtree" class="ztree"></div>
+		<div id="mergepannel-layout-action">
+			<button style="float:left" id="mergepannel-layout-savebtn">保存</button>
+			<div style="float:left" id="mergepannel-layout-msgqueue">xxxxxx</div>
+			<div style="clear:both"></div>
 		</div>
-		
-		
-		<!-- frame/view 属性面板 -->
-		<div id="mergepannel-properties" style="display:none">
-			<div id="mergepannel-props-type">layout item type</div>
-			<div>
-				ID: <span id="mergepannel-props-id">layout item element id</span>
+	
+		<div>
+			<!-- frame/view 结构树 -->
+			<div id='mergepannel-layout-struct'>
+				<span id='mergepannel-layout-struct-title'>视图布局结构</span>
+				<div id="mergepannel-viewtree" class="ztree"></div>
 			</div>
-			
-			<!-- 用于 frame -->
-			<div id="mergepannel-props-frame-type" style="display:none">
-				类型：
-				<label>
-					<input id="mergepannel-props-frame-ipt-v" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="v" />
-					纵向
-				</label>
+					
+			<!-- frame/view 属性面板 -->
+			<div id="mergepannel-properties" style="display:none">
+				<div id="mergepannel-props-type">layout item type</div>
+				<div>
+					ID: <span id="mergepannel-props-id">layout item element id</span>
+				</div>
 				
-				<label>
-					<input id="mergepannel-props-frame-ipt-h" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="h" />
-					横向
-				</label>
+				<!-- 用于 frame -->
+				<div id="mergepannel-props-frame" style="display:none">
+					<div id="mergepannel-props-frame-type">
+						类型：
+						<label>
+							<input id="mergepannel-props-frame-ipt-v" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="v" />
+							纵向
+						</label>
+						
+						<label>
+							<input id="mergepannel-props-frame-ipt-h" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="h" />
+							横向
+						</label>
+						
+						<label>
+							<input id="mergepannel-props-frame-ipt-s" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="s" disabled />
+							切换页
+						</label>				
+					</div>
+					
+					<div>
+						<button id="mergepannel-props-frame-autowidth-btn">等宽</button>
+						<button id="mergepannel-props-frame-autoheight-btn">等高</button>
+						<button id="mergepannel-props-frame-clearwidth-btn">清除宽</button>
+						<button id="mergepannel-props-frame-clearheight-btn">清除高</button>
+						<br />
+						<button id="mergepannel-props-frame-delete-btn">删</button>
+						<button id="mergepannel-props-frame-new-btn">+添加下架框架</button>
+					</div>
+				</div>
 				
-				<label>
-					<input id="mergepannel-props-frame-ipt-s" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="s" disabled />
-					切换页
-				</label>				
+				<!-- frame/view 通用属性 -->
+				<hr />
+				<div id="mergepannel-props-common">
+					宽：<input style="width:50px" id="mergepannel-props-ipt-width" />
+					x 高：<input style="width:50px" id="mergepannel-props-ipt-height" />
+				</div>
 			</div>
 		</div>
-		
 		
 	</div>
 
