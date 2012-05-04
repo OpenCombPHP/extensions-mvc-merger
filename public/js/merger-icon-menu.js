@@ -5,4 +5,8 @@ jquery(function(){
 		showSpeed: 50 
 	}) ;
 	
+	jquery('#ui-dialog-title-mergepannel-dialog a ').click(function(){
+		alert('暂时不能使用此功能');
+		return false;
+	});
 })

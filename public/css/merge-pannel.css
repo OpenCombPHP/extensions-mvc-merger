@@ -14,13 +14,35 @@
 	z-index:100000;
 }
 
-/* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 */
+/* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 
 .mergepannel-layout-view-flashing {
 	border: 1px solid red;
 }
 .mergepannel-layout-frame-flashing {
 	border: 1px solid green;
+}*/
+#mergepannel-layout-flashing{
+	display:none;
 }
+.mergepannel-layout-view-flashing {
+	position:absolute;
+	z-index:1000;
+	background:green;
+	border:1px solid #666;
+	filter:alpha(opacity=50);
+	-moz-opacity:0.5;
+	opacity: 0.5;
+}
+.mergepannel-layout-frame-flashing{
+	position:absolute;
+	z-index:1000;
+	background:red;
+	border:1px solid #666;
+	filter:alpha(opacity=50);
+	-moz-opacity:0.5;
+	opacity: 0.5;
+}
+
 /* 正在拖拽的 frame/item */
 .mergepannel-layout-item-dragging-active {
 	border: 1px solid #666;

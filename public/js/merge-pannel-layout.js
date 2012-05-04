@@ -54,6 +54,9 @@ MergerPannel.Layout.prototype._initUi = function (){
 	$('#mergepannel-props-frame-clearheight-btn').click(function(){
 		$(realThis.eleSelectedItem).children('.jc-layout').height('') ;
 	}) ;
+	$('#mergepannel-props-frame-center-btn').click(function(){
+		$(realThis.eleSelectedItem).children('.jc-layout').toggleClass('place_center');
+	}) ;
 	$('#mergepannel-props-frame-delete-btn').click(function(){
 		realThis.deleteFrame(realThis.eleSelectedItem,realThis.dataSelectedItem) ;
 	}) ;
@@ -102,6 +105,9 @@ MergerPannel.Layout.prototype._initZtree = function (){
 			, callback: {
 				// 鼠标按下
 				onMouseDown: function(event,treeId,treeNode) {
+					if(!treeNode){
+						return;
+					}
 					$('#'+treeNode.id).addClass('mergepannel-layout-item-dragging-active') ;
 				}
 				// 鼠标释放
@@ -185,22 +191,28 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function (){
 	var $ = jquery ;
 	realThis = this ;
 	$('li[treenode]>a>span:not(.mergepannel-viewtree-item-draggable)')
-		// 添加样式
-		.addClass( 'mergepannel-viewtree-item-draggable' ) 
-		
 		// 补充 zTree 的事件
-		.mouseover( function(){
-			// 鼠标移过 item 时， 对应的 frame/view 闪烁样式
-			var aNode = realThis.aZtree.getNodeByTId(this.parentNode.parentNode.id) ;
-			$('#'+aNode.id).addClass('mergepannel-layout-'+aNode.type+'-flashing') ;
-		})
-		.mouseout( function(){
-			// 取消 item 对应的 frame/view 闪烁样式
-			var aNode = realThis.aZtree.getNodeByTId(this.parentNode.parentNode.id) ;
-			$('#'+aNode.id).removeClass('mergepannel-layout-'+aNode.type+'-flashing') ;
-		})
-		.each(function(){
-			console.log(this.id) ;			
+		.die('mouseover mouseout')
+		.live('mouseover mouseout', function(){
+			if(event.type == 'mouseover'){
+				// 鼠标移过 item 时， 对应的 frame/view 闪烁样式
+				var aNode = realThis.aZtree.getNodeByTId(this.parentNode.parentNode.id) ;
+				var flashing = $('<div id="mergepannel-layout-flashing"></div>');
+				var position = $('#'+aNode.id).position();
+				var width = $('#'+aNode.id).outerWidth(true);
+				var height = $('#'+aNode.id).outerHeight(true);
+				flashing.css({
+					'top':position.top,
+					'left':position.left,
+					'width':width,
+					'height':height
+				});
+				$('body').append(flashing.addClass('mergepannel-layout-'+aNode.type+'-flashing'));
+				flashing.show();
+			}else if(event.type == 'mouseout'){	
+				// 取消 item 对应的 frame/view 闪烁样式
+				$('#mergepannel-layout-flashing').remove();
+			}
 		}) ;
 }
 
@@ -440,12 +452,27 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame,node){
  */
 MergerPannel.Layout.prototype.autoItemsHeight = function(frame,node){
 	var nMaxH = 0 ;
-	$(frame).children('.jc-layout').each(function (){
-		if( $(this).height()>nMaxH )
+	var aChildren = $(frame).children('.jc-layout');
+	if( node.layout==='h' )
+	{
+		aChildren.height('100%') ;
+	}
+	else if( node.layout==='v' )
+	{
+		if( aChildren.size() < 1 )
 		{
-			nMaxH = $(this).height() ;
+			return ;
 		}
-	}).height(nMaxH) ;
+		var nHeight = Math.floor( $(frame).height()/aChildren.size() ) ;
+		aChildren.height(nHeight) ;
+	}
+	
+//	$(frame).children('.jc-layout').each(function (){
+//		if( $(this).height()>nMaxH )
+//		{
+//			nMaxH = $(this).height() ;
+//		}
+//	}).height(nMaxH) ;
 }
 
 /**
@@ -495,8 +522,8 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 	
 	$('#mergepannel-props-ipt-width').val(this.eleSelectedItem.style.width) ;
 	$('#mergepannel-props-ipt-height').val(this.eleSelectedItem.style.height) ;
-	$('#mergepannel-props-sel-text-align').val(this.eleSelectedItem.style.textAlign) ;
-	$('#mergepannel-props-sel-vertical-align').val(this.eleSelectedItem.style.verticalAlign) ;
+//	$('#mergepannel-props-sel-text-align').val(this.eleSelectedItem.style.textAlign) ;
+//	$('#mergepannel-props-sel-vertical-align').val(this.eleSelectedItem.style.verticalAlign) ;
 }
 
 /**
@@ -507,8 +534,8 @@ MergerPannel.Layout.prototype.applyProperties = function(){
 	
 	this.eleSelectedItem.style.width = $('#mergepannel-props-ipt-width').val() ;
 	this.eleSelectedItem.style.height = $('#mergepannel-props-ipt-height').val() ;
-	this.eleSelectedItem.style.textAlign = $('#mergepannel-props-sel-text-align').val() ;
-	this.eleSelectedItem.style.verticalAlign = $('#mergepannel-props-sel-vertical-align').val() ;
+//	this.eleSelectedItem.style.textAlign = $('#mergepannel-props-sel-text-align').val() ;
+//	this.eleSelectedItem.style.verticalAlign = $('#mergepannel-props-sel-vertical-align').val() ;
 }
 /**
  * 删除一个frame（只有用户添加的frame可以被删除）
