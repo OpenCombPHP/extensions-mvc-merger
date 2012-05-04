@@ -2,6 +2,8 @@
 namespace org\opencomb\mvcmerger ;
 
 
+use org\opencomb\platform\service\Service;
+
 use org\jecat\framework\util\EventReturnValue;
 
 use org\jecat\framework\mvc\view\ViewAssembler;
@@ -66,8 +68,8 @@ class MvcMerger extends Extension
 	{
 		$aEventMgr->registerEventHandle(
 				'org\\jecat\\framework\\mvc\\controller\\Response'
-				, Response::afterRenderViews
-				, array(__CLASS__,'onAfterRenderViews')
+				, Response::beforeRespond
+				, array(__CLASS__,'onBeforeRespond')
 			)
 			->registerEventHandle(
 				'org\\jecat\\framework\\mvc\\view\\ViewAssembler'
@@ -76,15 +78,19 @@ class MvcMerger extends Extension
 			) ;
 	}
 	
-	static public function onAfterRenderViews(Response $aResponse,View $aView,Controller $aController)
+	static public function onBeforeRespond(Response $aResponse,Controller $aController)
 	{
 		if( !Request::singleton()->has('mvcmerger') )
 		{
 			return ;
 		}
 
-		$aMergePannel = new MergePannel($aView) ;
-		$aMergePannel->output($aResponse->printer(),get_class($aController)) ;
+		// 向控制器插入 mvc pannel dialog 视图
+		$aView = new View('MergePannelDialog','mvc-merger:MergePannelDialog.html') ;
+		$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
+		$aView->variables()->set('sImageFolder',$sImageFolder) ;
+		$aView->variables()->set('sControllerClass',str_replace('\\','.',get_class($aController))) ;
+		$aController->mainView()->add($aView) ;
 	}
 	static public function onAssemble(ViewAssembler $aViewAssembler,Controller $aController)
 	{
@@ -94,7 +100,7 @@ class MvcMerger extends Extension
 		if( $arrLayout=$aSetting->item('/merge/layout/'.$sClassName,'*',null) )
 		{
 			return EventReturnValue::returnByRef($arrLayout) ;
-		}		
+		}
 	}
 
 
