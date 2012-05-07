@@ -2,7 +2,7 @@
 	cursor: move;		
 }
 #mergepannel-viewtree-dropping-tip{
-	z-index: 2000;
+	z-index: 300;
 	position: absolute;
 	display:none;
 	border: 1px solid #ccc;
@@ -11,7 +11,7 @@
 }
 /*提高移动node时指针的高度*/
 .zTreeDragUL , .tmpzTreeMove_arrow{
-	z-index:100000;
+	z-index:301;
 }
 
 /* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 
@@ -26,7 +26,7 @@
 }
 .mergepannel-layout-view-flashing {
 	position:absolute;
-	z-index:1000;
+	z-index:300;
 	background:green;
 	border:1px solid #666;
 	filter:alpha(opacity=50);
@@ -35,7 +35,7 @@
 }
 .mergepannel-layout-frame-flashing{
 	position:absolute;
-	z-index:1000;
+	z-index:300;
 	background:red;
 	border:1px solid #666;
 	filter:alpha(opacity=50);

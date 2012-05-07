@@ -288,13 +288,18 @@ MergerPannel.Layout.prototype.saveLayout = function(){
 			return ;
 		}
 		
+		var skinAndClass = '';
+		if(mapMVCMergerItemProperties[this.id]){
+			skinAndClass = mapMVCMergerItemProperties[this.id]['skin'];
+		}
+		
 		var aLayoutItem = {
 			type : aNode.type
 			, id : this.id
-			, 'class': {}
+			, 'cssClass': [skinAndClass]
 			, style: $(this).attr("style")
 			, items: []
-		}
+		};
 		
 		// frame 类型
 		if(aNode.type=='frame')
@@ -501,7 +506,7 @@ MergerPannel.Layout.prototype.openProperty = function(itemData,itemEle){
 
 		$('.mergepannel-props-frame-type').attr('checked',false) ;
 		$('#mergepannel-props-frame-ipt-'+itemData.layout).attr('checked',true) ;
-		console.log(itemData.id+'#mergepannel-props-frame-ipt-'+itemData.layout) ;
+//		console.log(itemData.id+'#mergepannel-props-frame-ipt-'+itemData.layout) ;
 		
 		$('#mergepannel-props-frame-delete-btn').attr( 'disabled', $(itemEle).hasClass('cusframe')?false:true ) ;
 	}
@@ -523,25 +528,50 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 	var $ = jquery ;
 	
 	var sId = this.eleSelectedItem.id ;
-	if(typeof(mapMVCMergerItemProperties[sId])=='undefined')
-	{
-		return ;
-	}
 	
 	var mapPropertyNames = {
 		'width' : 'mergepannel-props-ipt-width'
 		, 'height' : 'mergepannel-props-ipt-height'
+		, 'skin' : 'mergepannel-props-ipt-skin'
 	};
+	
 	for(var sPropName in mapPropertyNames)
 	{
 		var sInputId = mapPropertyNames[sPropName] ;
-		if( typeof(mapMVCMergerItemProperties[sId][sPropName])!='undefined' )
+		
+		if( typeof(mapMVCMergerItemProperties[sId]) != 'undefined' && typeof(mapMVCMergerItemProperties[sId][sPropName]) != 'undefined'  )
 		{
 			$('#'+sInputId).val( mapMVCMergerItemProperties[sId][sPropName] ) ;
 		}
 		else
 		{
 			$('#'+sInputId).val('') ;
+		}
+	}
+	
+	//额外skin处理
+	if($('#mergepannel-props-ipt-skin')){
+		var arrClasses = $(this.eleSelectedItem).attr('class').split(' ');
+		for(var nClass in arrClasses )
+		{
+			if(arrClasses[nClass].indexOf('jc-view-') == 0)
+			{
+				var bHasOne = false;
+				$('#mergepannel-props-ipt-skin').find('option').each(function(v,b){
+					if($(b).val() == arrClasses[nClass]){
+						bHasOne = true;
+					}
+				});
+				if(!bHasOne){
+					$('#mergepannel-props-ipt-skin').append("<option value='"+arrClasses[nClass]+"'>"+arrClasses[nClass]+"</option>");
+				}
+				
+				if(typeof mapMVCMergerItemProperties[this.eleSelectedItem.id]['skin'] != 'undefined'){
+					$('#mergepannel-props-ipt-skin').val(mapMVCMergerItemProperties[this.eleSelectedItem.id]['skin']) ;
+				}else{
+					$('#mergepannel-props-ipt-skin').val(arrClasses[nClass]) ;
+				}
+			}
 		}
 	}
 }
@@ -551,18 +581,30 @@ MergerPannel.Layout.prototype.updateProperties = function(){
  */
 MergerPannel.Layout.prototype.applyProperties = function(){
 	var $ = jquery ;
+	var realthis = this;
+	realthis.eleSelectedItem.style.width = $('#mergepannel-props-ipt-width').val() ;
+	realthis.eleSelectedItem.style.height = $('#mergepannel-props-ipt-height').val() ;
 	
-	this.eleSelectedItem.style.width = $('#mergepannel-props-ipt-width').val() ;
-	this.eleSelectedItem.style.height = $('#mergepannel-props-ipt-height').val() ;
+	
+	if($('#mergepannel-props-ipt-skin').val() != 0){
+		$(realthis.eleSelectedItem).addClass($('#mergepannel-props-ipt-skin').val()) ;
+	}else{
+		$('#mergepannel-props-ipt-skin').find('option').each(function(v,b){
+			if($(b).val()!=''){
+				$(realthis.eleSelectedItem).removeClass($(b).val()) ;
+			}
+		});
+	}
 	
 	// 保存用户输入的属性值
-	var sId = this.eleSelectedItem.id ;
+	var sId = realthis.eleSelectedItem.id ;
 	if(typeof(mapMVCMergerItemProperties[sId])=='undefined')
 	{
 		mapMVCMergerItemProperties[sId] = {} ;
 	}
 	mapMVCMergerItemProperties[sId]['width'] = $('#mergepannel-props-ipt-width').val() ;
 	mapMVCMergerItemProperties[sId]['height'] = $('#mergepannel-props-ipt-height').val() ;
+	mapMVCMergerItemProperties[sId]['skin'] = $('#mergepannel-props-ipt-skin').val() ;
 }
 /**
  * 删除一个frame（只有用户添加的frame可以被删除）
