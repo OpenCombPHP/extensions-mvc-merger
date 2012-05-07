@@ -71,6 +71,16 @@ MergerPannel.Layout.prototype._initUi = function (){
 	$('#mergepannel-props-common select').change(function (){
 		realThis.applyProperties() ;
 	}) ;
+	
+	// 激活提示
+	$('.mergepannel-tippalbe-element').poshytip({
+		className: 'tip-yellowsimple',
+		showTimeout: 1,
+		alignTo: 'target',
+		alignX: 'center',
+		offsetY: 5,
+		allowTipHover: false,
+	});
 }
 /**
  * 初始化 ztree
@@ -530,6 +540,7 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 		return ;
 	}
 	
+	// 从后端 setting 中取出上一次输入的属性值，用来恢复当前属性面板中的input (mapMVCMergerItemProperties)
 	var mapPropertyNames = {
 		'width' : 'mergepannel-props-ipt-width'
 		, 'height' : 'mergepannel-props-ipt-height'
@@ -554,10 +565,13 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 MergerPannel.Layout.prototype.applyProperties = function(){
 	var $ = jquery ;
 	
+	// 应用用户输入的属性值
 	this.eleSelectedItem.style.width = $('#mergepannel-props-ipt-width').val() ;
 	this.eleSelectedItem.style.height = $('#mergepannel-props-ipt-height').val() ;
 	
 	// 保存用户输入的属性值
+	// 将用户输入的属性值，保存在变量 mapMVCMergerItemProperties 中
+	// 保存视图布局时，会将 mapMVCMergerItemProperties 提交给后端PHP，并保存到 setting 里，用于下一次编辑时显示
 	var sId = this.eleSelectedItem.id ;
 	if(typeof(mapMVCMergerItemProperties[sId])=='undefined')
 	{

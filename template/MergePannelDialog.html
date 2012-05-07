@@ -1,5 +1,6 @@
 <lib name="jquery.ui" />
 <lib name="jquery.ztree" />
+<lib name="jquery.tip" />
 <script src="mvc-merger:js/merge-pannel.js" />
 <script src="mvc-merger:js/merge-pannel-layout.js" />
 <css src="mvc-merger:css/merge-pannel.css" />
@@ -49,14 +50,14 @@
 					</div>
 					
 					<div>
-						<button id="mergepannel-props-frame-autowidth-btn">等宽</button>
-						<button id="mergepannel-props-frame-autoheight-btn">等高</button>
-						<button id="mergepannel-props-frame-clearwidth-btn">清除宽</button>
-						<button id="mergepannel-props-frame-clearheight-btn">清除高</button>
-						<button id="mergepannel-props-frame-center-btn">居中</button>
+						<button id="mergepannel-props-frame-autowidth-btn" class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等宽 设置'>等宽</button>
+						<button id="mergepannel-props-frame-autoheight-btn" class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等高 设置'>等高</button>
+						<button id="mergepannel-props-frame-clearwidth-btn" class="mergepannel-tippalbe-element" title='清除所有下级成员的宽度设置'>清除宽</button>
+						<button id="mergepannel-props-frame-clearheight-btn" class="mergepannel-tippalbe-element" title='清除所有下级成员的高度设置'>清除高</button>
+						<button id="mergepannel-props-frame-center-btn" class="mergepannel-tippalbe-element" title='让下级成员居中'>居中</button>
 						<br />
-						<button id="mergepannel-props-frame-delete-btn">删</button>
-						<button id="mergepannel-props-frame-new-btn">+添加下架框架</button>
+						<button id="mergepannel-props-frame-delete-btn" class="mergepannel-tippalbe-element" title='删除布局框架<br />只有客户创建的布局框架才能删除'>删</button>
+						<button id="mergepannel-props-frame-new-btn" class="mergepannel-tippalbe-element" title='增加一个下级布局框架'>+添加下架框架</button>
 					</div>
 				</div>
 				
@@ -65,8 +66,8 @@
 				<div id="mergepannel-props-common">
 					
 					<div>
-						宽：<input style="width:50px" id="mergepannel-props-ipt-width" />
-						x 高：<input style="width:50px" id="mergepannel-props-ipt-height" />
+						宽：<input style="width:50px" id="mergepannel-props-ipt-width" class="mergepannel-tippalbe-element" title="设置视图或布局框架的宽度<br />可以使用百分比或单位,默认的单位是px" />
+						x 高：<input style="width:50px" id="mergepannel-props-ipt-height" class="mergepannel-tippalbe-element" title="设置视图或布局框架的高度<br />可以使用百分比或单位,默认的单位是px" />
 					</div>
 					
 				</div>
