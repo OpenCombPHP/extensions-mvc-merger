@@ -13,6 +13,7 @@ MergerPannel.prototype.init = function()
 		, height: 450
 		, title: "<a href='javascript:void'>视图布局</a> | <a href='javascript:void'>模板编织</a> | <a href='javascript:void'>网页融合</a>"
 		, resize: function(){ thisMergerPannel.resizeDialog() }
+		, zIndex:500
 	}) ;
 	
 	this.layout.init() ;

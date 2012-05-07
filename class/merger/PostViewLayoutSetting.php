@@ -22,7 +22,7 @@ class PostViewLayoutSetting extends ControlPanel
 		$this->doActions() ;
 	}
 	
-	protected function actionClear()
+	protected function actionClean()
 	{
 		if( empty($this->params['controller']) )
 		{
@@ -31,9 +31,9 @@ class PostViewLayoutSetting extends ControlPanel
 		}
 		$sClassName = str_replace('\\','.',$this->params['controller']);
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		$arrLayoutControllers = $aSetting->deleteKey('/merge/view_layout/'.$sClassName) ;
+		$arrLayoutControllers = $aSetting->deleteKey('/merge/layout/'.$sClassName) ;
 						
-		$this->createMessage(Message::success,"视图设置已经清空。") ;
+		$this->createMessage(Message::success,"视图设置已经清空。刷新页面查看更改。") ;
 	}
 	
 	protected function actionSave()
