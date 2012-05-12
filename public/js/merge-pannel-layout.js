@@ -83,7 +83,7 @@ MergerPannel.Layout.prototype._initUi = function (){
 		alignTo: 'target',
 		alignX: 'center',
 		offsetY: 5,
-		allowTipHover: false,
+		allowTipHover: false
 	});
 }
 /**
@@ -387,13 +387,13 @@ MergerPannel.Layout.prototype.resizeDialog = function ()
 {
 	var $ = jquery ;
 	$('#mergepannel-viewtree').height(
-			$('#mergepannel-dialog').height() - $('#mergepannel-layout-struct-title').height() - $('#mergepannel-layout-action').height() - 10
+			$('#mergepannel-dialog').height() - $('#mergepannel-layout-struct-title').height() - $('#mergepannel-layout-action').height() - 15
 	) ;
 	$('#mergepannel-properties').height(
-			$('#mergepannel-dialog').height() - $('#mergepannel-layout-action').height() - 5
+			$('#mergepannel-dialog').height() - $('#mergepannel-layout-action').height() -5
 	) ;
 	$('#mergepannel-layout-struct').width(
-			$('#mergepannel-dialog').width() - $('#mergepannel-properties').width() - 20
+			$('#mergepannel-dialog').width() - $('#mergepannel-properties').width() - 20  //$('#mergepannel-properties').width() = 230
 	) ;
 }
 
@@ -542,7 +542,7 @@ MergerPannel.Layout.prototype.getDataByEleId = function(eleId){
 MergerPannel.Layout.prototype.openProperty = function(itemData,itemEle){
 	var $ = jquery ;
 	
-	$('#mergepannel-props-id').html(itemData.id) ;
+	$('.mergepannel-props-id').html(itemData.id) ;
 	
 	// frame
 	if( itemData.type=='frame' )
@@ -579,7 +579,7 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 	var mapPropertyNames = {
 		'width' : 'mergepannel-props-ipt-width'
 		, 'height' : 'mergepannel-props-ipt-height'
-		, 'skin' : 'mergepannel-props-ipt-skin'
+//		, 'skin' : 'mergepannel-props-ipt-skin'
 	};
 	
 	for(var sPropName in mapPropertyNames)
@@ -596,7 +596,7 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 		}
 	}
 	
-	//额外skin处理
+	//从页面中的属性来处理skin控件的值
 	if($('#mergepannel-props-ipt-skin')){
 		var arrClasses = $(this.eleSelectedItem).attr('class').split(' ');
 		for(var nClass in arrClasses )
@@ -612,8 +612,8 @@ MergerPannel.Layout.prototype.updateProperties = function(){
 				if(!bHasOne){
 					$('#mergepannel-props-ipt-skin').append("<option value='"+arrClasses[nClass]+"'>"+arrClasses[nClass]+"</option>");
 				}
-				
-				if(typeof mapMVCMergerItemProperties[this.eleSelectedItem.id]['skin'] != 'undefined'){
+//				console.log(mapMVCMergerItemProperties);
+				if(typeof mapMVCMergerItemProperties[sId] != 'undefined' && typeof mapMVCMergerItemProperties[sId]['skin'] != 'undefined'){
 					$('#mergepannel-props-ipt-skin').val(mapMVCMergerItemProperties[this.eleSelectedItem.id]['skin']) ;
 				}else{
 					$('#mergepannel-props-ipt-skin').val(arrClasses[nClass]) ;

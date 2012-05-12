@@ -4,88 +4,108 @@
 <script src="mvc-merger:js/merge-pannel.js" />
 <script src="mvc-merger:js/merge-pannel-layout.js" />
 <css src="mvc-merger:css/merge-pannel.css" />
-<div id='mergepannel-dialog'>
 
+<div id='mergepannel-dialog'>
 	<div id='mergepannel-layout'>
-	
-	
-		<div id="mergepannel-layout-action">
-			<button style="float:left" id="mergepannel-layout-savebtn">保存</button>
-			<button style="float:left" id="mergepannel-layout-cleanbtn">清理</button>
-			<div style="float:left" id="mergepannel-layout-msgqueue"></div>
-			<div style="clear:both"></div>
-		</div>
-	
-		<div>
+		<div id='mergepannel-layout-views'>
 			<!-- frame/view 结构树 -->
 			<div id='mergepannel-layout-struct'>
 				<h1 id='mergepannel-layout-struct-title'>视图布局结构</h1>
-				<div id="mergepannel-viewtree" class="ztree"></div>
+				<hr />
+				<ul id="mergepannel-viewtree" class="ztree"></ul>
 			</div>
-					
 			<!-- frame/view 属性面板 -->
-			<div id="mergepannel-properties" style="display:none">
-				<h1 id="mergepannel-props-type">layout item type</h1>
-				<h2>
-					控制 <span id="mergepannel-props-id">layout item element id</span> 包含的元素
-				</h2>
-				
+			<div id="mergepannel-properties" style="display: none">
+				<h1 id="mergepannel-props-type-text"><span id="mergepannel-props-type">layout item type</span>设置 </h1>
 				<!-- 用于 frame -->
-				<div id="mergepannel-props-frame" style="display:none;">
+				<div id="mergepannel-props-frame" style="display: none;">
+					<hr />
+					<h2 id="mergepannel-props-id-text"> 控制 <span class="mergepannel-props-id">layout item element id</span> 中元素的样式 </h2>
 					<div id="mergepannel-props-frame-type">
-						类型：
-						<label>
-							<input id="mergepannel-props-frame-ipt-v" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="v" />
-							纵向
-						</label>
-						
-						<label>
-							<input id="mergepannel-props-frame-ipt-h" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="h" />
-							横向
-						</label>
-						
-						<label>
-							<input id="mergepannel-props-frame-ipt-s" class="mergepannel-props-frame-type" name='mergepannel-props-frame-type' type="radio" value="s" disabled />
-							切换页
-						</label>
+						类型： <label>
+							<input id="mergepannel-props-frame-ipt-v"
+							class="mergepannel-props-frame-type"
+							name='mergepannel-props-frame-type' type="radio" value="v" />
+							纵向 </label><label>
+							<input id="mergepannel-props-frame-ipt-h"
+							class="mergepannel-props-frame-type"
+							name='mergepannel-props-frame-type' type="radio" value="h" />
+							横向 </label><label>
+							<input id="mergepannel-props-frame-ipt-s"
+							class="mergepannel-props-frame-type"
+							name='mergepannel-props-frame-type' type="radio" value="s"
+							disabled />
+							切换页 </label>
 					</div>
-					
 					<div>
-						<button id="mergepannel-props-frame-autowidth-btn" class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等宽 设置'>等宽</button>
-						<button id="mergepannel-props-frame-autoheight-btn" class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等高 设置'>等高</button>
-						<button id="mergepannel-props-frame-clearwidth-btn" class="mergepannel-tippalbe-element" title='清除所有下级成员的宽度设置'>清除宽</button>
-						<button id="mergepannel-props-frame-clearheight-btn" class="mergepannel-tippalbe-element" title='清除所有下级成员的高度设置'>清除高</button>
-						<button id="mergepannel-props-frame-center-btn" class="mergepannel-tippalbe-element" title='让下级成员居中'>居中</button>
+						<button id="mergepannel-props-frame-autowidth-btn"
+						class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等宽 设置'>
+							等宽
+						</button>
+						<button id="mergepannel-props-frame-autoheight-btn"
+						class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等高 设置'>
+							等高
+						</button>
+						<button id="mergepannel-props-frame-clearwidth-btn"
+						class="mergepannel-tippalbe-element" title='清除所有下级成员的宽度设置'>
+							清除宽
+						</button>
+						<button id="mergepannel-props-frame-clearheight-btn"
+						class="mergepannel-tippalbe-element" title='清除所有下级成员的高度设置'>
+							清除高
+						</button>
+						<button id="mergepannel-props-frame-center-btn"
+						class="mergepannel-tippalbe-element" title='让下级成员居中'>
+							居中
+						</button>
 						<br />
-						<button id="mergepannel-props-frame-delete-btn" class="mergepannel-tippalbe-element" title='删除布局框架<br />只有客户创建的布局框架才能删除'>删</button>
-						<button id="mergepannel-props-frame-new-btn" class="mergepannel-tippalbe-element" title='增加一个下级布局框架'>+添加下架框架</button>
+						<button id="mergepannel-props-frame-delete-btn"
+						class="mergepannel-tippalbe-element"
+						title='删除布局框架<br />只有客户创建的布局框架才能删除'>
+							删
+						</button>
+						<button id="mergepannel-props-frame-new-btn"
+						class="mergepannel-tippalbe-element" title='增加一个下级布局框架'>
+							+添加下架框架
+						</button>
 					</div>
 				</div>
-				
 				<!-- frame/view 通用属性 -->
 				<hr />
 				<div id="mergepannel-props-common">
-					
+					<h2 id="mergepannel-props-id-text"> 控制 <span class="mergepannel-props-id">layout item element id</span> 的样式 </h2>
 					<div>
-						宽：<input style="width:50px" id="mergepannel-props-ipt-width" class="mergepannel-tippalbe-element" title="设置视图或布局框架的宽度<br />可以使用百分比或单位,默认的单位是px" />
-						x 高：<input style="width:50px" id="mergepannel-props-ipt-height" class="mergepannel-tippalbe-element" title="设置视图或布局框架的高度<br />可以使用百分比或单位,默认的单位是px" />
+						宽：
+						<input style="width: 50px" id="mergepannel-props-ipt-width"
+						class="mergepannel-tippalbe-element"
+						title="设置视图或布局框架的宽度<br />可以使用百分比或单位,默认的单位是px" />
+						x 高：
+						<input
+						style="width: 50px" id="mergepannel-props-ipt-height"
+						class="mergepannel-tippalbe-element"
+						title="设置视图或布局框架的高度<br />可以使用百分比或单位,默认的单位是px" />
 					</div>
-					
 					<div>
-						<label>样式 : 
-							<select id='mergepannel-props-ipt-skin' type='checkbox' value='1'>
+						<label>样式 :
+							<select id='mergepannel-props-ipt-skin'
+							type='checkbox' value='1'>
 								<option value>无</option>
 								<option value="jc-view-decorater-oc">蜂巢默认样式</option>
-							</select>
-						</label>
+							</select> </label>
 					</div>
-					
 				</div>
 			</div>
 		</div>
-		
 	</div>
-
+	<div id="mergepannel-layout-action">
+		<span id="mergepannel-layout-msgqueue"></span>
+		<button id="mergepannel-layout-savebtn">
+			保存
+		</button>
+		<button id="mergepannel-layout-cleanbtn">
+			清理
+		</button>
+	</div>
 </div>
 
 <script>

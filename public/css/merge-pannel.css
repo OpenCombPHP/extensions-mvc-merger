@@ -11,7 +11,7 @@
 }
 /*提高移动node时指针的高度*/
 .zTreeDragUL , .tmpzTreeMove_arrow{
-	z-index:301;
+	z-index:510;
 }
 
 /* 当鼠标在视图列表上划过时，对应的视图 闪烁效果 
@@ -21,6 +21,9 @@
 .mergepannel-layout-frame-flashing {
 	border: 1px solid green;
 }*/
+
+
+/*对话框内部*/
 #mergepannel-layout-flashing{
 	display:none;
 }
@@ -105,12 +108,35 @@
 }
 #mergepannel-properties{
 	float: left ;
-	width: 240px ;
+	width:230px;
 }
-
 
 #mergepannel-viewtree-placeholder{
 	border: 1px solid #ccc;	
 	background-color: #efefef;
 	height: 50px ;
+}
+
+#mergepannel-layout-struct-title ,#mergepannel-props-type-text{
+	font-size:16px;
+	font-weight:bold;
+	line-height:20px;
+}
+#mergepannel-props-id-text{
+	font-size:14px;
+	line-height:18px;
+}
+
+/*修正ui的css*/
+#mergepannel-dialog{
+	background:white;
+}
+
+#mergepannel-layout-action{
+	position:absolute;
+	right:5px;
+	bottom:5px;
+}
+#mergepannel-layout-msgqueue{
+	float:left;
 }
