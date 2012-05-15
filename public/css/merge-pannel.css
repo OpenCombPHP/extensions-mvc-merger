@@ -140,3 +140,39 @@
 #mergepannel-layout-msgqueue{
 	float:left;
 }
+
+#mergepannel-props-frame-autowidth-btn{
+	width:32px;
+	height:32px;
+	border:1px solid #333;
+	margin:2px;
+	background:url(../image/width.gif) no-repeat center center;
+}
+#mergepannel-props-frame-clearwidth-btn{
+	width:32px;
+	height:32px;
+	border:1px solid #333;
+	margin:2px;
+	background:url(../image/nowidth.gif) no-repeat center center;
+}
+#mergepannel-props-frame-autoheight-btn{
+	width:32px;
+	height:32px;
+	border:1px solid #333;
+	margin:2px;
+	background:url(../image/height.gif) no-repeat center center;
+}
+#mergepannel-props-frame-clearheight-btn{
+	width:32px;
+	height:32px;
+	border:1px solid #333;
+	margin:2px;
+	background:url(../image/noheight.gif) no-repeat center center;
+}
+#mergepannel-props-frame-center-btn{
+	width:32px;
+	height:32px;
+	border:1px solid #333;
+	margin:2px;
+	background:url(../image/center.gif) no-repeat center center;
+}

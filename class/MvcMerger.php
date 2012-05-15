@@ -55,12 +55,12 @@ class MvcMerger extends Extension
 				),__FILE__) ;*/
 
 		// 注册菜单build事件的处理函数
-		Menu::registerBuildHandle(
-				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
-				, 'frameView'
-				, 'mainMenu'
-				, array(__CLASS__,'buildControlPanelMenu')
-		) ;
+// 		Menu::registerBuildHandle(
+// 				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+// 				, 'frameView'
+// 				, 'mainMenu'
+// 				, array(__CLASS__,'buildControlPanelMenu')
+// 		) ;
 	}
 
 	
