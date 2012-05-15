@@ -103,6 +103,9 @@ MergerPannel.Layout.prototype._initUi = function() {
 		allLinkOfTreeNode.click();
 		allLinkOfTreeNode.first().click();
 	}
+	
+	//自动选中第一个
+	$("#mergepannel-viewtree").find('a:first').click();
 }
 /**
  * 初始化 ztree
@@ -371,22 +374,21 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 	});
 
 	// ajax 提交给PHP
-	$
-			.ajax({
-				type : "POST",
-				url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=save',
-				data : {
-					layout : mapRootNodes,
-					controller : sMvcMergerController,
-					properties : mapMVCMergerItemProperties
-				},
-				complete : function(req) {
-					// 显示操作结果消息队列
-					$('#mergepannel-layout-msgqueue').html(req.responseText);
-					// 重新计算ui布局(消息队列可能影响ui界面)
-					realThis.resizeDialog();
-				}
-			});
+	$.ajax({
+		type : "POST",
+		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=save',
+		data : {
+			layout : mapRootNodes,
+			controller : sMvcMergerController,
+			properties : mapMVCMergerItemProperties
+		},
+		complete : function(req) {
+			// 显示操作结果消息队列
+			$('#mergepannel-layout-msgqueue').html(req.responseText);
+			// 重新计算ui布局(消息队列可能影响ui界面)
+			realThis.resizeDialog();
+		}
+	});
 }
 
 /**
@@ -394,20 +396,19 @@ MergerPannel.Layout.prototype.saveLayout = function() {
  */
 MergerPannel.Layout.prototype.cleanLayout = function() {
 	var $ = jquery;
-	$
-			.ajax({
-				type : "POST",
-				url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=clean',
-				data : {
-					controller : sMvcMergerController
-				},
-				complete : function(req) {
-					// 显示操作结果消息队列
-					$('#mergepannel-layout-msgqueue').html(req.responseText);
-					// 重新计算ui布局(消息队列可能影响ui界面)
-					realThis.resizeDialog();
-				}
-			});
+	$.ajax({
+		type : "POST",
+		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=clean',
+		data : {
+			controller : sMvcMergerController
+		},
+		complete : function(req) {
+			// 显示操作结果消息队列
+			$('#mergepannel-layout-msgqueue').html(req.responseText);
+			// 重新计算ui布局(消息队列可能影响ui界面)
+			realThis.resizeDialog();
+		}
+	});
 }
 
 /**
@@ -418,14 +419,13 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 	$('#mergepannel-viewtree').height(
 			$('#mergepannel-dialog').height()
 					- $('#mergepannel-layout-struct-title').height()
-					- $('#mergepannel-layout-action').height() - 15);
+					- $('#mergepannel-layout-action').height() - 35);
 	$('#mergepannel-properties').height(
 			$('#mergepannel-dialog').height()
 					- $('#mergepannel-layout-action').height() - 5);
 	$('#mergepannel-layout-struct').width(
 			$('#mergepannel-dialog').width()
-					- $('#mergepannel-properties').width() - 20 // $('#mergepannel-properties').width()
-																// = 230
+					- $('#mergepannel-properties').width() - 20 
 	);
 }
 
@@ -437,9 +437,7 @@ MergerPannel.Layout.prototype.moveIn = function(view, frame) {
 	if ($(frame).children('.jc-layout-item-end').size() < 1) {
 		$(view).appendTo($(frame));
 	} else {
-		$(view)
-				.insertBefore(
-						$($(frame).children('.jc-layout-item-end').last()));
+		$(view).insertBefore( $($(frame).children('.jc-layout-item-end').last()));
 	}
 	// frame 重新布局
 	this.layoutFrame(frame);
@@ -506,8 +504,10 @@ MergerPannel.Layout.mapLayoutItemStyles = {
  */
 MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 	var $ = jquery;
+	var aChildren;
+	var nWidth;
 	if (node.layout === 'h') {
-		var aChildren = $(frame).children('.jc-layout');
+		aChildren = $(frame).children('.jc-layout');
 		if (aChildren.size() < 1) {
 			return;
 		}
@@ -515,11 +515,16 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 		aChildren.each(function(v,b){
 			borderWidth += $(b).outerWidth(true) - $(b).width();
 		});
-		var nWidth = Math.floor(  ($(frame).width() -borderWidth ) / aChildren.size() );
-		aChildren.width(nWidth - 10 );
+		nWidth = Math.floor( ($(frame).width() -borderWidth ) / aChildren.size() );
+		aChildren.width( nWidth - 10 );
 	} else if (node.layout === 'v') {
-		$(frame).children('.jc-layout').width('100%');
+		aChildren = $(frame).children('.jc-layout');
+		nWidth = '100%';
+		aChildren.width(nWidth);
 	}
+	aChildren.each(function(v,b){
+		mapMVCMergerItemProperties[b.id]['width'] = nWidth;
+	});
 }
 /**
  * frame内部成员的高度相等（都设为原来的最大值）
@@ -527,22 +532,19 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 MergerPannel.Layout.prototype.autoItemsHeight = function(frame, node) {
 	var nMaxH = 0;
 	var aChildren = $(frame).children('.jc-layout');
+	var nHeight;
 	if (node.layout === 'h') {
 		aChildren.height('100%');
 	} else if (node.layout === 'v') {
 		if (aChildren.size() < 1) {
 			return;
 		}
-		var nHeight = Math.floor($(frame).height() / aChildren.size());
+		nHeight = Math.floor($(frame).height() / aChildren.size());
 		aChildren.height(nHeight);
 	}
-
-	// $(frame).children('.jc-layout').each(function (){
-	// if( $(this).height()>nMaxH )
-	// {
-	// nMaxH = $(this).height() ;
-	// }
-	// }).height(nMaxH) ;
+	aChildren.each(function(v,b){
+		mapMVCMergerItemProperties[b.id]['height'] = nHeight;
+	});
 }
 
 /**
@@ -608,7 +610,7 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	}
 
 	// 从页面中的属性来处理skin控件的值
-	if ($('#mergepannel-props-ipt-skin')) {
+	if ($('#mergepannel-props-ipt-skin').length > 0) {
 		var arrClasses = $(this.eleSelectedItem).attr('class').split(' ');
 		for ( var nClass in arrClasses) {
 			if (arrClasses[nClass].indexOf('jc-view-') == 0) {
@@ -654,20 +656,24 @@ MergerPannel.Layout.prototype.applyProperties = function() {
 			}
 		});
 	}
-
-	// 将用户输入的属性值，保存在变量 mapMVCMergerItemProperties 中
+	realthis.saveProperties();
+}
+/**
+ * 将用户输入的属性值，保存在变量 mapMVCMergerItemProperties 中
+ */
+MergerPannel.Layout.prototype.saveProperties = function() {
+	var $ = jquery;
+	var realthis = this;
 	// 保存视图布局时，会将 mapMVCMergerItemProperties 提交给后端PHP，并保存到 setting 里，用于下一次编辑时显示
 	var sId = realthis.eleSelectedItem.id;
 	if (typeof (mapMVCMergerItemProperties[sId]) == 'undefined') {
 		mapMVCMergerItemProperties[sId] = {};
 	}
-	mapMVCMergerItemProperties[sId]['width'] = $('#mergepannel-props-ipt-width')
-			.val();
-	mapMVCMergerItemProperties[sId]['height'] = $(
-			'#mergepannel-props-ipt-height').val();
-	mapMVCMergerItemProperties[sId]['skin'] = $('#mergepannel-props-ipt-skin')
-			.val();
+	mapMVCMergerItemProperties[sId]['width'] = $('#mergepannel-props-ipt-width').val();
+	mapMVCMergerItemProperties[sId]['height'] = $( '#mergepannel-props-ipt-height').val();
+	mapMVCMergerItemProperties[sId]['skin'] = $('#mergepannel-props-ipt-skin').val();
 }
+
 /**
  * 删除一个frame（只有用户添加的frame可以被删除）
  */
