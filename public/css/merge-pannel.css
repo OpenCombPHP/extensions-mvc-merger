@@ -102,9 +102,17 @@
 	overflow:scroll;
 	overflow-x:scroll;
 }
+
+#mergepannel-props-css{
+	font-size:12px;
+}
+
+#mergepannel-props-css h3{
+	display:inline;
+}
 #mergepannel-properties{
 	float: left ;
-	width:230px;
+	width:290px;
 }
 
 #mergepannel-viewtree-placeholder{
@@ -126,6 +134,8 @@
 /*修正ui的css*/
 #mergepannel-dialog{
 	background:white;
+	opacity: 0.7;
+	filter:alpha(opacity=70);
 }
 
 #mergepannel-layout-action{
@@ -137,6 +147,27 @@
 	float:left;
 }
 
+#mergepannel-props-properties-overflow{
+	height:350px;
+	overflow:scroll;
+}
+
+#mergepannel-props-ipt-borders-showmore{
+	display:block;
+	width:20px;
+	height:20px;
+	float:right;
+}
+#mergepannel-props-ipt-borders{
+	display:none;
+}
+.mergepannel-props-ipt-borders-arrow-left{
+	background:url(../image/arrow_left.png) center center no-repeat;
+}
+.mergepannel-props-ipt-borders-arrow-down{
+	background:url(../image/arrow_down.png) center center no-repeat;
+}
+/*
 #mergepannel-props-frame-autowidth-btn{
 	width:32px;
 	height:32px;
@@ -165,10 +196,11 @@
 	margin:2px;
 	background:url(../image/noheight.gif) no-repeat center center;
 }
+
 #mergepannel-props-frame-center-btn{
 	width:32px;
 	height:32px;
 	border:1px solid #333;
 	margin:2px;
 	background:url(../image/center.gif) no-repeat center center;
-}
+}*/

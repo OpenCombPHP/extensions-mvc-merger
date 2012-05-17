@@ -173,7 +173,7 @@ class MvcMerger extends Extension
 		}
 
 		// for UI Object Browser ---------
-		if(Request::singleton()->bool('mvcmerger_ui_browser'))
+		if(Request::singleton()->bool('mvcmerger'))
 		{
 			\org\opencomb\coresystem\lib\LibManager::singleton()->loadLibrary('jquery') ;
 			\org\opencomb\coresystem\lib\LibManager::singleton()->loadLibrary('jquery.ui') ;

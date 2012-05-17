@@ -4,6 +4,46 @@ MergerPannel.Layout = function() {
 
 	this.eleSelectedItem = null;
 	this.dataSelectedItem = null;
+	
+	// 从后端 setting 中取出上一次输入的属性值，用来恢复当前属性面板中的input (mapMVCMergerItemProperties)
+	//key 是css属性名称,value是表单对应ID
+	this.mapPropertyNames = {
+		'width' : 'mergepannel-props-ipt-width',
+		'height' : 'mergepannel-props-ipt-height',
+		'skin' : 'mergepannel-props-ipt-skin',
+		'class' : 'mergepannel-props-class',
+		'background-image' : 'mergepannel-props-background-image',
+		'background-color' : 'mergepannel-props-background-color',
+		'background-position' : 'mergepannel-props-background-position',
+		'background-repeat' : 'mergepannel-props-background-repeat',
+		'position' : 'mergepannel-props-ipt-position',
+		'z-index' : 'mergepannel-props-ipt-zindex',
+		'top' : 'mergepannel-props-ipt-top',
+		'left' : 'mergepannel-props-ipt-left',
+		'bottom' : 'mergepannel-props-ipt-bottom',
+		'right' : 'mergepannel-props-ipt-right',
+		'border-top-width' : 'mergepannel-props-ipt-border-top-width',
+		'border-top-color' : 'mergepannel-props-ipt-border-top-color',
+		'border-top-style' : 'mergepannel-props-ipt-border-top-style',
+		'border-bottom-width' : 'mergepannel-props-ipt-border-bottom-width',
+		'border-bottom-color' : 'mergepannel-props-ipt-border-bottom-color',
+		'border-bottom-style' : 'mergepannel-props-ipt-border-bottom-style',
+		'border-right-width' : 'mergepannel-props-ipt-border-right-width',
+		'border-right-color' : 'mergepannel-props-ipt-border-right-color',
+		'border-right-style' : 'mergepannel-props-ipt-border-right-style',
+		'border-left-width' : 'mergepannel-props-ipt-border-left-width',
+		'border-left-color' : 'mergepannel-props-ipt-border-left-color',
+		'border-left-style' : 'mergepannel-props-ipt-border-left-style',
+		'margin-top' : 'mergepannel-props-ipt-margin-top',
+		'margin-right' : 'mergepannel-props-ipt-margin-right',
+		'margin-bottom' : 'mergepannel-props-ipt-margin-bottom',
+		'margin-left' : 'mergepannel-props-ipt-margin-left',
+		'padding-top' : 'mergepannel-props-ipt-padding-top',
+		'padding-right' : 'mergepannel-props-ipt-padding-right',
+		'padding-bottom' : 'mergepannel-props-ipt-padding-bottom',
+		'padding-left' : 'mergepannel-props-ipt-padding-left',
+		'style' : 'mergepannel-props-style'
+	};
 
 	this.nAssignedFrameId = 0;
 	// 单件
@@ -75,11 +115,14 @@ MergerPannel.Layout.prototype._initUi = function() {
 			});
 
 	// 属性
-	$('#mergepannel-props-common input').blur(function() {
-		realThis.applyProperties();
+	$('#mergepannel-props-common input').blur(function(event) {
+		realThis.applyProperties(event);
 	});
-	$('#mergepannel-props-common select').change(function() {
-		realThis.applyProperties();
+	$('#mergepannel-props-common select').change(function(event) {
+		realThis.applyProperties(event);
+	});
+	$('#mergepannel-props-common textarea').change(function(event) {
+		realThis.applyProperties(event);
 	});
 
 	// 激活提示
@@ -106,6 +149,16 @@ MergerPannel.Layout.prototype._initUi = function() {
 	
 	//自动选中第一个
 	$("#mergepannel-viewtree").find('a:first').click();
+	
+	//border特殊处理
+	$('#mergepannel-props-ipt-borders-showmore').toggle(function(){
+		$(this).removeClass('mergepannel-props-ipt-borders-arrow-left').addClass('mergepannel-props-ipt-borders-arrow-down');
+		$("#mergepannel-props-ipt-borders").show();
+	},function(){
+		$(this).removeClass('mergepannel-props-ipt-borders-arrow-down').addClass('mergepannel-props-ipt-borders-arrow-left');
+		$("#mergepannel-props-ipt-borders").hide();
+	});
+	
 }
 /**
  * 初始化 ztree
@@ -420,13 +473,12 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 			$('#mergepannel-dialog').height()
 					- $('#mergepannel-layout-struct-title').height()
 					- $('#mergepannel-layout-action').height() - 35);
-	$('#mergepannel-properties').height(
-			$('#mergepannel-dialog').height()
-					- $('#mergepannel-layout-action').height() - 5);
-	$('#mergepannel-layout-struct').width(
-			$('#mergepannel-dialog').width()
-					- $('#mergepannel-properties').width() - 20 
-	);
+	
+	var height = $('#mergepannel-dialog').height() - $('#mergepannel-layout-action').height() -5;
+	$('#mergepannel-properties').height( height );
+	$('#mergepannel-props-properties-overflow').height(height-27);
+	
+	$('#mergepannel-layout-struct').width( $('#mergepannel-dialog').width() - $('#mergepannel-properties').width() - 15 );
 }
 
 /**
@@ -570,8 +622,6 @@ MergerPannel.Layout.prototype.openProperty = function(itemData, itemEle) {
 		$('.mergepannel-props-frame-type').attr('checked', false);
 		$('#mergepannel-props-frame-ipt-' + itemData.layout).attr('checked',
 				true);
-		// console.log(itemData.id+'#mergepannel-props-frame-ipt-'+itemData.layout)
-		// ;
 
 		$('#mergepannel-props-frame-delete-btn').attr('disabled',
 				$(itemEle).hasClass('cusframe') ? false : true);
@@ -592,15 +642,8 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	var $ = jquery;
 	var sId = this.eleSelectedItem.id;
 
-	// 从后端 setting 中取出上一次输入的属性值，用来恢复当前属性面板中的input (mapMVCMergerItemProperties)
-	var mapPropertyNames = {
-		'width' : 'mergepannel-props-ipt-width',
-		'height' : 'mergepannel-props-ipt-height',
-		'skin' : 'mergepannel-props-ipt-skin'
-	};
-
-	for ( var sPropName in mapPropertyNames) {
-		var sInputId = mapPropertyNames[sPropName];
+	for ( var sPropName in this.mapPropertyNames) {
+		var sInputId = this.mapPropertyNames[sPropName];
 		if (typeof (mapMVCMergerItemProperties[sId]) != 'undefined'
 				&& typeof (mapMVCMergerItemProperties[sId][sPropName]) != 'undefined') {
 			$('#' + sInputId).val(mapMVCMergerItemProperties[sId][sPropName]);
@@ -641,12 +684,37 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 /**
  * 将属性表单中的值应用到 frame/view 上
  */
-MergerPannel.Layout.prototype.applyProperties = function() {
+MergerPannel.Layout.prototype.applyProperties = function(event) {
 	var $ = jquery;
 	var realthis = this;
-	realthis.eleSelectedItem.style.width = $('#mergepannel-props-ipt-width').val();
-	realthis.eleSelectedItem.style.height = $('#mergepannel-props-ipt-height').val();
-
+	var sId = realthis.eleSelectedItem.id;
+	
+	//border 特殊处理
+	if(typeof event !='undefined'){
+		if(event.currentTarget.id == 'mergepannel-props-ipt-border-width' ){
+			$('#mergepannel-props-ipt-border-top-width').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-left-width').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-right-width').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-bottom-width').val($(event.currentTarget).val());
+		}else if(event.currentTarget.id == 'mergepannel-props-ipt-border-color'){
+			$('#mergepannel-props-ipt-border-top-color').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-left-color').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-right-color').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-bottom-color').val($(event.currentTarget).val());
+		}else if(event.currentTarget.id == 'mergepannel-props-ipt-border-style'){
+			$('#mergepannel-props-ipt-border-top-style').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-left-style').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-right-style').val($(event.currentTarget).val());
+			$('#mergepannel-props-ipt-border-bottom-style').val($(event.currentTarget).val());
+		}
+	}
+	
+	//class 处理
+	if(typeof mapMVCMergerItemProperties == 'undefined'){
+		$(realthis.eleSelectedItem).removeClass(mapMVCMergerItemProperties[sId]['class']);
+	}
+	$(realthis.eleSelectedItem).addClass($('#mergepannel-props-class').val());
+	
 	if ($('#mergepannel-props-ipt-skin').val() != '') {
 		$(realthis.eleSelectedItem).addClass( $('#mergepannel-props-ipt-skin').val() );
 	} else {
@@ -656,12 +724,23 @@ MergerPannel.Layout.prototype.applyProperties = function() {
 			}
 		});
 	}
+	
+	for( var propertyName in this.mapPropertyNames){
+		if(propertyName == 'class' || propertyName == 'skin' || propertyName == 'style'){
+			continue;
+		}
+		$(realthis.eleSelectedItem).css( propertyName , $('#'+this.mapPropertyNames[propertyName]).val() );
+	}
+	
+	//额外的style , 保持在style属性最后面
+	$(realthis.eleSelectedItem).attr('style' , $(realthis.eleSelectedItem).attr('style') + ' ' + $('#mergepannel-props-style').val() );
+	
 	realthis.saveProperties();
 }
 /**
  * 将用户输入的属性值，保存在变量 mapMVCMergerItemProperties 中
  */
-MergerPannel.Layout.prototype.saveProperties = function() {
+MergerPannel.Layout.prototype.saveProperties = function(sId) {
 	var $ = jquery;
 	var realthis = this;
 	// 保存视图布局时，会将 mapMVCMergerItemProperties 提交给后端PHP，并保存到 setting 里，用于下一次编辑时显示
@@ -669,9 +748,10 @@ MergerPannel.Layout.prototype.saveProperties = function() {
 	if (typeof (mapMVCMergerItemProperties[sId]) == 'undefined') {
 		mapMVCMergerItemProperties[sId] = {};
 	}
-	mapMVCMergerItemProperties[sId]['width'] = $('#mergepannel-props-ipt-width').val();
-	mapMVCMergerItemProperties[sId]['height'] = $( '#mergepannel-props-ipt-height').val();
-	mapMVCMergerItemProperties[sId]['skin'] = $('#mergepannel-props-ipt-skin').val();
+	
+	for( var propertyName in this.mapPropertyNames){
+		mapMVCMergerItemProperties[sId][propertyName] = $('#'+this.mapPropertyNames[propertyName]).val();
+	}
 }
 
 /**

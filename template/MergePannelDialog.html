@@ -17,72 +17,213 @@
 			<!-- frame/view 属性面板 -->
 			<div id="mergepannel-properties" style="display: none">
 				<h1 id="mergepannel-props-type-text"><span id="mergepannel-props-type">layout item type</span>设置 </h1>
-				<!-- 用于 frame -->
-				<div id="mergepannel-props-frame" style="display: none;">
+				<div id="mergepannel-props-properties-overflow">
+					<!-- 用于 frame -->
+					<div id="mergepannel-props-frame" style="display: none;">
+						<hr />
+						<h2 id="mergepannel-props-id-text"> 控制子元素的样式 </h2>
+						<div id="mergepannel-props-frame-type">
+							类型： <label>
+								<input id="mergepannel-props-frame-ipt-v"
+								class="mergepannel-props-frame-type"
+								name='mergepannel-props-frame-type' type="radio" value="v" />
+								纵向 </label><label>
+								<input id="mergepannel-props-frame-ipt-h"
+								class="mergepannel-props-frame-type"
+								name='mergepannel-props-frame-type' type="radio" value="h" />
+								横向 </label><label>
+								<input id="mergepannel-props-frame-ipt-s"
+								class="mergepannel-props-frame-type"
+								name='mergepannel-props-frame-type' type="radio" value="s"
+								disabled />
+								切换页 </label>
+						</div>
+						<div>
+							<img id="mergepannel-props-frame-autowidth-btn" width="24" height="24" src="extensions/mvc-merger/0.1/public/image/width.gif" class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等宽 设置'/>
+							<img id="mergepannel-props-frame-autoheight-btn" width="24" height="24" src="extensions/mvc-merger/0.1/public/image/height.gif" class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等高 设置'/>
+							<img id="mergepannel-props-frame-clearwidth-btn" width="24" height="24" src="extensions/mvc-merger/0.1/public/image/nowidth.gif" class="mergepannel-tippalbe-element" title='清除所有下级成员的宽度设置'/>
+							<img id="mergepannel-props-frame-clearheight-btn" width="24" height="24" src="extensions/mvc-merger/0.1/public/image/noheight.gif" class="mergepannel-tippalbe-element" title='清除所有下级成员的高度设置'/>
+							<img id="mergepannel-props-frame-center-btn" width="24" height="24" src="extensions/mvc-merger/0.1/public/image/center.gif" class="mergepannel-tippalbe-element" title='让下级成员居中'/>
+							<br />
+							<button id="mergepannel-props-frame-delete-btn" class="mergepannel-tippalbe-element" title='删除布局框架<br />只有客户创建的布局框架才能删除'>
+								删
+							</button>
+							<button id="mergepannel-props-frame-new-btn"
+							class="mergepannel-tippalbe-element" title='增加一个下级布局框架'>
+								+添加下级框架
+							</button>
+						</div>
+					</div>
+					<!-- frame/view 通用属性 -->
 					<hr />
-					<h2 id="mergepannel-props-id-text"> 控制 <span class="mergepannel-props-id">layout item element id</span> 中元素的样式 </h2>
-					<div id="mergepannel-props-frame-type">
-						类型： <label>
-							<input id="mergepannel-props-frame-ipt-v"
-							class="mergepannel-props-frame-type"
-							name='mergepannel-props-frame-type' type="radio" value="v" />
-							纵向 </label><label>
-							<input id="mergepannel-props-frame-ipt-h"
-							class="mergepannel-props-frame-type"
-							name='mergepannel-props-frame-type' type="radio" value="h" />
-							横向 </label><label>
-							<input id="mergepannel-props-frame-ipt-s"
-							class="mergepannel-props-frame-type"
-							name='mergepannel-props-frame-type' type="radio" value="s"
-							disabled />
-							切换页 </label>
-					</div>
-					<div>
-						<button id="mergepannel-props-frame-autowidth-btn"
-						class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等宽 设置'>
-						</button>
-						<button id="mergepannel-props-frame-autoheight-btn"
-						class="mergepannel-tippalbe-element" title='视图框架下的所有下级成员进行 等高 设置'>
-						</button>
-						<button id="mergepannel-props-frame-clearwidth-btn"
-						class="mergepannel-tippalbe-element" title='清除所有下级成员的宽度设置'>
-						</button>
-						<button id="mergepannel-props-frame-clearheight-btn"
-						class="mergepannel-tippalbe-element" title='清除所有下级成员的高度设置'>
-						</button>
-						<button id="mergepannel-props-frame-center-btn"
-						class="mergepannel-tippalbe-element" title='让下级成员居中'>
-						</button>
-						<br />
-						<button id="mergepannel-props-frame-delete-btn"
-						class="mergepannel-tippalbe-element"
-						title='删除布局框架<br />只有客户创建的布局框架才能删除'>
-							删
-						</button>
-						<button id="mergepannel-props-frame-new-btn"
-						class="mergepannel-tippalbe-element" title='增加一个下级布局框架'>
-							+添加下架框架
-						</button>
-					</div>
-				</div>
-				<!-- frame/view 通用属性 -->
-				<hr />
-				<div id="mergepannel-props-common">
-					<h2 id="mergepannel-props-id-text"> 控制 <span class="mergepannel-props-id">layout item element id</span> 的样式 </h2>
-					<div>
-						<label>样式 :
-							<select id='mergepannel-props-ipt-skin' >
-								<option value="">无</option>
-								<option value="jc-view-decorater-oc">蜂巢默认样式</option>
+					<div id="mergepannel-props-common">
+						<h2 id="mergepannel-props-id-text"> 控制自身样式 </h2>
+						<div>
+							<h3>样式:</h3>
+							<label>选择样式
+								<select id='mergepannel-props-ipt-skin' >
+									<option value="">无</option>
+									<option value="jc-view-decorater-oc">蜂巢默认样式</option>
+								</select>
+							</label>
+							<br/>
+							<label>填写样式:
+								<input style="width: 160px" id="mergepannel-props-class"/>
+							</label>
+						</div>
+						<div id='mergepannel-props-css'>
+							<br/>
+							<h3>宽高:</h3>
+							宽
+							<input style="width: 50px" id="mergepannel-props-ipt-width" class="mergepannel-tippalbe-element" title="设置视图或布局框架的宽度<br />可以使用百分比或单位,默认的单位是px" />
+							x 高
+							<input style="width: 50px" id="mergepannel-props-ipt-height" class="mergepannel-tippalbe-element" title="设置视图或布局框架的高度<br />可以使用百分比或单位,默认的单位是px" />
+							<br/><br/>
+							
+							<h3>背景:</h3>
+							图片地址<input style="width: 160px" id="mergepannel-props-background-image" /><br/>
+							颜色<input style="width: 160px" id="mergepannel-props-background-color" />
+								<br/>
+							背景位置<input style="width: 180px" id="mergepannel-props-background-position" /><br/>
+							背景重复<select id="mergepannel-props-background-repeat">
+										<option value='no-repeat'>不重复</option>
+										<option value='repeat'>重复</option>
+										<option value='repeat-x'>横向重复</option>
+										<option value='repeat-y'>纵向重复</option>
+									</select>
+							<br/>
+							<br/>
+							
+							<h3>位置:</h3>
+							位置模式<select id="mergepannel-props-ipt-position">
+								<option value="static">正常</option>
+								<option value="relative">相对</option>
+								<option value="absolute">绝对</option>
+								<option value="fixed">窗口绝对</option>
 							</select>
-						</label>
-					</div>
-					<div>
-						宽：
-						<input style="width: 50px" id="mergepannel-props-ipt-width" class="mergepannel-tippalbe-element" title="设置视图或布局框架的宽度<br />可以使用百分比或单位,默认的单位是px" />
-						x 高：
-						<input style="width: 50px" id="mergepannel-props-ipt-height" class="mergepannel-tippalbe-element" title="设置视图或布局框架的高度<br />可以使用百分比或单位,默认的单位是px" />
-					</div>
+							高度:<input style="width: 33px" id="mergepannel-props-ipt-zindex" type="text"/>
+							<br/>
+							上
+							<input style="width: 33px" id="mergepannel-props-ipt-top" type="text"/>
+							左
+							<input style="width: 33px" id="mergepannel-props-ipt-left" type="text"/>
+							下
+							<input style="width: 33px" id="mergepannel-props-ipt-bottom" type="text"/>
+							右
+							<input style="width: 33px" id="mergepannel-props-ipt-right" type="text"/>
+							<br/><br/>
+							
+							<h3>边框:</h3>
+							宽
+							<input style="width: 40px" id="mergepannel-props-ipt-border-width" type="text"/>
+							色
+							<input style="width: 40px" id="mergepannel-props-ipt-border-color" type="text"/>
+							样
+							<select id="mergepannel-props-ipt-border-style" style='width:70px;'>
+								<option value="none">无</option>
+								<option value="solid">实线</option>
+								<option value="dotted">点状</option>
+								<option value="dashed">虚线</option>
+								<option value="double">双线</option>
+								<option value="groove">3D 凹槽</option>
+								<option value="ridge">3D 垄状</option>
+								<option value="inset">3D 内部</option>
+								<option value="outset">3D 外部</option>
+							</select>
+							
+							<a id="mergepannel-props-ipt-borders-showmore" href="#" title="展开详细" class="mergepannel-props-ipt-borders-arrow-left">
+							 </a>
+							<div id='mergepannel-props-ipt-borders'>
+								<h3>上边框:</h3>
+								宽
+								<input style="width: 40px" id="mergepannel-props-ipt-border-top-width" type="text"/>
+								色
+								<input style="width: 40px" id="mergepannel-props-ipt-border-top-color" type="text"/>
+								样
+								<select id="mergepannel-props-ipt-border-top-style" style='width:70px;'>
+									<option value="none">无</option>
+									<option value="solid">实线</option>
+									<option value="dotted">点状</option>
+									<option value="dashed">虚线</option>
+									<option value="double">双线</option>
+									<option value="groove">3D 凹槽</option>
+									<option value="ridge">3D 垄状</option>
+									<option value="inset">3D 内部</option>
+									<option value="outset">3D 外部</option>
+								</select><br/>
+								<h3>右边框:</h3>
+								宽
+								<input style="width: 40px" id="mergepannel-props-ipt-border-right-width" type="text"/>
+								色
+								<input style="width: 40px" id="mergepannel-props-ipt-border-right-color" type="text"/>
+								样
+								<select id="mergepannel-props-ipt-border-right-style" style='width:70px;'>
+									<option value="none">无</option>
+									<option value="solid">实线</option>
+									<option value="dotted">点状</option>
+									<option value="dashed">虚线</option>
+									<option value="double">双线</option>
+									<option value="groove">3D 凹槽</option>
+									<option value="ridge">3D 垄状</option>
+									<option value="inset">3D 内部</option>
+									<option value="outset">3D 外部</option>
+								</select><br/>
+								<h3>下边框:</h3>
+								宽
+								<input style="width: 40px" id="mergepannel-props-ipt-border-bottom-width" type="text"/>
+								色
+								<input style="width: 40px" id="mergepannel-props-ipt-border-bottom-color" type="text"/>
+								样
+								<select id="mergepannel-props-ipt-border-bottom-style" style='width:70px;'>
+									<option value="none">无</option>
+									<option value="solid">实线</option>
+									<option value="dotted">点状</option>
+									<option value="dashed">虚线</option>
+									<option value="double">双线</option>
+									<option value="groove">3D 凹槽</option>
+									<option value="ridge">3D 垄状</option>
+									<option value="inset">3D 内部</option>
+									<option value="outset">3D 外部</option>
+								</select><br/>
+								<h3>左边框:</h3>
+								宽
+								<input style="width: 40px" id="mergepannel-props-ipt-border-left-width" type="text"/>
+								色
+								<input style="width: 40px" id="mergepannel-props-ipt-border-left-color" type="text"/>
+								样
+								<select id="mergepannel-props-ipt-border-left-style" style='width:70px;'>
+									<option value="none">无</option>
+									<option value="solid">实线</option>
+									<option value="dotted">点状</option>
+									<option value="dashed">虚线</option>
+									<option value="double">双线</option>
+									<option value="groove">3D 凹槽</option>
+									<option value="ridge">3D 垄状</option>
+									<option value="inset">3D 内部</option>
+									<option value="outset">3D 外部</option>
+								</select>
+							</div>
+							<br/>
+							<br/>
+							<h3>边距:</h3>
+							上<input style="width: 33px" id="mergepannel-props-ipt-margin-top" type="text"/>
+							右<input style="width: 33px" id="mergepannel-props-ipt-margin-right" type="text"/>
+							下<input style="width: 33px" id="mergepannel-props-ipt-margin-bottom" type="text"/>
+							左<input style="width: 33px" id="mergepannel-props-ipt-margin-left" type="text"/>
+							<br/><br/>
+							
+							<h3>留白:</h3>
+							上<input style="width: 33px" id="mergepannel-props-ipt-padding-top" type="text"/>
+							右<input style="width: 33px" id="mergepannel-props-ipt-padding-right" type="text"/>
+							下<input style="width: 33px" id="mergepannel-props-ipt-padding-bottom" type="text"/>
+							左<input style="width: 33px" id="mergepannel-props-ipt-padding-left" type="text"/>
+							<br/><br/>
+							
+							<h3>附加:</h3>
+							<textarea id="mergepannel-props-style"></textarea>
+							<br/>
+						</div>
+				</div>
 				</div>
 			</div>
 		</div>
