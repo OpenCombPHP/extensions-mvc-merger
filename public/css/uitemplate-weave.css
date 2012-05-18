@@ -69,7 +69,7 @@
 	border:blue 2px solid ;
 }
 #ub_select_dom{
-	background:red;
+	background:url(../image/select.gif) center center no-repeat;
 }
 
 .mvcmerger_template_namespace{

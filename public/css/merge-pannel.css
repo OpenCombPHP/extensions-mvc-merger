@@ -1,6 +1,15 @@
 .mergepannel-viewtree-item-draggable {
 	cursor: move;		
 }
+#ui-dialog-title-mergepannel-dialog a{
+	width:60px;
+	height:15px;
+	display:block;
+	float:left;
+}
+#ui-dialog-title-mergepannel-dialog .selected_mvcmerger{
+	background:white;
+}
 #mergepannel-viewtree-dropping-tip{
 	z-index: 300;
 	position: absolute;

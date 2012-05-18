@@ -3,7 +3,7 @@ ub = {
 	aRunningZTree:null,
 	aTemplates:null,
 	aDialog:jQuery(
-		'<div id="ub_dialog" title="模板编织">'
+		'<div id="ub_dialog" title="模板编织" class="mvcmerger_pages">'
 			+ '<div id="ub_toolbox">'
 				+ '<div id="ub_select_dom" class="toolBtns">'
 				+ '</div>'
@@ -60,12 +60,14 @@ ub = {
 		}
 	},
 	openDialog:function(){
-		ub.aDialog.dialog({
-			width:900
-			, height:500
-			, closeOnEscape: true
-			, show: 'slide'
-		});
+//		ub.aDialog.dialog({
+//			width:900
+//			, height:500
+//			, closeOnEscape: true
+//			, show: 'slide'
+//		});
+		
+		ub.aDialog.hide().appendTo(jquery('#mergepannel-dialog'));
 		jQuery( "#tabs" ).tabs({ selected: 0});
 	},
 	//************初始化tag列表************
@@ -109,7 +111,7 @@ ub = {
 		jQuery.each(aTags,function(nKey,aTag){
 			var aLi = {name: "<"+aTag['tag']+">" , children:[]};
 			aLi['children'] = ub.initChildrenTagList(aTag['children']);
-			aLi['tagxpath'] = aTag['xpath'];
+			aLi['tagxpath'] = aTag['uixpath'];
 			aLi['data'] = aTag;
 			arrChildren.push(aLi);
 		});
@@ -132,7 +134,7 @@ ub = {
 		ub.clearEditForm();
 		var parentNode = ub.getTopNode(treeNode);
 		jQuery('#ub_template').val(parentNode.templateNameAndNameSpace);
-		jQuery('#ub_xpath').val(treeNode.data.xpath);
+		jQuery('#ub_xpath').val(treeNode.data.uixpath);
 	},
 	clearEditForm:function(){
 		jQuery('#ub_edit').find('input,textarea').val('');
@@ -154,7 +156,7 @@ ub = {
 	//绑定事件
 	bindEvent:function(){
 		//选取dom模式开关
-		jQuery("#ub_select_dom").click(function(){
+		jQuery("#ub_select_dom").live('click',function(){
 			if(jQuery(this).hasClass("toolBtnSelect")){
 				ub.closeSelectDomMode();
 			}else{
@@ -178,13 +180,13 @@ ub = {
 			jQuery( "#tabs" ).tabs( "select" , 1);
 			var parentNode = ub.getTopNode(treeNode);
 			var templateNamespace = parentNode.templateNameAndNameSpace;
-			var xpath = treeNode.data.xpath;
+			var uixpath = treeNode.data.uixpath;
 			//个tab页面填充信息
 			jQuery.ajax( {
 				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=list'
 				, data:{ 
 					namespace:templateNamespace
-					,xpath : xpath
+					,xpath : uixpath
 				}
 				, type: 'POST'
 				, dataType: 'json'
@@ -275,25 +277,25 @@ ub = {
 	openSelectDomMode:function(){
 		jQuery("#ub_select_dom").addClass("toolBtnSelect");
 		//绑定选择dom的方法
-		jQuery('body').on("mouseover","*[xpath]",ub.highLightDom);
-		jQuery('body').on("mouseout","*[xpath]",ub.lowLightDom);
-		jQuery('body').on("click","*[xpath]",ub.selectDomAndFindTag);
+		jQuery('body').on("mouseover","*[uixpath]",ub.highLightDom);
+		jQuery('body').on("mouseout","*[uixpath]",ub.lowLightDom);
+		jQuery('body').on("click","*[uixpath]",ub.selectDomAndFindTag);
 	},
 	closeSelectDomMode:function(){
 		jQuery("#ub_select_dom").removeClass("toolBtnSelect");
 		//卸载选择dom的方法
-		jQuery('body').off("mouseover","*[xpath]",ub.highLightDom);
-		jQuery('body').off("mouseout","*[xpath]",ub.lowLightDom);
-		jQuery('body').off("click","*[xpath]",ub.selectDomAndFindTag);
+		jQuery('body').off("mouseover","*[uixpath]",ub.highLightDom);
+		jQuery('body').off("mouseout","*[uixpath]",ub.lowLightDom);
+		jQuery('body').off("click","*[uixpath]",ub.selectDomAndFindTag);
 	},
 	selectDomAndFindTag:function(e){
 		var dom = jQuery(e.target);
 		dom.removeClass("highlight");
-		var xpath = dom.attr("xpath");
+		var uixpath = dom.attr("uixpath");
 		//收起已经展开的tag
 		ub.closeTree();
 		//需要显示的节点
-		var target = ub.aRunningZTree.getNodesByParamFuzzy("tagxpath" , xpath , null);
+		var target = ub.aRunningZTree.getNodesByParamFuzzy("tagxpath" , uixpath , null);
 		//展开父节点
 		ub.aRunningZTree.expandNode(target[0],true,false,true);
 		//选中目标节点
@@ -337,13 +339,12 @@ ub = {
 		container.scrollTop(dom.position().top-toHeight);
 	},
 	highLightDomForSec:function(tag,sec){
-		var dom = jQuery("*[xpath='"+tag.tagxpath+"']");
+		var dom = jQuery("*[uixpath='"+tag.data.uixpath+"']");
 		dom.addClass("highlight");
 		setTimeout(function(){dom.removeClass("highlight")} , sec*1000);
 	},
 	saveSetting:function() {
 		jquery('#ub_save_message').html('正在保存 ... ...') ;
-		
 		jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostTemplateWeave&rspn=msgqueue&act=save',{
 			data: {
 				template: jquery('#ub_template').val()

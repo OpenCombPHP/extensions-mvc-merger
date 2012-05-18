@@ -15,6 +15,7 @@ class TemplateWeaveList extends ControlPanel
 	}
 	
 	protected function actionList(){
+		
 		if(!$this->params->has('namespace') OR !$this->params->has('xpath')){
 			return;
 		}

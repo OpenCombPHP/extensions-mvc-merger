@@ -280,7 +280,7 @@ MergerPannel.Layout.prototype._initZtree = function() {
 MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 	var $ = jquery;
 	realThis = this;
-	$('li[treenode]>a>span:not(.mergepannel-viewtree-item-draggable)')
+	$('#mergepannel-viewtree li[treenode]>a>span:not(.mergepannel-viewtree-item-draggable)')
 			// 补充 zTree 的事件
 			.die('mouseover mouseout')
 			.live(
@@ -288,8 +288,7 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 					function(event) {
 						if (event.type == 'mouseover') {
 							// 鼠标移过 item 时， 对应的 frame/view 闪烁样式
-							var aNode = realThis.aZtree
-									.getNodeByTId(this.parentNode.parentNode.id);
+							var aNode = realThis.aZtree.getNodeByTId(this.parentNode.parentNode.id);
 							var flashing = $('<div id="mergepannel-layout-flashing"></div>');
 							var position = $('#' + aNode.id).position();
 							var width = $('#' + aNode.id).outerWidth(true);

@@ -6,7 +6,7 @@
 <css src="mvc-merger:css/merge-pannel.css" />
 
 <div id='mergepannel-dialog'>
-	<div id='mergepannel-layout'>
+	<div id='mergepannel-layout' class="mvcmerger_pages">
 		<div id='mergepannel-layout-views'>
 			<!-- frame/view 结构树 -->
 			<div id='mergepannel-layout-struct'>
@@ -227,16 +227,17 @@
 				</div>
 			</div>
 		</div>
+		<div id="mergepannel-layout-action">
+			<span id="mergepannel-layout-msgqueue"></span>
+			<button id="mergepannel-layout-savebtn">
+				保存
+			</button>
+			<button id="mergepannel-layout-cleanbtn">
+				清理
+			</button>
+		</div>
 	</div>
-	<div id="mergepannel-layout-action">
-		<span id="mergepannel-layout-msgqueue"></span>
-		<button id="mergepannel-layout-savebtn">
-			保存
-		</button>
-		<button id="mergepannel-layout-cleanbtn">
-			清理
-		</button>
-	</div>
+	<!-- tab页面其他的内容会动态添加在这里 -->
 </div>
 
 <script>

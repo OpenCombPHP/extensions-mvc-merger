@@ -59,7 +59,6 @@ class PostTemplateWeave extends ControlPanel
 		
 		// 清理系统缓存
 		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton()) ;
-		
 		// 清理模板编译缓存
 		MvcMerger::clearTemplateCompiled($sTemplate,$sNamespace) ;
 	}

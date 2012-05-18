@@ -138,7 +138,6 @@ class MvcMerger extends Extension
 			{
 				$sTemplate = $aTemplateKey->name() ;
 				$arrAllPatchs = $aTemplateKey->item('arrPatchs',array()) ;
-	
 				foreach($arrAllPatchs as $sXPath=>$arrPatchList)
 				{
 					foreach($arrPatchList as $arrPatch)
@@ -198,23 +197,22 @@ class MvcMerger extends Extension
 			$aClassFile->delete() ;
 		}
 	}
+	
 	static public function clearTemplateCompiled($sTemplate,$sNamespace)
 	{
 		$aSrcMgr = MvcUIFactory::singleton()->sourceFileManager() ;
-		
-		if( !$aFolder = Folder::singleton()->findFolder($aSrcMgr->compiledFolderPath()) )
-		{
-			return false ;
+		$dir = $aSrcMgr->compiledFolderPath() . '/';
+		self::rrmdir($dir);
+	}
+	//删除非空文件夹
+	private function rrmdir($dir){
+		foreach(glob($dir . '/*') as $file) {
+			if(is_dir($file))
+				self::rrmdir($file);
+			else
+				unlink($file);
 		}
-		foreach($aFolder->iterator(FSIterator::FOLDER) as $sFolderName)
-		{
-			$sCompiledPath = $sFolderName . '/' .$sNamespace . '/' . $sTemplate . '.php' ;
-			if( $aCompiled=$aFolder->findFile($sCompiledPath) )
-			{
-				$aCompiled->delete() ;
-			}
-		}
-		
+		rmdir($dir);
 	}
 
 	static public function buildControlPanelMenu(array & $arrConfig)

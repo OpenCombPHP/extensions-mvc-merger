@@ -58,10 +58,10 @@ class UIObjectBrowserInfo implements IInterpreter
 		if( $aObject instanceof Node )
 		{
 			$sXPath = $aObject->properties()->get('xpath') ;
-			$aObject->attributes()->add( AttributeValue::createInstance('xpath',$sXPath) ) ;
+			$aObject->attributes()->add( AttributeValue::createInstance('uixpath',$sXPath) ) ;
 		
 			$sStructJson.= "{$sIndent}	, tag:'".$aObject->tagName()."'\r\n" ;
-			$sStructJson.= "{$sIndent}	, xpath:'{$sXPath}'\r\n" ;
+			$sStructJson.= "{$sIndent}	, uixpath:'{$sXPath}'\r\n" ;
 		}
 		
 		$sStructJson.= "{$sIndent}	, children:[" ;
