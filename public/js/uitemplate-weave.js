@@ -60,13 +60,14 @@ ub = {
 		}
 	},
 	openDialog:function(){
+		//把内容放入独立的对话框
 //		ub.aDialog.dialog({
 //			width:900
 //			, height:500
 //			, closeOnEscape: true
 //			, show: 'slide'
 //		});
-		
+		//内容放入共用对话框
 		ub.aDialog.hide().appendTo(jquery('#mergepannel-dialog'));
 		jQuery( "#tabs" ).tabs({ selected: 0});
 	},
@@ -102,6 +103,16 @@ ub = {
 			}
 		}, arrZtreeData);
 		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("ub_template_list");
+		
+		//添加补丁个数显示
+		var arrNodes = ub.aRunningZTree.getNodesByFilter(function(node){
+			if( typeof(node.data) != "undefined" && typeof(node.data.patchNum) != "undefined"){
+				if(node.data.patchNum > 0){
+					ub.aRunningZTree.expandNode(node.getParentNode(),true,false);
+					jquery('#'+node.tId).find('a .button').after("<span class='patchNum'>("+node.data.patchNum+")</span>");
+				}
+			}
+		},false);
 	},
 	initChildrenTagList:function(aTags){
 		if(aTags.length <= 0){
@@ -170,10 +181,10 @@ ub = {
 		}
 		var aObj = jQuery("#" + treeNode.tId);
 		if (jQuery("#showDom_"+treeNode.tId).length>0) return;
-		var editStr = "<button type='button' id='showDom_" +treeNode.tId
-						+ "' title='编织模板' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/patch.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>"
-						+ "<button type='button' id='showConf_" +treeNode.tId
-						+ "' title='显示DOM节点' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></button>";
+		var editStr = "<span class='button' id='showDom_" +treeNode.tId
+						+ "' title='编织模板' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/patch.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></span>"
+						+ "<span class='button' id='showConf_" +treeNode.tId
+						+ "' title='显示DOM节点' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></span>";
 		aObj.find('>a').after(editStr);
 		jQuery("#showDom_"+treeNode.tId).on("click", function(){
 			//切换tab

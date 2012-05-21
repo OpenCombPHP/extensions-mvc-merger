@@ -28,6 +28,12 @@
 .highlight{
 	background:#F6A828;
 }
+#ub_template{
+	width:250px;
+}
+#ub_xpath{
+	width:250px;
+}
 
 #ub_template_list{
 	
@@ -52,18 +58,18 @@
 	width:auto;
 	height:30px;
 }
-#showDom{
-	
+.patchNum{
+	color:red;
+	font-weight:bold;
 }
-
-#tabs ul{
+#tabs .ui-tabs-nav{
 	height:22px;
 }
-#tabs ul li{
+#tabs .ui-tabs-nav li{
 	height:20px;
 	line-height:20px;
 }
-#tabs ul li a{
+#tabs .ui-tabs-nav li a{
 	padding:0 4px;
 }
 
