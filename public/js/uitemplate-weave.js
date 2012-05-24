@@ -76,7 +76,6 @@ ub = {
 		var arrZtreeData = [];
 		jQuery.each(ub.aTemplates ,function(sKey,aTemplate){
 			var arrKeys = sKey.split(':');
-			
 			//TODO 这里隐藏了织入的模板,应该显示出来让用户有递归编织的机会,但是目前没有完成
 			if(arrKeys[1] == ''){
 				return;
