@@ -65,7 +65,7 @@ class ControllerMerger extends ControlPanel
 				$this->form->createMessage(Message::error,"输入的%s控制器类不存在：%s",array($sName,$this->params[$sDataName])) ;
 				return ;
 			}
-			if( !Type::hasImplements($this->params[$sDataName],'org\\jecat\\framework\\mvc\\controller\\Controller') )
+			if( $this->params[$sDataName] instanceof \org\jecat\framework\mvc\controller\Controller )
 			{
 				$this->form->createMessage(Message::error,"输入的%s不是有效的控制器类：%s",array($sName,$this->params[$sDataName])) ;
 				return ;

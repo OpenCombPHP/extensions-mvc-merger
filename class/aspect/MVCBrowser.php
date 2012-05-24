@@ -20,7 +20,6 @@ class MVCBrowser
 		{
 			return ;
 		}
-		
 		$sJsCode = "\r\n<script>\r\n" ;
 		$sJsCode.= "var _mvcstruct = " . \org\opencomb\mvcmerger\aspect\MVCBrowser::generateControllerStructJcCode($this) . "; \r\n" ;
 		$sJsCode.= "if( parent && typeof(parent.structBrowser)!='undefined' ){\r\n" ;

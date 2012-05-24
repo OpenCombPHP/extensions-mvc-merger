@@ -59,7 +59,6 @@ structBrowser._loadModelList = function(arrModels)
 		{
 			source.append(structBrowser._loadModel(arrModels[i])) ;
 		}
-		
 		return source ;
 	}
 	else
@@ -186,6 +185,7 @@ jQuery(function(){
 			alert("请至少选定一个对象");
 			return;
 		}
+		
 		if(structBrowser.selectType == "handle"){
 			jQuery(structBrowser.parentObject.document).find("#source_controller_class").val(jQuery("#classname").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_name']").val(jQuery("#name").val());
@@ -212,12 +212,19 @@ jQuery(function(){
 		that.addClass("selectClass");
 		jQuery("#classname").val(that.data("class"));
 		jQuery("#name").val(that.data("name"));
-		jQuery("#args").val(that.data("params"));
+		
+		//屏蔽系统自动添加的.data-name-is-user-call参数
+		var args =  that.data("params").substr( that.data("params").indexOf(".data-name-is-user-call=") + 26 ) ;
+		jQuery("#args").val(args);
 		jQuery("#title").val(that.data("title"));
 	});
+	
+	//页面大小
+	window.resizeTo(840,600);
 });
 </script>
 <div class="structBrowser_left">
+	请选择控制器:
 	<ul id="browser" class="filetree"></ul>
 </div>
 

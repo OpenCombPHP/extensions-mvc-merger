@@ -176,6 +176,10 @@
 .mergepannel-props-ipt-borders-arrow-down{
 	background:url(../image/arrow_down.png) center center no-repeat;
 }
+
+#mergepannel-controllermerger{
+	display:none;
+}
 /*
 #mergepannel-props-frame-autowidth-btn{
 	width:32px;

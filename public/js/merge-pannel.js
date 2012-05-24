@@ -11,7 +11,7 @@ MergerPannel.prototype.init = function()
 	$('#mergepannel-dialog').dialog({
 		width: 600
 		, height: 450
-		, title: "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='ub_dialog'>模板编织</a><a href='javascript:;'>网页融合</a>"
+		, title: "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='ub_dialog'>模板编织</a><a href='javascript:;' tab='mergepannel-controllermerger'>网页融合</a>"
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
 	}) ;
@@ -19,6 +19,18 @@ MergerPannel.prototype.init = function()
 	this.layout.init() ;
 	
 	this.resizeDialog() ;
+	
+	//获取页面融合页面内容
+	$.ajax({
+		url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe'
+		, dataType:'html'
+//		, beforeSend:function(){
+//			comment_list_field.html('<div class="comment_loadding">加载中...</div>');
+//		}
+		, success: function(html) {
+			$("#mergepannel-controllermerger").html(html);
+		}
+	}) ;
 	
 	//tab页面
 	$('.selected_mvcmerger').parent().find('a').click(function(){

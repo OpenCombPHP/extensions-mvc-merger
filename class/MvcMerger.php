@@ -44,15 +44,15 @@ class MvcMerger extends Extension
 	public function load()
 	{
 		// AOP 注册
-		/*aspect\ControllerMerge::registerAOP() ;
-		aspect\ViewLayoutSetting::registerAOP() ;
+		aspect\ControllerMerge::registerAOP() ;
+// 		aspect\ViewLayoutSetting::registerAOP() ;
 		AOP::singleton()
 				->registerBean(array(
 						// jointpoint
 						'org\\jecat\\framework\\mvc\\controller\\Controller::mainRun()' ,
 						// advice
 						array('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser','reflectMvc')
-				),__FILE__) ;*/
+				),__FILE__) ;
 
 		// 注册菜单build事件的处理函数
 // 		Menu::registerBuildHandle(
@@ -194,7 +194,7 @@ class MvcMerger extends Extension
 	{
 		if( $aClassFile = ClassLoader::singleton()->searchClass($sClass,Package::compiled) )
 		{
-			$aClassFile->delete() ;
+			unlink($aClassFile);
 		}
 	}
 	
