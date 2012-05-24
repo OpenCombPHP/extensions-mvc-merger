@@ -253,6 +253,8 @@ ub = {
 						if(confirm('删除节点成功,需要刷新页面才能看到删除后效果,点击\"确定\"刷新页面,点击\"取消\"停留在现在的页面')){							
 							window.location.reload();
 						}
+						console.log(ub.aRunningZTree.getSelectedNodes());
+						ub.setTagPatchsInfoToEditForm(ub.aRunningZTree.getSelectedNodes()[0]);
 					}
 					else
 					{
