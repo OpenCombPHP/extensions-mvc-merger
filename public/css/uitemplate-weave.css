@@ -2,18 +2,15 @@
 	
 }
 #ub_left{
-	width:50%;
 	height:90%;
 	float:left;
 	overflow-x:auto;
 	overflow-y:auto;
 }
 #ub_right{
-	width:50%;
+	width:300px;
 	height:90%;
 	float:left;
-	overflow-x:auto;
-	overflow-y:auto;
 }
 #ub_source{
 	width:100%;

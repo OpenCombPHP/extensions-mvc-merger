@@ -476,8 +476,9 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 	var height = $('#mergepannel-dialog').height() - $('#mergepannel-layout-action').height() -5;
 	$('#mergepannel-properties').height( height );
 	$('#mergepannel-props-properties-overflow').height(height-27);
-	
-	$('#mergepannel-layout-struct').width( $('#mergepannel-dialog').width() - $('#mergepannel-properties').width() - 15 );
+	var width = $('#mergepannel-dialog').width() - $('#mergepannel-properties').width() - 20 ;
+	$('#mergepannel-layout-struct').width( width );
+	$('#ub_left').width( width -10 );
 }
 
 /**
