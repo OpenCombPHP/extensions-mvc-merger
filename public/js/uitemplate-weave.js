@@ -134,6 +134,7 @@ ub = {
 		if(!treeNode.getParentNode()){
 			return;
 		}
+		ub.setTagPatchsInfoToEditForm(treeNode);
 		ub.sentTagInfoToEditForm(treeNode);
 		event.stopPropagation();
 	},
@@ -161,6 +162,36 @@ ub = {
 		}while(true);
 		return parentNode;
 	},
+	setTagPatchsInfoToEditForm:function(treeNode){
+		var parentNode = ub.getTopNode(treeNode);
+		var templateNamespace = parentNode.templateNameAndNameSpace;
+		var uixpath = treeNode.data.uixpath;
+		//个tab页面填充信息
+		jQuery.ajax( {
+			url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=list'
+			, data:{ 
+				namespace:templateNamespace
+				,xpath : uixpath
+			}
+			, type: 'POST'
+			, dataType: 'json'
+			, beforeSend: function (){
+				//loading图标
+				jQuery('#ub_merge_list').html('<img src="extensions/mvc-merger/0.1/public/image/loading.gif" width=250 height=180>');
+			}
+			, complete: function(jqXHR, textStatus){
+				if(textStatus=='success')
+				{
+					ub.buildWeaveList(jQuery.parseJSON(jqXHR.responseText) );
+				}
+				else
+				{
+					jQuery('#ub_merge_list').html('没有节点');
+					return;
+				}
+			}
+		});
+	},
 	//**************end 点中tag后 编辑属性**************
 	
 	//绑定事件
@@ -179,44 +210,11 @@ ub = {
 			return;
 		}
 		var aObj = jQuery("#" + treeNode.tId);
-		if (jQuery("#showDom_"+treeNode.tId).length>0) return;
-		var editStr = "<span class='button' id='showDom_" +treeNode.tId
-						+ "' title='编织模板' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/patch.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></span>"
-						+ "<span class='button' id='showConf_" +treeNode.tId
-						+ "' title='显示DOM节点' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></span>";
+		if (jQuery("#showConf_"+treeNode.tId).length>0) return;
+		var editStr = "<span class='button' id='showConf_" +treeNode.tId
+						+ "' title='点击高亮显示页面中的元素' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></span>";
 		aObj.find('>a').after(editStr);
-		jQuery("#showDom_"+treeNode.tId).on("click", function(){
-			//切换tab
-			jQuery( "#tabs" ).tabs( "select" , 1);
-			var parentNode = ub.getTopNode(treeNode);
-			var templateNamespace = parentNode.templateNameAndNameSpace;
-			var uixpath = treeNode.data.uixpath;
-			//个tab页面填充信息
-			jQuery.ajax( {
-				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=list'
-				, data:{ 
-					namespace:templateNamespace
-					,xpath : uixpath
-				}
-				, type: 'POST'
-				, dataType: 'json'
-				, beforeSend: function (){
-					//loading图标
-					jQuery('#ub_merge_list').html('<img src="extensions/mvc-merger/0.1/public/image/loading.gif" width=250 height=180>');
-				}
-				, complete: function(jqXHR, textStatus){
-					if(textStatus=='success')
-					{
-						ub.buildWeaveList(jQuery.parseJSON(jqXHR.responseText) );
-					}
-					else
-					{
-						jQuery('#ub_merge_list').html('没有节点');
-						return;
-					}
-				}
-			});
-		});
+	
 		jQuery("#showConf_"+treeNode.tId).on("click", function(){
 			ub.highLightDomForSec(treeNode,4);
 		});
@@ -252,7 +250,7 @@ ub = {
 				, complete: function(jqXHR, textStatus){
 					if(textStatus=='success')
 					{
-						if(confirm('删除节点成功,需要刷新页面才能看到删除后效果,点击\"确定\"刷新页面,点击\"取消\"停留在现在的页面')){
+						if(confirm('删除节点成功,需要刷新页面才能看到删除后效果,点击\"确定\"刷新页面,点击\"取消\"停留在现在的页面')){							
 							window.location.reload();
 						}
 					}
