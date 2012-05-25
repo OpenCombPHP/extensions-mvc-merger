@@ -729,6 +729,15 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		if(propertyName == 'class' || propertyName == 'skin' || propertyName == 'style'){
 			continue;
 		}
+		if( (propertyName =='position' && $('#'+this.mapPropertyNames[propertyName]).val() == 'static')
+			|| (propertyName =='border-top-style' && $('#'+this.mapPropertyNames[propertyName]).val() == 'none')
+			|| (propertyName =='border-left-style' && $('#'+this.mapPropertyNames[propertyName]).val() == 'none')
+			|| (propertyName =='border-right-style' && $('#'+this.mapPropertyNames[propertyName]).val() == 'none')
+			|| (propertyName =='border-bottom-style' && $('#'+this.mapPropertyNames[propertyName]).val() == 'none')
+			|| (propertyName =='background-repeat' && $('#'+this.mapPropertyNames[propertyName]).val() == 'no-repeat')
+		){
+			continue;
+		}
 		$(realthis.eleSelectedItem).css( propertyName , $('#'+this.mapPropertyNames[propertyName]).val() );
 	}
 	
