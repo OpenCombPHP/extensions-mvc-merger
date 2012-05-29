@@ -2,20 +2,15 @@
 namespace org\opencomb\mvcmerger ;
 
 
-use org\opencomb\platform\service\Service;
-
-use org\jecat\framework\util\EventReturnValue;
-
-use org\jecat\framework\mvc\view\ViewAssembler;
-
 use org\jecat\framework\mvc\view\View;
-
+use org\jecat\framework\mvc\view\IView;
+use org\jecat\framework\mvc\model\IModel;
+use org\opencomb\platform\service\Service;
+use org\jecat\framework\util\EventReturnValue;
+use org\jecat\framework\mvc\view\ViewAssembler;
 use org\jecat\framework\ui\UI;
-
 use org\jecat\framework\mvc\controller\Response;
-
 use org\opencomb\mvcmerger\merger\MergePannel;
-
 use org\jecat\framework\mvc\controller\Controller;
 use org\jecat\framework\util\EventManager;
 use org\jecat\framework\lang\oop\Package;
@@ -43,36 +38,85 @@ class MvcMerger extends Extension
 	 */
 	public function load()
 	{
-		// AOP 注册
-		aspect\ControllerMerge::registerAOP() ;
+// 		aspect\ControllerMerge::registerAOP() ;
 // 		aspect\ViewLayoutSetting::registerAOP() ;
-// 		AOP::singleton()
-// 				->registerBean(array(
-// 						// jointpoint
-// 						'org\\jecat\\framework\\mvc\\controller\\Controller::mainRun()' ,
-// 						// advice
-// 						array('org\\opencomb\\mvcmerger\\aspect\\MVCBrowser',
-// 						'reflectMvc')
-// 				),__FILE__) ;
-				
-		EventManager::singleton()->registerEventHandle(
+	}
+
+	public function initRegisterEvent(EventManager $aEventMgr)
+	{
+		$aEventMgr->registerEventHandle(
+				'org\\jecat\\framework\\mvc\\controller\\Response'
+				, Response::beforeRespond
+				, array(__CLASS__,'onBeforeRespond')
+		)
+		->registerEventHandle(
+				'org\\jecat\\framework\\mvc\\view\\ViewAssembler'
+				, ViewAssembler::assemble
+				, array(__CLASS__,'onAssemble')
+		)
+		->registerEventHandle(/*视图布局*/
 				'org\\jecat\\framework\\mvc\\controller\\Controller'
 				, Controller::afterMainRun
 				, array(__CLASS__,'reflectMvc')
+		);
+		/*页面融合*/
+		// 扩展 mvc-merger 的 Setting对象
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		// 取得 item 数据
+		$arrMergeSetting = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrControllerClasses = array_keys($arrMergeSetting) ;
+		
+		foreach($arrControllerClasses as $sControllerClass)
+		{
+			$aEventMgr->registerEventHandle(
+					'org\\jecat\\framework\\mvc\\controller\\Controller'
+					, Controller::beforeBuildBean
+					, array(__CLASS__,'addController')
+					, null
+					, $sControllerClass
 			);
-
-		// 注册菜单build事件的处理函数
-// 		Menu::registerBuildHandle(
-// 				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
-// 				, 'frameView'
-// 				, 'mainMenu'
-// 				, array(__CLASS__,'buildControlPanelMenu')
-// 		) ;
+		}
+	}
+	
+	public function addController($aController ,& $arrBean)
+	{
+		$sClassName = get_class($aController);
+		
+		// 扩展 mvc-merger 的 Setting对象
+		$aSetting = \org\opencomb\platform\ext\Extension::flyweight('mvc-merger')->setting() ;
+	
+		// for 控制器融合
+		$arrControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		if( !empty($arrControllers[$sClassName]) )
+		{
+			$nNum = 0; //命名计数
+			foreach($arrControllers[$sClassName] as $arrMerge)
+			{
+				$arrControllersBean = array();
+				if( empty($arrMerge['params']) )
+				{
+					$aParams = null ;
+				}
+				else
+				{
+					$arrParams = explode('&', $arrMerge['params']);
+					foreach($arrParams as $arrPar){
+						$arrKeyValue = explode('=', $arrPar);
+						$arrControllersBean['params'][$arrKeyValue[0]] = $arrKeyValue[1];
+					}
+				}
+				$arrControllersBean['class'] = $arrMerge['controller'];
+				$arrControllersBeanName = empty($arrMerge['name'])? 'mergeControllerBySystem'.$nNum : $arrMerge['name'];
+				
+				$arrBean['controllers'][$arrControllersBeanName] = $arrControllersBean;
+				$nNum++;
+			}
+		}
 	}
 	
 	public function reflectMvc($aController)
 	{
-		if(isset($aController->params) and !$aController->params->bool('mvcmerger_browser'))
+		if(!$aController->params()->bool('mvcmerger_browser'))
 		{
 			return ;
 		}
@@ -202,21 +246,6 @@ class MvcMerger extends Extension
 		return $sJsCode ;
 	}
 
-	
-	public function initRegisterEvent(EventManager $aEventMgr)
-	{
-		$aEventMgr->registerEventHandle(
-				'org\\jecat\\framework\\mvc\\controller\\Response'
-				, Response::beforeRespond
-				, array(__CLASS__,'onBeforeRespond')
-			)
-			->registerEventHandle(
-				'org\\jecat\\framework\\mvc\\view\\ViewAssembler'
-				, ViewAssembler::assemble
-				, array(__CLASS__,'onAssemble')
-			) ;
-	}
-	
 	static public function onBeforeRespond(Response $aResponse,Controller $aController)
 	{
 		if( !Request::singleton()->has('mvcmerger') )
