@@ -12,30 +12,15 @@
 	完成控制器的融合设置后，可以通过<a href="?c=org.opencomb.mvcmerger.merger.ViewLayerout">视图布局</a>对融合后的网页视图进行布局调整。
 </p>
 
-<script type="text/javascript">
-function browserController(sClassType ,sSelectType)
-{
-	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",
-			{parent:self,allowSelectClass:sClassType,selectType:sSelectType},
-			"dialogWidth=820px;dialogHeight=450px"); 	
-}
-</script>
+<br/>
 
 <msgqueue />
 
 <form method="post" action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
-
-	<div>
-		目标控制器类：<input type="text" style="width:400px" name="target_controller_class" id="target_controller_class" value="org\opencomb\opencms\article\ArticleManage" />
-		<input type="button" value="浏览查找 ..." onclick="browserController('c','target')" />
-	</div>
-	<div>
-		参数：<input type="text" style="width:400px" name="target_controller_params" />
-	</div>
-	<div>
-		注释：<input type="text" style="width:400px" name="target_controller_comment" />
-	</div>
-	<hr />
+	<!-- 目标控制器类： -->
+	<input type="hidden" name="target_controller_class" id="target_controller_class" value="{=$sRequestC}" />
+	<!-- 参数： -->
+	<input type="hidden" name="target_controller_params"  value="{=$sRequestParams}"/>
 	<div>
 		被并入的控制器类：<input type="text" style="width:400px" name="source_controller_class" id="source_controller_class" value="org\opencomb\opencms\article\CreateArticle" />
 		<input type="button" value="浏览查找 ..." onclick="browserController('c','handle')" />
@@ -90,3 +75,13 @@ function browserController(sClassType ,sSelectType)
 	</li>
 </foreach>
 </ul>
+<script>
+
+function browserController(sClassType ,sSelectType)
+{
+	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",
+			{parent:self,allowSelectClass:sClassType,selectType:sSelectType},
+			"dialogWidth=820px;dialogHeight=450px");
+}
+
+</script>

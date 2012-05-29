@@ -1,6 +1,10 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\jecat\framework\system\AccessRouter;
+
+use org\jecat\framework\mvc\controller\Request;
+
 use org\opencomb\coresystem\auth\Id;
 use org\opencomb\platform\service\ServiceSerializer;
 use org\opencomb\mvcmerger\MvcMerger;
@@ -41,6 +45,25 @@ class ControllerMerger extends ControlPanel
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
 		
 		$this->form->variables()->set('arrMergedControllers',$arrMergedControllers) ;
+		
+		//表单默认值
+		$sRequestC ='';
+		$arrRequest = array();
+		if($this->params->request){
+			$sRequest = str_replace('^','=',str_replace('@', '&', $this->params->request));
+			$arrRequest = explode('&',$sRequest);
+			$sRequestC= '';
+			foreach($arrRequest as $key=>$value){
+				if(strpos($value,'c=')===0){
+					$sRequestC = substr($value ,2);
+					unset($arrRequest[$key]);
+				}else if(strpos($value,'mvcmerger')===0){
+					unset($arrRequest[$key]);
+				}
+			}
+		}
+		$this->form->variables()->set('sRequestC',AccessRouter::singleton()->transControllerClass($sRequestC)) ;
+		$this->form->variables()->set('sRequestParams',implode('&', $arrRequest)) ;
 	}
 	
 	protected function actionMerge()

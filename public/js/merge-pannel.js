@@ -20,9 +20,15 @@ MergerPannel.prototype.init = function()
 	
 	this.resizeDialog() ;
 	
+	
+	var currHref = location.href;
+	var index = currHref.lastIndexOf("?");
+	var param = "";
+	if(index != "-1"){    param = currHref.substr(index+1);}
+//	console.log(param.replace(/&/g,'@').replace(/=/g,'^'));
 	//获取页面融合页面内容
 	$.ajax({
-		url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe'
+		url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe&request='+param.replace(/&/g,'@').replace(/=/g,'^')
 		, dataType:'html'
 //		, beforeSend:function(){
 //			comment_list_field.html('<div class="comment_loadding">加载中...</div>');

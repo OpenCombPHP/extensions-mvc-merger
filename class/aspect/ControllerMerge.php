@@ -25,7 +25,6 @@ class ControllerMerge
 		// advice
 		$arrBeanConfig[] = array(__CLASS__,'init') ;
 		
-		
 		AOP::singleton()->registerBean($arrBeanConfig,__FILE__) ;
 	}
 	
@@ -39,7 +38,7 @@ class ControllerMerge
 		$aSetting = \org\opencomb\platform\ext\Extension::flyweight('mvc-merger')->setting() ;
 		
 		// for 控制器融合
-		$arrControllers = $aSetting->item('/merge/controller','controller',array()) ;
+		$arrControllers = $aSetting->item('/merge/controller','controllers',array()) ;
 		if( !empty($arrControllers[__CLASS__]) )
 		{
 			foreach($arrControllers[__CLASS__] as $arrMerge)

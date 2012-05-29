@@ -185,14 +185,15 @@ jQuery(function(){
 			alert("请至少选定一个对象");
 			return;
 		}
-		
 		if(structBrowser.selectType == "handle"){
 			jQuery(structBrowser.parentObject.document).find("#source_controller_class").val(jQuery("#classname").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_name']").val(jQuery("#name").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_params']").val(jQuery("#args").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");
 		}else{
-			jQuery(structBrowser.parentObject.document).find("#target_controller_class").val(jQuery("#classname").val());
+			console.log(jQuery("#classname").val());
+			console.log(jQuery(structBrowser.parentObject.document).find("#target_controller_class").val());
+			console.log(jQuery(structBrowser.parentObject.document).find("#target_controller_class").val(jQuery("#classname").val()));
 			jQuery(structBrowser.parentObject.document).find("input[name='target_controller_params']").val(jQuery("#args").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='target_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");
 		}
@@ -214,7 +215,15 @@ jQuery(function(){
 		jQuery("#name").val(that.data("name"));
 		
 		//屏蔽系统自动添加的.data-name-is-user-call参数
-		var args =  that.data("params").substr( that.data("params").indexOf(".data-name-is-user-call=") + 26 ) ;
+		var arrParams = that.data("params").split('&');
+		var arrParams2 = [];
+		for(var key in arrParams){
+			if(arrParams[key].indexOf(".data-name-is-user-call=") == 0){
+				continue;
+			}
+			arrParams2.push(arrParams[key]);
+		}
+		var args = arrParams2.join("&");
 		jQuery("#args").val(args);
 		jQuery("#title").val(that.data("title"));
 	});
