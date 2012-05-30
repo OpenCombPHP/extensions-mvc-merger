@@ -1,4 +1,5 @@
 <lib name='jquery' />
+<css name="ControllerMerger.css"/>
 
 <h2>控制器融合</h2>
 
@@ -13,16 +14,40 @@
 </p>
 
 <br/>
+<script>
 
-<msgqueue />
+function browserController(sClassType ,sSelectType)
+{
+	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",
+			{parent:self,allowSelectClass:sClassType,selectType:sSelectType},
+			"dialogWidth=820px;dialogHeight=450px");
+}
 
-<form method="post" action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
+jquery(function(){
+	jquery('#controllerMergeForm').submit(function(){
+		jquery.ajax({
+			url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue'
+			, data:jquery('#controllerMergeForm').serialize()
+			, dataType:'html'
+			, success: function(html) {
+				jquery("#ControllerMerger_msgqueue").html(html);
+			}
+		}) ;
+		return false;
+	});
+});
+
+</script>
+
+<div id="ControllerMerger_msgqueue"></div>
+
+<form id="controllerMergeForm" method="post" action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
 	<!-- 目标控制器类： -->
 	<input type="hidden" name="target_controller_class" id="target_controller_class" value="{=$sRequestC}" />
 	<!-- 参数： -->
 	<input type="hidden" name="target_controller_params"  value="{=$sRequestParams}"/>
 	<div>
-		被并入的控制器类：<input type="text" style="width:400px" name="source_controller_class" id="source_controller_class" value="org\opencomb\opencms\article\CreateArticle" />
+		被并入的控制器类：<input type="text" style="width:300px" name="source_controller_class" id="source_controller_class" value="org\opencomb\opencms\article\CreateArticle" />
 		<input type="button" value="浏览查找 ..." onclick="browserController('c','handle')" />
 	</div>
 	<div>
@@ -75,13 +100,3 @@
 	</li>
 </foreach>
 </ul>
-<script>
-
-function browserController(sClassType ,sSelectType)
-{
-	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",
-			{parent:self,allowSelectClass:sClassType,selectType:sSelectType},
-			"dialogWidth=820px;dialogHeight=450px");
-}
-
-</script>
