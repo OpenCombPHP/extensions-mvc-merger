@@ -1,6 +1,7 @@
 <lib name="jquery.ui" />
 <lib name="jquery.ztree" />
 <lib name="jquery.tip" />
+<lib name='jquery.farbtastic'/>
 <script src="mvc-merger:js/merge-pannel.js" />
 <script src="mvc-merger:js/merge-pannel-layout.js" />
 <css src="mvc-merger:css/merge-pannel.css" />
@@ -86,15 +87,17 @@
 							<dl>
 								<dt><h3>背景:</h3></dt>
 								<dd>
-									图片地址<input style="width: 160px" id="mergepannel-props-background-image" /><br/>
-									背景颜色<input style="width: 160px" id="mergepannel-props-background-color" /><br/>
-									背景位置<input style="width: 160px" id="mergepannel-props-background-position" /><br/>
-									背景重复<select id="mergepannel-props-background-repeat">
-												<option value='no-repeat'>不重复</option>
-												<option value='repeat'>重复</option>
-												<option value='repeat-x'>横向重复</option>
-												<option value='repeat-y'>纵向重复</option>
-											</select>
+									颜色<input style="width: 80px" id="mergepannel-props-background-color" />
+									<div id="mergepannel-props-color-selecter"></div>
+									<br/>
+									位置<input style="width: 100px" id="mergepannel-props-background-position" />
+									<select id="mergepannel-props-background-repeat">
+										<option value='no-repeat'>不重复</option>
+										<option value='repeat'>重复</option>
+										<option value='repeat-x'>横向重复</option>
+										<option value='repeat-y'>纵向重复</option>
+									</select><br/>
+									图片地址<input style="width: 160px" id="mergepannel-props-background-image" />
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
@@ -239,9 +242,9 @@
 							</dl>
 							
 							<dl>
-								<dt><h3>附加:</h3></dt>
+								<dt style="width:80px;display:block;"><h3>附加样式:</h3></dt>
 								<dd>
-								<textarea id="mergepannel-props-style" style="width:220px;"></textarea>
+								<textarea id="mergepannel-props-style" style="width:260px;height:150px;margin-left:5px;"></textarea>
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
@@ -271,8 +274,26 @@
 var sMvcMergerPublicFolderUrl = '{=$sImageFolder}' ;
 var sMvcMergerController = '{=$sControllerClass}' ;
 var mapMVCMergerItemProperties = {=$arrLayoutProperties} ;
+
 jquery(document).ready(function(){
 	var mergerpannel = new MergerPannel() ;
 	mergerpannel.init() ;
+	
+	//颜色选择器
+   jquery('#mergepannel-props-color-selecter').farbtastic('#mergepannel-props-background-color');
+   if(jquery('#mergepannel-props-background-color').val() == ''){
+		jquery('#mergepannel-props-background-color').val('#fff');
+	}
+	jquery('#mergepannel-props-background-color').focusin(function(){
+		jquery('#mergepannel-props-color-selecter')
+		.css({
+			'top':jquery(this).position().top + jquery(this).outerHeight(),
+			'left':jquery(this).position().left
+		})
+		.show();
+	});
+	jquery('#mergepannel-props-background-color').focusout(function(){
+		jquery('#mergepannel-props-color-selecter').hide();
+	});
 }) ;
 </script>
