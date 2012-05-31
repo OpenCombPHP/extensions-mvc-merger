@@ -568,7 +568,7 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 			borderWidth += $(b).outerWidth(true) - $(b).width();
 		});
 		nWidth = Math.floor( ($(frame).width() -borderWidth ) / aChildren.size() );
-		aChildren.width( nWidth - 10 );
+		aChildren.width( nWidth );
 	} else if (node.layout === 'v') {
 		aChildren = $(frame).children('.jc-layout');
 		nWidth = '100%';
@@ -583,6 +583,7 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
  */
 MergerPannel.Layout.prototype.autoItemsHeight = function(frame, node) {
 	var nMaxH = 0;
+	var $ = jquery;
 	var aChildren = $(frame).children('.jc-layout');
 	var nHeight;
 	if (node.layout === 'h') {
