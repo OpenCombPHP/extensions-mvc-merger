@@ -200,7 +200,7 @@ class MvcMerger extends Extension
 		
 		$sJsCode = "{\r\n" ;
 		$sJsCode.= $sIndent."	name: \"{$sNameEsc}\"\r\n" ;
-		$sJsCode.= $sIndent."	, class: \"{$sClassEsc}\"\r\n" ;
+		$sJsCode.= $sIndent."	, 'class': \"{$sClassEsc}\"\r\n" ;
 		$sJsCode.= $sIndent."	, params: \"\"\r\n" ;
 		$sJsCode.= $sIndent."	, title: \"{$sTitleEsc}\"\r\n" ;
 		$sJsCode.= $sIndent."	, params: \"".http_build_query($arrParams)."\"\r\n" ;

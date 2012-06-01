@@ -274,7 +274,7 @@ mvcmerger.exportLayoutConfig = function(layout)
 {
 	
 	var config = { 
-			class: 'frame'
+			'class': 'frame'
 			, type: layout.layoutType()
 			, xpath: jquery(layout.element).data('xpath')
 			, name: jquery(layout.element).attr('name')
@@ -315,7 +315,7 @@ mvcmerger.exportLayoutConfig = function(layout)
 					mvcmerger.exportedItems[this.id] = this ;
 				}
 				config.items.push({
-					class: 'view'
+					'class':'view'
 					, id: this.id
 					//, name: jquery(this).attr('name') 
 					, xpath: jquery(this).data('xpath')

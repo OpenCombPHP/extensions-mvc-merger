@@ -105,7 +105,7 @@
 }
 
 #mergepannel-layout-struct{
-	float: left ;
+	margin-right:300px;
 }
 #mergepannel-viewtree{
 	overflow:scroll;
@@ -119,10 +119,7 @@
 #mergepannel-props-css h3{
 	display:inline;
 }
-#mergepannel-properties{
-	float: left ;
-	width:290px;
-}
+
 
 #mergepannel-viewtree-placeholder{
 	border: 1px solid #ccc;	
@@ -266,14 +263,14 @@
 }
 #ub_left{
 	height:90%;
-	float:left;
+	margin-right:300px;
 	overflow-x:auto;
 	overflow-y:auto;
 }
 #ub_right{
 	width:300px;
 	height:90%;
-	float:left;
+	float:right;
 }
 #ub_source{
 	width:100%;
@@ -355,9 +352,12 @@
 }
 
 #mergepannel-properties{
+	float: right ;
+	width:290px;
 	line-height:22px;
 	position:relative;
 }
+
 #mergepannel-properties button{
 	height:22px;
 	line-height:16px;
