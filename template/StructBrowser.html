@@ -9,16 +9,18 @@
 	color:blue;
 	font-weight:bold;
 }
-.structBrowser_left{
-	width:200px;
-	height:100%;
-	overflow: auto;
-	float:left;
-}
 .structBrowser_right{
-	height:800px;
-	overflow: auto;
-	margin-left:200px;
+	width:200px;
+	height:520px;
+	float:right;
+}
+#browser{
+	height:500px;
+	overflow:auto;
+}
+.structBrowser_left{
+	height:490px;
+	margin-right:210px;
 }
 </style>
 
@@ -178,7 +180,7 @@ jQuery(function(){
 	structBrowser.getArgumentFromParent();
 	//structBrowser.closeArgsAndTitleInputByNeed();
 	
-	jQuery("#submitClassInfo").click(function(){
+	function submitClassInfo(){
 		if(jQuery('.selectClass').length == 0){
 			alert("请至少选定一个对象");
 			return;
@@ -193,7 +195,7 @@ jQuery(function(){
 			jQuery(structBrowser.parentObject.document).find("input[name='target_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");
 		}
 		window.close();
-	});
+	}
 	
 	jQuery(".folder").live("click",function(e){
 		var that = jQuery(this);
@@ -221,6 +223,8 @@ jQuery(function(){
 		var args = arrParams2.join("&");
 		jQuery("#args").val(args);
 		jQuery("#title").val(that.data("title"));
+		
+		submitClassInfo();
 	});
 	
 	//页面大小
@@ -240,17 +244,20 @@ jQuery(function(){
 });
 </script>
 
-<div class="structBrowser_left">
+<div class="structBrowser_right">
 	请选择控制器:
-	<ul id="browser" class="filetree"></ul>
+	<ul id="browser" class="filetree" ></ul>
 </div>
 
-<div class="structBrowser_right">
+<div class="structBrowser_left">
+	<div style="display:none;">
 	<div><label for="classname">类名<input type="text" id="classname" value="" style="width:400px" disabled/></label></div>
 	<div><label for="name">名称<input type="text" id="name" value="" style="width:400px" disabled/></label></div>
 	<div><label for="args">参数<input type="text" id="args" value="" style="width:400px" disabled/></label></div>
 	<div><input type="hidden" id="title"/></div>
 	<div><input type="button" id="submitClassInfo" value="提交" /></div>
+	</div>
+	
 	<div>
 		<label>页面地址<input type="text" id="current_url" value="" style="width:400px" /></label> 
 		<input type="button" value="打开网页" onclick="structBrowser.location();" />
