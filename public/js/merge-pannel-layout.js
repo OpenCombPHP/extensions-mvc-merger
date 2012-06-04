@@ -12,6 +12,7 @@ MergerPannel.Layout = function() {
 		'height' : 'mergepannel-props-ipt-height',
 		'skin' : 'mergepannel-props-ipt-skin',
 		'class' : 'mergepannel-props-class',
+		'display' : 'mergepannel-props-display',
 		'background-image' : 'mergepannel-props-background-image',
 		'background-color' : 'mergepannel-props-background-color',
 		'background-position' : 'mergepannel-props-background-position',
@@ -135,11 +136,14 @@ MergerPannel.Layout.prototype._initUi = function() {
 		allowTipHover : false
 	});
 	
-	//属性值扫描,解决第一次打开panel并保存后丢失属性的问题
+	//属性值扫描,解决第一次打开panel并保存后丢失属性的问题顺便解决display的半透明treenode的特效
 	var bIsNew = true;
-	for(var xx in mapMVCMergerItemProperties){
-		bIsNew = false;
-		break;
+	for(var keys in mapMVCMergerItemProperties){
+		bIsNew = false; //不许要扫描
+		if(mapMVCMergerItemProperties[keys]['display'] == 'none'){
+			var tid = realThis.aZtree.getNodesByParam("id",keys)[0]['tId'];
+			$('#'+tid).animate({opacity:'0.5'},0);
+		}
 	}
 	if(bIsNew){
 		var allLinkOfTreeNode = $("#mergepannel-viewtree").find('a');
@@ -689,6 +693,18 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 	var $ = jquery;
 	var realthis = this;
 	var sId = realthis.eleSelectedItem.id;
+	
+	//display特殊处理 , 如果结果为"隐藏",则半透明treenode
+	if(typeof mapMVCMergerItemProperties != 'undefined'
+		&& typeof event !='undefined'
+		&& event.currentTarget.id == 'mergepannel-props-display'
+		&& $(event.currentTarget).val() == 'none'){
+		
+		$("#mergepannel-viewtree").find('.curSelectedNode').parent('li').animate({opacity:'0.5'},0);
+		
+	}else{
+		$("#mergepannel-viewtree").find('.curSelectedNode').parent('li').animate({opacity:'1'},0);
+	}
 	
 	//border 特殊处理
 	if(typeof event !='undefined'){
