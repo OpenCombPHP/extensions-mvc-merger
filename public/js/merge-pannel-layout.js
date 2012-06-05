@@ -560,10 +560,9 @@ MergerPannel.Layout.mapLayoutItemStyles = {
  */
 MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 	var $ = jquery;
-	var aChildren;
-	var nWidth;
+	var nWidth = 0;
+	var aChildren = $(frame).children('.jc-layout');
 	if (node.layout === 'h') {
-		aChildren = $(frame).children('.jc-layout');
 		if (aChildren.size() < 1) {
 			return;
 		}
@@ -572,12 +571,14 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 			borderWidth += $(b).outerWidth(true) - $(b).width();
 		});
 		nWidth = Math.floor( ($(frame).width() -borderWidth ) / aChildren.size() );
-		aChildren.width( nWidth );
 	} else if (node.layout === 'v') {
-		aChildren = $(frame).children('.jc-layout');
-		nWidth = '100%';
-		aChildren.width(nWidth);
+		aChildren.each(function(v,b){
+			if($(b).width() > nWidth){
+				nWidth = $(b).width();
+			}
+		});
 	}
+	aChildren.width(nWidth);
 	aChildren.each(function(v,b){
 		mapMVCMergerItemProperties[b.id]['width'] = nWidth;
 	});
@@ -589,16 +590,20 @@ MergerPannel.Layout.prototype.autoItemsHeight = function(frame, node) {
 	var nMaxH = 0;
 	var $ = jquery;
 	var aChildren = $(frame).children('.jc-layout');
-	var nHeight;
+	var nHeight = 0;
 	if (node.layout === 'h') {
-		aChildren.height('100%');
+		aChildren.each(function(v,b){
+			if($(b).height() > nHeight){
+				nHeight = $(b).height();
+			}
+		});
 	} else if (node.layout === 'v') {
 		if (aChildren.size() < 1) {
 			return;
 		}
 		nHeight = Math.floor($(frame).height() / aChildren.size());
-		aChildren.height(nHeight);
 	}
+	aChildren.height(nHeight);
 	aChildren.each(function(v,b){
 		mapMVCMergerItemProperties[b.id]['height'] = nHeight;
 	});
