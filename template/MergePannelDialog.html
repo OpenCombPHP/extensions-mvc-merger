@@ -293,15 +293,25 @@ jquery(document).ready(function(){
 	mergerpannel.init() ;
 	
 	//颜色选择器
-   jquery('#mergepannel-props-color-selecter').farbtastic('#mergepannel-props-background-color');
-   if(jquery('#mergepannel-props-background-color').val() == ''){
-		jquery('#mergepannel-props-background-color').val('#fff');
+	if(jquery('#mergepannel-props-background-color').val() != ''){
+		jquery('#mergepannel-props-background-color').css('background-color' , jquery('#mergepannel-props-background-color').val());
 	}
+	
+	jquery('#mergepannel-props-background-color').change(function(){
+		if(jquery(this).val() == ''){
+			jquery(this).css('background-color' ,'');
+		}
+	});
+	
+	jquery('#mergepannel-props-color-selecter').farbtastic(function(color){
+		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color);
+	});
+	
 	jquery('#mergepannel-props-background-color').focusin(function(){
 		jquery('#mergepannel-props-color-selecter')
 		.css({
-			'top':jquery(this).position().top + jquery(this).outerHeight(),
-			'left':jquery(this).position().left
+			'top':jquery(this).position().top - 200,
+			'left':0
 		})
 		.show();
 	});
