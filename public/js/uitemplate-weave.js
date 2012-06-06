@@ -302,10 +302,12 @@ ub = {
 		var dom = jQuery(e.target);
 		dom.removeClass("highlight");
 		var uixpath = dom.attr("uixpath");
+		var template = dom.parents('uitemplate:first').attr("file");
 		//收起已经展开的tag
 		ub.closeTree();
 		//需要显示的节点
-		var target = ub.aRunningZTree.getNodesByParamFuzzy("tagxpath" , uixpath , null);
+		var parentNode = ub.aRunningZTree.getNodesByParamFuzzy("templateNameAndNameSpace" , template , null);
+		var target = ub.aRunningZTree.getNodesByParamFuzzy("tagxpath" , uixpath , parentNode[0]);
 		//展开父节点
 		ub.aRunningZTree.expandNode(target[0],true,false,true);
 		//选中目标节点
@@ -349,7 +351,17 @@ ub = {
 		container.scrollTop(dom.position().top-toHeight);
 	},
 	highLightDomForSec:function(tag,sec){
-		var dom = jQuery("*[uixpath='"+tag.data.uixpath+"']");
+		var TopParentNode = tag;
+		while(true){
+			parentNodeTemp = TopParentNode.getParentNode();
+			if(parentNodeTemp){
+				TopParentNode = parentNodeTemp;
+			}else{
+				break;
+			}
+		}
+		var dom = jQuery("uitemplate[file='"+TopParentNode['templateNameAndNameSpace']+"']")
+					.find("*[uixpath='"+tag.data.uixpath+"']");
 		dom.addClass("highlight");
 		setTimeout(function(){dom.removeClass("highlight")} , sec*1000);
 	},
