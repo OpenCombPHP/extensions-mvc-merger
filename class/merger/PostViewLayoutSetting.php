@@ -29,9 +29,17 @@ class PostViewLayoutSetting extends ControlPanel
 			$this->createMessage(Message::error,"缺少参数 controller") ;
 			return ;
 		}
+		
+		if( empty($this->params['requestparams']) )
+		{
+			$this->createMessage(Message::error,"缺少参数 requestparams") ;
+			return ;
+		}
+		$sParams = $this->unserializeParams($this->params['requestparams']);
+		
 		$sClassName = str_replace('\\','.',$this->params['controller']);
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		$arrLayoutControllers = $aSetting->deleteKey('/merge/layout/'.$sClassName) ;
+		$aSetting->deleteItem('/merge/layout/'.$sClassName , $sParams) ;
 						
 		$this->createMessage(Message::success,"视图设置已经清空。刷新页面查看更改。") ;
 	}
@@ -55,16 +63,35 @@ class PostViewLayoutSetting extends ControlPanel
 			return ;
 		}
 		$sClassName = str_replace('\\','.',$this->params['controller']);
-				
-		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-
-		// 保存设定
-		$aSetting->setItem('/merge/layout/'.$sClassName,'assemble',$this->params['layout']) ;
+		
+		if( empty($this->params['requestparams']) )
+		{
+			$this->createMessage(Message::error,"缺少参数 requestparams") ;
+			return ;
+		}
+		
+		$sParams = $this->unserializeParams($this->params['requestparams']);
+		
+		$arrSetting = array();
+		$arrSetting['assemble'] = $this->params['layout'];
 		if(!empty($this->params['properties']))
 		{
-			$aSetting->setItem('/merge/layout/'.$sClassName,'properties',$this->params['properties']) ;			
+			$arrSetting['properties'] = $this->params['properties'];
 		}
-				
+		
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		
+		// 保存设定
+		$aSetting->setItem('/merge/layout/'.$sClassName , $sParams , $arrSetting) ;
+		
 		$this->createMessage(Message::success,"视图布局配置已经保存。") ;
+	}
+	
+	static public function unserializeParams($sParams){
+		$sParams = str_replace('@', '&', $sParams);
+		$sParams = str_replace('^', '=', $sParams);
+		$arrParams = explode("&", $sParams);
+		natsort($arrParams);
+		return implode('&', $arrParams);
 	}
 }

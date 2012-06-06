@@ -252,27 +252,58 @@ class MvcMerger extends Extension
 		{
 			return ;
 		}
-
+		
+		$arrParmasTemp = explode('&', $_SERVER['QUERY_STRING']);
+		$arrParmas = array();
+		foreach($arrParmasTemp as $value){
+			if( strpos( $value , 'c=' ) !== 0 and strpos( $value , 'mvcmerger=' ) !== 0 ){
+				$arrParmas[] = $value;
+			}
+		}
+		natsort($arrParmas);
+		$sParams = implode('&', $arrParmas);
+		
 		$sClassName = str_replace('\\','.',get_class($aController)) ;
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		$arrProperties = $aSetting->item('/merge/layout/'.$sClassName,'properties',array()) ;
+		$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, $sParams ,null) ;
+		if(!$arrProperties){
+			$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, '*' ,null) ;
+		}
+		if(!isset($arrProperties['properties'])){
+			$arrProperties['properties'] = array();
+		}
 		
 		// 向控制器插入 mvc pannel dialog 视图
 		$aView = new View('MergePannelDialog','mvc-merger:MergePannelDialog.html') ;
 		$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
 		$aView->variables()->set('sImageFolder',$sImageFolder) ;
 		$aView->variables()->set('sControllerClass',$sClassName) ;
-		$aView->variables()->set('arrLayoutProperties',$arrProperties?json_encode($arrProperties):'{}') ;
+		$aView->variables()->set('arrLayoutProperties',$arrProperties['properties']?json_encode($arrProperties['properties']):'{}') ;
 		$aController->mainView()->add($aView) ;
 	}
 	static public function onAssemble(ViewAssembler $aViewAssembler,Controller $aController)
 	{
 		$sClassName = str_replace('\\','.',get_class($aController)) ;
 		
+		$arrParmasTemp = explode('&', $_SERVER['QUERY_STRING']);
+		$arrParmas = array();
+		foreach($arrParmasTemp as $value){
+			if( strpos( $value , 'c=') !== 0 and strpos( $value , 'mvcmerger=') !== 0 ){
+				$arrParmas[] = $value;
+			}
+		}
+		natsort($arrParmas);
+		$sParams = implode('&', $arrParmas);
+		
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		if( $arrLayout=$aSetting->item('/merge/layout/'.$sClassName,'assemble',null) )
+		
+		$arrLayout=$aSetting->item('/merge/layout/'.$sClassName, $sParams ,null);
+		if(!$arrLayout){
+			$arrLayout = $aSetting->item('/merge/layout/'.$sClassName, '*' ,null) ;
+		}
+		if( isset($arrLayout['assemble']) and $arrLayout['assemble'] )
 		{
-			return EventReturnValue::returnByRef($arrLayout) ;
+			return EventReturnValue::returnByRef($arrLayout['assemble']) ;
 		}
 	}
 

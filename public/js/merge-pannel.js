@@ -25,7 +25,6 @@ MergerPannel.prototype.init = function()
 	var index = currHref.lastIndexOf("?");
 	var param = "";
 	if(index != "-1"){    param = currHref.substr(index+1);}
-//	console.log(param.replace(/&/g,'@').replace(/=/g,'^'));
 	//获取页面融合页面内容
 	$.ajax({
 		url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe&request='+param.replace(/&/g,'@').replace(/=/g,'^')

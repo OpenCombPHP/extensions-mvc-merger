@@ -11,11 +11,13 @@
 		<div id='mergepannel-layout-views'>
 			<!-- frame/view 属性面板 -->
 			<div id="mergepannel-properties" style="display: none">
-				<h1 id="mergepannel-props-type-text"><span id="mergepannel-props-type">layout item type</span>设置 </h1>
+				<div>
+					<h1 id="mergepannel-props-type-text"><span id="mergepannel-props-type">layout item type</span>设置 </h1>
+					<hr />
+				</div>
 				<div id="mergepannel-props-properties-overflow">
 					<!-- 用于 frame -->
 					<div id="mergepannel-props-frame" style="display: none;">
-						<hr />
 						<h2 id="mergepannel-props-id-text"> 控制子元素的样式 </h2>
 						<div id="mergepannel-props-frame-type">
 							类型： <label>
@@ -261,19 +263,36 @@
 			</div>
 			<!-- frame/view 结构树 -->
 			<div id='mergepannel-layout-struct'>
-				<h1 id='mergepannel-layout-struct-title'>视图布局结构</h1>
-				<hr />
+				<div>
+					<h1 id='mergepannel-layout-struct-title'>视图布局结构</h1>
+					<hr />
+				</div>
 				<ul id="mergepannel-viewtree" class="ztree"></ul>
 			</div>
 		</div>
 		<div id="mergepannel-layout-action">
-			<span id="mergepannel-layout-msgqueue"></span>
-			<button id="mergepannel-layout-savebtn">
-				保存
-			</button>
-			<button id="mergepannel-layout-cleanbtn">
-				清理
-			</button>
+		
+			<div style="float:left">
+				<select id="mergepannel-layout-saveType">
+					<option value="type">对同类网页生效</option>
+					<option value="current">仅当前网页生效</option>
+					<option value="special">指定条件(高级)</option>
+				</select>
+				<input type="text" id='mergepannel-layout-save-parmas' style="display:none;width:400px;"/>
+			</div>
+			
+			<div style="float:right">
+				<span id="mergepannel-layout-msgqueue"></span>
+				<button id="mergepannel-layout-savebtn">
+					保存
+				</button>
+				<button id="mergepannel-layout-cleanbtn">
+					清理
+				</button>
+			</div>
+			
+			<div style="clear:both"></div>
+			
 		</div>
 	</div>
 	<!-- tab页面其他的内容会动态添加在这里 -->

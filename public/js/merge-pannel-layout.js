@@ -163,6 +163,36 @@ MergerPannel.Layout.prototype._initUi = function() {
 		$("#mergepannel-props-ipt-borders").hide();
 	});
 	
+	//保存方式
+	//	处理参数列表,清理c和mvcmerger参数
+	var arrParamsTemp = location.search.substr( 1 ).split('&'); 
+	var arrParams = [];
+	for(var nKey in arrParamsTemp){
+		if(
+				arrParamsTemp[nKey].indexOf("mvcmerger=") != 0
+			&& arrParamsTemp[nKey].indexOf("c=") != 0
+		){
+			arrParams.push(arrParamsTemp[nKey]);
+		}
+	}
+//	arrParams.sort();
+	var sParams = arrParams.join('&');
+	$("#mergepannel-layout-save-parmas").val(sParams);
+	
+	$("#mergepannel-layout-saveType").click(function(){
+		if( $(this).val() == 'type' ){
+		}else if( $(this).val() == 'current' ){
+		}else if( $(this).val() == 'special' ){
+			$("#mergepannel-dialog").dialog('option','height' , $("#mergepannel-dialog").dialog('option','height') + 30 );
+			$("#mergepannel-layout-save-parmas").show(0);
+		}else {
+			alert('未知保存方式');
+		}
+		if( $(this).val() != 'special' && $("#mergepannel-layout-save-parmas:visible").length == 1){
+			$("#mergepannel-dialog").dialog('option','height' , $("#mergepannel-dialog").dialog('option','height') - 30 );
+			$("#mergepannel-layout-save-parmas").hide(0);
+		}
+	});
 }
 /**
  * 初始化 ztree
@@ -430,13 +460,18 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 	});
 
 	// ajax 提交给PHP
+	var sParams = $("#mergepannel-layout-save-parmas").val().replace(/&/g,'@').replace(/=/g,'^');
+	if(sParams == '' || $("#mergepannel-layout-saveType").val() == 'type'){
+		sParams = '*';
+	}
 	$.ajax({
 		type : "POST",
 		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=save',
 		data : {
-			layout : mapRootNodes,
-			controller : sMvcMergerController,
-			properties : mapMVCMergerItemProperties
+			layout : mapRootNodes
+			, controller : sMvcMergerController
+			, properties : mapMVCMergerItemProperties
+			, requestparams : sParams
 		},
 		complete : function(req) {
 			// 显示操作结果消息队列
@@ -452,11 +487,17 @@ MergerPannel.Layout.prototype.saveLayout = function() {
  */
 MergerPannel.Layout.prototype.cleanLayout = function() {
 	var $ = jquery;
+	
+	var sParams = $("#mergepannel-layout-save-parmas").val().replace(/&/g,'@').replace(/=/g,'^');
+	if(sParams == '' || $("#mergepannel-layout-saveType").val() == 'type'){
+		sParams = '*';
+	}
 	$.ajax({
 		type : "POST",
 		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=clean',
 		data : {
 			controller : sMvcMergerController
+			, requestparams : sParams
 		},
 		complete : function(req) {
 			// 显示操作结果消息队列
@@ -472,17 +513,23 @@ MergerPannel.Layout.prototype.cleanLayout = function() {
  */
 MergerPannel.Layout.prototype.resizeDialog = function() {
 	var $ = jquery;
-	$('#mergepannel-viewtree').height(
-			$('#mergepannel-dialog').height()
-					- $('#mergepannel-layout-struct-title').height()
-					- $('#mergepannel-layout-action').height() - 35);
 	
-	var height = $('#mergepannel-dialog').height() - $('#mergepannel-layout-action').height() -5;
-	$('#mergepannel-properties').height( height );
-	$('#mergepannel-props-properties-overflow').height(height-27);
-//	var width = $('#mergepannel-dialog').width() - $('#mergepannel-properties').width() - 20 ;
-//	$('#mergepannel-layout-struct').width( width );
-//	$('#ub_left').width( width -10 );
+	var nHeight = $('#mergepannel-dialog').height() - $('#mergepannel-layout-action').outerHeight(true) ;
+	
+	$('#mergepannel-properties , #mergepannel-layout-struct , #mergepannel-layout-views').height( nHeight );
+	
+	$('#mergepannel-props-properties-overflow').height( 
+			nHeight
+			- $('#mergepannel-props-type-text').parent('div:first').outerHeight(true)
+			- 10
+	);
+	
+	$('#mergepannel-viewtree').height( 
+			nHeight
+			- $('#mergepannel-layout-struct-title').parent('div:first').outerHeight(true) 
+			- ( $('#mergepannel-viewtree').outerHeight() - $('#mergepannel-viewtree').height() )
+			- 10
+	);
 }
 
 /**

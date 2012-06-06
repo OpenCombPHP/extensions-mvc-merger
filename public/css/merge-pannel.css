@@ -145,9 +145,7 @@
 }
 
 #mergepannel-layout-action{
-	position:absolute;
-	right:5px;
-	bottom:5px;
+	width:100%;
 }
 #mergepannel-layout-msgqueue{
 	float:left;
