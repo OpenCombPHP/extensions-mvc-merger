@@ -87,6 +87,9 @@ MergerPannel.Layout.prototype._initUi = function() {
 			function() {
 				realThis.autoItemsWidth(realThis.eleSelectedItem,
 						realThis.dataSelectedItem);
+				//兼容IE
+				realThis.autoItemsWidth(realThis.eleSelectedItem,
+						realThis.dataSelectedItem);
 			});
 	$('#mergepannel-props-frame-autoheight-btn').click(
 			function() {
@@ -548,7 +551,7 @@ MergerPannel.Layout.prototype.moveIn = function(view, frame) {
 	}
 	// frame 重新布局
 	this.layoutFrame(frame);
-}
+};
 /**
  * 移动 frame/view 到另一个 frame/view 前面 参数 view, frame 都是 html div 元素 将 view 移动到
  * behindItem 的前面
@@ -558,7 +561,7 @@ MergerPannel.Layout.prototype.moveBefore = function(view, behindItem) {
 	$(view).insertBefore($(behindItem));
 	// frame 重新布局
 	this.layoutFrame(behindItem.parentNode);
-}
+};
 /**
  * 移动 frame/view 到另一个 frame/view 前面 参数 view, frame 都是 html div 元素 将 view 移动到
  * frontItem 的后面
@@ -568,7 +571,7 @@ MergerPannel.Layout.prototype.moveAfter = function(view, frontItem) {
 	$(view).insertAfter($(frontItem));
 	// frame 重新布局
 	this.layoutFrame(frontItem.parentNode);
-}
+};
 
 /**
  * 设置一个frame的类型：横向(h), 纵向(v)
@@ -580,7 +583,7 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 	aNode.layout = sType;
 
 	this.layoutFrame(frame, aNode);
-}
+};
 MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	var $ = jquery;
 
@@ -597,7 +600,7 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	var sLayout = node.layout;
 	$(frame).addClass( MergerPannel.Layout.mapLayoutFrameStyles[sLayout] )
 			.children('.jc-layout').addClass( MergerPannel.Layout.mapLayoutItemStyles[sLayout] );
-}
+};
 MergerPannel.Layout.mapLayoutFrameStyles = {
 	h : 'jc-frame-horizontal',
 	v : 'jc-frame-vertical'
@@ -621,7 +624,7 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 		aChildren.each(function(v,b){
 			borderWidth += $(b).outerWidth(true) - $(b).width();
 		});
-		nWidth = Math.floor( ($(frame).width() -borderWidth ) / aChildren.size() );
+		nWidth = Math.floor( ($(frame).width() - borderWidth ) / aChildren.size() );
 	} else if (node.layout === 'v') {
 		aChildren.each(function(v,b){
 			if($(b).width() > nWidth){
