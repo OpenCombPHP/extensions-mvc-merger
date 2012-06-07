@@ -3,7 +3,14 @@
 
 	<name>mvc-merger</name>
 	<version>0.1</version>
-	<title>页面融合</title>
+	<title>网页融合工具</title>
+	
+	<description>
+这是一个高级的网页融合工具包，提供了以下功能：
+* 允许您在蜂巢系统中，以拖拽的方式摆放网页中的视图位置，
+* UI模板编织工具
+* 网页融合：将任意两个网页融合成一个网页
+	</description>
 	
 	<class>org.opencomb.mvcmerger.MvcMerger</class>
 	<package folder="/class" namespace="org.opencomb.mvcmerger" />
@@ -13,5 +20,7 @@
 	<beanFolder folder="/bean" />
 	
 	<publicFolder folder="/public" />
+	
+	<require type="extension" item="coresystem"><![CDATA[ >=0.1 ]]></require>
 	
 </Extension>
