@@ -304,6 +304,7 @@ MergerPannel.Layout.prototype._initZtree = function() {
 							}
 						}
 					}, this.arrZTreeRootNodes);
+	
 
 	// 全部展开
 	this.aZtree.expandAll(true);
@@ -362,6 +363,11 @@ MergerPannel.Layout.prototype.scanFrameViewStruct = function() {
 								: 'frame';
 
 						var sName = '';
+						
+						if(this.id == "MergePannelDialog-0"){
+							return;
+						}
+						
 						if (sType == 'frame') {
 							sName = '布局框架:';
 							if ($(this).hasClass('jc-frame-horizontal')) {
@@ -513,9 +519,7 @@ MergerPannel.Layout.prototype.cleanLayout = function() {
  */
 MergerPannel.Layout.prototype.resizeDialog = function() {
 	var $ = jquery;
-	
-	var nHeight = $('#mergepannel-dialog').height() - $('#mergepannel-layout-action').outerHeight(true) ;
-	
+	var nHeight = $('#mergepannel-dialog').height() - 30;// $('#mergepannel-layout-action').outerHeight(true) ;
 	$('#mergepannel-properties , #mergepannel-layout-struct , #mergepannel-layout-views').height( nHeight );
 	
 	$('#mergepannel-props-properties-overflow').height( 
