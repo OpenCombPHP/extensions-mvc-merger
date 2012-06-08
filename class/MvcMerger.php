@@ -248,38 +248,36 @@ class MvcMerger extends Extension
 
 	static public function onBeforeRespond(Response $aResponse,Controller $aController)
 	{
-		if( !Request::singleton()->has('mvcmerger') )
+		if( Request::singleton()->has('mvcmerger') )
 		{
-			return ;
-		}
-		
-		$arrParmasTemp = explode('&', $_SERVER['QUERY_STRING']);
-		$arrParmas = array();
-		foreach($arrParmasTemp as $value){
-			if( strpos( $value , 'c=' ) !== 0 and strpos( $value , 'mvcmerger=' ) !== 0 ){
-				$arrParmas[] = $value;
+			$arrParmasTemp = explode('&', $_SERVER['QUERY_STRING']);
+			$arrParmas = array();
+			foreach($arrParmasTemp as $value){
+				if( strpos( $value , 'c=' ) !== 0 and strpos( $value , 'mvcmerger=' ) !== 0 ){
+					$arrParmas[] = $value;
+				}
 			}
+			natsort($arrParmas);
+			$sParams = implode('&', $arrParmas);
+			
+			$sClassName = str_replace('\\','.',get_class($aController)) ;
+			$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+			$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, $sParams ,null) ;
+			if(!$arrProperties){
+				$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, '*' ,null) ;
+			}
+			if(!isset($arrProperties['properties'])){
+				$arrProperties['properties'] = array();
+			}
+			// 向控制器插入 mvc pannel dialog 视图
+			$aView = new View('MergePannelDialog','mvc-merger:MergePannelDialog.html') ;
+			$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
+			$aView->variables()->set('sImageFolder',$sImageFolder) ;
+			$aView->variables()->set('sControllerClass',$sClassName) ;
+			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;
+			var_dump(json_encode($arrProperties['properties']));
+			$aController->mainView()->add($aView) ;
 		}
-		natsort($arrParmas);
-		$sParams = implode('&', $arrParmas);
-		
-		$sClassName = str_replace('\\','.',get_class($aController)) ;
-		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, $sParams ,null) ;
-		if(!$arrProperties){
-			$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, '*' ,null) ;
-		}
-		if(!isset($arrProperties['properties'])){
-			$arrProperties['properties'] = array();
-		}
-		
-		// 向控制器插入 mvc pannel dialog 视图
-		$aView = new View('MergePannelDialog','mvc-merger:MergePannelDialog.html') ;
-		$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
-		$aView->variables()->set('sImageFolder',$sImageFolder) ;
-		$aView->variables()->set('sControllerClass',$sClassName) ;
-		$aView->variables()->set('arrLayoutProperties',$arrProperties['properties']?json_encode($arrProperties['properties']):'{}') ;
-		$aController->mainView()->add($aView) ;
 	}
 	static public function onAssemble(ViewAssembler $aViewAssembler,Controller $aController)
 	{

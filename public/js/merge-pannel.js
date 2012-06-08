@@ -2,12 +2,10 @@ var MergerPannel = function()
 {
 	this.layout = new MergerPannel.Layout ;
 }
-
 MergerPannel.prototype.init = function()
 {
 	var $ = jquery ;
 	var thisMergerPannel = this ;
-	
 	$('#mergepannel-dialog').dialog({
 		width: 600
 		, height: 450
@@ -19,7 +17,6 @@ MergerPannel.prototype.init = function()
 	this.layout.init() ;
 	
 	this.resizeDialog() ;
-	
 	
 	var currHref = location.href;
 	var index = currHref.lastIndexOf("?");

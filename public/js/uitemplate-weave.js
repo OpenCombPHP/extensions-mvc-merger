@@ -60,13 +60,6 @@ ub = {
 		}
 	},
 	openDialog:function(){
-		//把内容放入独立的对话框
-//		ub.aDialog.dialog({
-//			width:900
-//			, height:500
-//			, closeOnEscape: true
-//			, show: 'slide'
-//		});
 		//内容放入共用对话框
 		ub.aDialog.hide().appendTo(jquery('#mergepannel-dialog'));
 		jQuery( "#tabs" ).tabs({ selected: 0});
