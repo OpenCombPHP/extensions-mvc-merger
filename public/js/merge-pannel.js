@@ -45,6 +45,17 @@ MergerPannel.prototype.init = function()
 		}
 		return false;
 	});
+	
+	
+	
+	
+	console.log('-------------') ;
+	this.layout.calculateMinMax(
+			$('#topList_new_2-0-vagrants')
+		) ;
+	this.layout.assignSize(
+			$('#topList_new_2-0-vagrants')
+		) ;
 }
 
 MergerPannel.prototype.resizeDialog = function ()
