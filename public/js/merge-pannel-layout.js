@@ -62,7 +62,12 @@ MergerPannel.Layout.prototype.init = function() {
 	
 	// 初始化默认宽度
 	this.log("初始化initarea");
-	this.initArea();
+	jquery('.jc-layout').each(function(v,b){
+		if( !jquery(b).parent().hasClass('jc-frame') ){
+			realthis.calculateMinMax( jquery(b) );
+			realthis.topFrame.push( jquery(b) );
+		}
+	});
 }
 /**
  * 初始化界面
@@ -346,13 +351,11 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 
 MergerPannel.Layout.prototype.initArea = function(resetFun) {
 	var realthis = this;
-	var layouts = jquery('.jc-layout');
+	var layouts = realthis.topFrame;
 	try{
-		layouts.each(function(v,b){
-			if( !jquery(b).parent().hasClass('jc-frame') ){
-				realthis.calculateMinMax( jquery(b) );
-				realthis.topFrame.push( jquery(b) );
-			}
+		jquery.each(layouts,function(v,b){
+			realthis.calculateMinMax( jquery(b) );
+			realthis.assignSize( jquery(b) );
 		});
 	}catch(e){
 		
@@ -363,12 +366,10 @@ MergerPannel.Layout.prototype.initArea = function(resetFun) {
 			resetFun();
 		}
 		
-//		layouts.each(function(v,b){
-//			if( !jquery(b).parent().hasClass('jc-frame') ){
-//				realthis.calculateMinMax( jquery(b) );
-//				realthis.topFrame.push( jquery(b) );
-//			}
-//		});
+		jquery.each(layouts,function(v,b){
+			realthis.calculateMinMax( jquery(b) );
+			realthis.assignSize( jquery(b) );
+		});
 	}
 }
 
