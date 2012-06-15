@@ -68,6 +68,7 @@ MergerPannel.Layout.prototype.init = function() {
 			realthis.topFrame.push( jquery(b) );
 		}
 	});
+	console.log(realthis.topFrame);
 }
 /**
  * 初始化界面
