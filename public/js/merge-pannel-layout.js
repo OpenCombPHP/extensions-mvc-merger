@@ -4,6 +4,7 @@ MergerPannel.Layout = function() {
 
 	this.eleSelectedItem = null;
 	this.dataSelectedItem = null;
+	this.topFrame = new Array();
 	
 	// 从后端 setting 中取出上一次输入的属性值，用来恢复当前属性面板中的input (mapMVCMergerItemProperties)
 	//key 是css属性名称,value是表单对应ID
@@ -52,11 +53,16 @@ MergerPannel.Layout = function() {
 }
 
 MergerPannel.Layout.prototype.init = function() {
+	var realthis = this;
 	// 初始化 ztree
 	this._initZtree();
-
+	
 	// 初始化界面元素
 	this._initUi();
+	
+	// 初始化默认宽度
+	this.log("初始化initarea");
+	this.initArea();
 }
 /**
  * 初始化界面
@@ -82,20 +88,6 @@ MergerPannel.Layout.prototype._initUi = function() {
 		realThis.cleanLayout();
 	});
 
-	// frame 按钮事件
-	$('#mergepannel-props-frame-autowidth-btn').click(
-			function() {
-				realThis.autoItemsWidth(realThis.eleSelectedItem,
-						realThis.dataSelectedItem);
-				//兼容IE
-				realThis.autoItemsWidth(realThis.eleSelectedItem,
-						realThis.dataSelectedItem);
-			});
-	$('#mergepannel-props-frame-autoheight-btn').click(
-			function() {
-				realThis.autoItemsHeight(realThis.eleSelectedItem,
-						realThis.dataSelectedItem);
-			});
 	$('#mergepannel-props-frame-clearwidth-btn').click(function() {
 		$(realThis.eleSelectedItem).children('.jc-layout').width('');
 	});
@@ -139,10 +131,10 @@ MergerPannel.Layout.prototype._initUi = function() {
 		allowTipHover : false
 	});
 	
-	//属性值扫描,解决第一次打开panel并保存后丢失属性的问题顺便解决display的半透明treenode的特效
+	//属性值扫描,解决第一次打开panel并保存后丢失属性的问题,顺便解决display的半透明treenode的特效
 	var bIsNew = true;
 	for(var keys in mapMVCMergerItemProperties){
-		bIsNew = false; //不许要扫描
+		bIsNew = false; //不需要扫描
 		if(mapMVCMergerItemProperties[keys]['display'] == 'none'){
 			var tid = realThis.aZtree.getNodesByParam("id",keys)[0]['tId'];
 			$('#'+tid).animate({opacity:'0.5'},0);
@@ -151,7 +143,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 	if(bIsNew){
 		var allLinkOfTreeNode = $("#mergepannel-viewtree").find('a');
 		allLinkOfTreeNode.click();
-		allLinkOfTreeNode.first().click();
+//		allLinkOfTreeNode.first().click();
 	}
 	
 	//自动选中第一个
@@ -172,7 +164,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 	var arrParams = [];
 	for(var nKey in arrParamsTemp){
 		if(
-				arrParamsTemp[nKey].indexOf("mvcmerger=") != 0
+			arrParamsTemp[nKey].indexOf("mvcmerger=") != 0
 			&& arrParamsTemp[nKey].indexOf("c=") != 0
 		){
 			arrParams.push(arrParamsTemp[nKey]);
@@ -350,6 +342,192 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 							$('#mergepannel-layout-flashing').remove();
 						}
 					});
+}
+
+MergerPannel.Layout.prototype.initArea = function(resetFun) {
+	var realthis = this;
+	var layouts = jquery('.jc-layout');
+	try{
+		layout.each(function(v,b){
+			if( !jquery(b).parent().hasClass('jc-frame') ){
+				realthis.calculateMinMax( jquery(b) );
+				realthis.topFrame.push( jquery(b) );
+			}
+		});
+	}catch(e){
+		
+		realthis.log(e);
+		
+		//回滚
+		if( typeof resetFun == "function" ){
+			resetFun();
+		}
+		
+//		layouts.each(function(v,b){
+//			if( !jquery(b).parent().hasClass('jc-frame') ){
+//				realthis.calculateMinMax( jquery(b) );
+//				realthis.topFrame.push( jquery(b) );
+//			}
+//		});
+	}
+}
+
+/**
+ * 初始化页面宽度和高度,防止css在布局框架上应用width:auto和height:auto
+ * 
+ * 自动宽高算法
+ * 
+ * 为了避免css中的auto(尤其是width的auto)
+ * 我们提供了一种算法来固定frame和view的宽高
+ * 所用到的值是
+ * min-width,max-width,min-height,max-height
+ * 框体的宽高不能小于min不能大于max,如果超出了,系统会通知用户他们的行为有问题
+ * 我们接管的宽高默认的min都是50,max为系统自动赋值,例如min-width=50,max-width=777意味着用户没有给这个框体提供宽高,
+ * 		系统现在让他以777的宽度显示,但是必要时可以缩到50,
+ * 如果用户给框体指定了宽度500,那么数值应该是这个样子:min-width=500,max-width=500,就是说宽度只能是500,没有浮动余地,
+ * max = -1 代表不限宽高最大值
+ * */
+MergerPannel.Layout.prototype.calculateMinMax = function(item) {
+	var $ = jquery;
+	var realthis = this;
+	var defaultMin = 50 ;
+	
+	var children = item.children('.jc-layout');
+	
+	//排除编辑控件自身
+	if(item.attr('id') == 'MergePannelDialog-0'){
+		return;
+	}
+	// 计算下级最小值
+	if( item.hasClass('jc-frame') )
+	{
+		children.each(function(key,child){
+			realthis.calculateMinMax( $(child) ) ;
+		});
+	}
+	
+	// 基本规则 (for view)
+	if( item.hasClass('jc-view') ){
+		realthis.log(item[0].id+"目前的宽度为:"+mapMVCMergerItemProperties[item[0].id]['width']);
+		if( mapMVCMergerItemProperties[item[0].id]['width'] == '' )
+		{
+			item.data('min-width' , defaultMin);
+			item.data('max-width' , -1);
+		}else{
+			//do nothing
+		}
+		//todo height?
+	// 容器规则：最大值不可以小于 所有成员的最大值总和 (for frame)
+	}else if( item.hasClass('jc-frame') ){
+		
+		var childrenMaxWidth = 0 ;
+		var childrenMaxjHeight = 0 ;
+		
+		children.each(function(v,child){
+			if( item.hasClass('jc-frame-horizontal') ){
+				childrenMaxWidth += $(child).width();
+				if(childrenMaxjHeight < $(child).height() ){
+					childrenMaxjHeight = $(child).height();
+				}
+			}else{
+				if( childrenMaxWidth < $(child).width() ){
+					childrenMaxWidth = $(child).width();
+				}
+			}
+		});
+		
+		if( item.data('max-width') < childrenMaxWidth )
+		{
+			item.data('max-width' , childrenMaxWidth );
+		}
+		
+		if( item.data('max-height') < childrenMaxjHeight )
+		{
+			item.data('max-height' , childrenMaxjHeight );
+		}
+	}else{
+		//其他布局方式?tab?
+		//do nothing
+	}
+}
+
+/**
+ * 为frame和view计算宽高
+ */
+MergerPannel.Layout.prototype.assignSize = function(container) {
+	var $ = jquery;
+	var realthis = this;
+	var children = container.children('.jc-layout');
+	
+	//排除编辑控件自身
+	if(container.attr('id') == 'MergePannelDialog-0'){
+		return;
+	}
+	
+	// 按照 min 逆向排序
+	children.sort(function(a,b){
+		return $(b).data('min-width') - $(a).data('min-width');
+	});
+	
+	realthis.log('assignSize-------------------');
+	realthis.log(container);
+	if(container.hasClass('jc-frame-horizontal')){
+		var unassignSpace = container.width() ;
+		realthis.log("剩余空间:"+unassignSpace);
+		children.each(function(key,layout){
+			// 剩余空间 不够一个item的最小值要求
+			if( unassignSpace < $(layout).data('min-width') )
+			{
+				throw new Error( $(layout)) ;
+			}
+
+			// 未分配的item 平分 剩余空间
+			var assign = unassignSpace / ( children.length - key ) ;
+			realthis.log("还剩"+(children.length - key)+"个item");
+			// 分配值不够item要求的最小值
+			if(  $(layout).data('min-width') > assign )	
+			{
+				assign =  $(layout).data('min-width') ;
+			}
+			// 分配值超出item限制的最大值
+			else if(  $(layout).data('max-width') < assign )	
+			{
+				assign =  $(layout).data('max-width') ;
+			}
+		
+			// 剩余未分配空间
+			unassignSpace -= assign ;
+		
+			// 应用计算可行的 分配空间
+			 $(layout).width( assign );
+		
+			// 递归分配item的下级
+			if(  $(layout).hasClass('jc-frame') )
+			{
+				assignSize( $(layout) ) ;
+			}
+		});
+	}else{
+		var max_Width = children.first().width();
+
+		var unassignSpace = container.width() ;
+		
+		if( unassignSpace < max_Width )
+		{
+			throw new Error('不行!回滚数值') ;
+		}
+		
+		children.each(function(key,layout){
+			if($(layout).data('min-width') != $(layout).data('max-width')){
+				$(layout).width(max_Width);
+			}
+			// 递归分配item的下级
+			if( $(layout).hasClass('jc-frame') )
+			{
+				realthis.assignSize($(layout)) ;
+			}
+		});
+	}
 }
 
 /**
@@ -578,11 +756,16 @@ MergerPannel.Layout.prototype.moveAfter = function(view, frontItem) {
  */
 MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 	var $ = jquery;
-
+	var realthis = this;
 	var aNode = this.getDataByEleId(frame.id);
+	var oldLayout = aNode.layout;
 	aNode.layout = sType;
 
 	this.layoutFrame(frame, aNode);
+	realthis.log("layout initarea");
+	this.initArea(function(){
+		realthis.setFrameLayout(frame,oldLayout);
+	});
 };
 MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	var $ = jquery;
@@ -684,8 +867,7 @@ MergerPannel.Layout.prototype.openProperty = function(itemData, itemEle) {
 		$('#mergepannel-props-frame').show();
 
 		$('.mergepannel-props-frame-type').attr('checked', false);
-		$('#mergepannel-props-frame-ipt-' + itemData.layout).attr('checked',
-				true);
+		$('#mergepannel-props-frame-ipt-' + itemData.layout).attr('checked', true);
 
 		$('#mergepannel-props-frame-delete-btn').attr('disabled',
 				$(itemEle).hasClass('cusframe') ? false : true);
@@ -711,6 +893,11 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 		if (typeof (mapMVCMergerItemProperties[sId]) != 'undefined'
 				&& typeof (mapMVCMergerItemProperties[sId][sPropName]) != 'undefined') {
 			$('#' + sInputId).val(mapMVCMergerItemProperties[sId][sPropName]);
+			//用户指定宽高处理
+			if(sPropName == "width" || sPropName == "height"){
+				$(this.eleSelectedItem).data( 'min-' + sPropName , mapMVCMergerItemProperties[sId][sPropName]);
+				$(this.eleSelectedItem).data( 'max-' + sPropName , mapMVCMergerItemProperties[sId][sPropName]);
+			}
 		} else {
 			$('#' + sInputId).val('');
 		}
@@ -751,7 +938,21 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 MergerPannel.Layout.prototype.applyProperties = function(event) {
 	var $ = jquery;
 	var realthis = this;
-	var sId = realthis.eleSelectedItem.id;
+	
+	//width height 的特殊处理,这里避免框架上出现auto宽度和高度,并计算jc-layout的最小宽高最大宽高
+	if(typeof mapMVCMergerItemProperties != 'undefined'
+		&& typeof event !='undefined'
+		&& (event.currentTarget.id == 'mergepannel-props-ipt-width' || event.currentTarget.id == 'mergepannel-props-ipt-height')
+		){
+		
+		var type = event.currentTarget.id.split('-')[3];
+		var oldValue = mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type];
+		mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = $("#"+event.currentTarget.id).val();
+		realthis.log("变值initarea");
+		realthis.initArea(function(){
+			mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = oldValue;
+		});
+	}
 	
 	//display特殊处理 , 如果结果为"隐藏",则半透明treenode
 	if(typeof mapMVCMergerItemProperties != 'undefined'
@@ -822,6 +1023,8 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 	
 	realthis.saveProperties();
 }
+
+
 /**
  * 将用户输入的属性值，保存在变量 mapMVCMergerItemProperties 中
  */
@@ -884,3 +1087,8 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	// 移动
 	this.moveIn(document.getElementById(sEleId), itemEle);
 }
+MergerPannel.Layout.prototype.log = function(msg){
+	if(typeof console == 'object'){
+		console.log(msg);
+	}
+};

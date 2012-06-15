@@ -41,7 +41,6 @@ class TemplateWeaveList extends ControlPanel
 		$sXpath = $this->params->get('xpath');
 		$sPostion =  $this->params->get('position');
 		$sSource =  $this->params->get('source');
-		
 		// 在setting中搜寻配置
 		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
 		$arrPatchs = $aKey->item('arrPatchs',array()) ;
@@ -50,13 +49,12 @@ class TemplateWeaveList extends ControlPanel
 			return;
 		}else{
 			$arrPatchKeys = array_keys($arrPatchs[$sXpath]);
-			
 			foreach($arrPatchKeys as $nKey){
-				if($arrPatchs[$sXpath][$nKey][0] == $sPostion && $arrPatchs[$sXpath][$nKey][1] == $sSource){
+				if($arrPatchs[$sXpath][$nKey][0] == $sPostion 
+						&& $arrPatchs[$sXpath][$nKey][1] == str_replace("\n","",$sSource)){
 					unset($arrPatchs[$sXpath][$nKey]);
 				}
 			}
-			
 			if(count($arrPatchs[$sXpath])==0){
 				unset($arrPatchs[$sXpath]);
 				if(count($arrPatchs)==0){
