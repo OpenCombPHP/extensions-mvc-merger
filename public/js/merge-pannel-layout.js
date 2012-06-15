@@ -348,7 +348,7 @@ MergerPannel.Layout.prototype.initArea = function(resetFun) {
 	var realthis = this;
 	var layouts = jquery('.jc-layout');
 	try{
-		layout.each(function(v,b){
+		layouts.each(function(v,b){
 			if( !jquery(b).parent().hasClass('jc-frame') ){
 				realthis.calculateMinMax( jquery(b) );
 				realthis.topFrame.push( jquery(b) );
@@ -356,7 +356,7 @@ MergerPannel.Layout.prototype.initArea = function(resetFun) {
 		});
 	}catch(e){
 		
-		realthis.log(e);
+		realthis.log(e.message);
 		
 		//回滚
 		if( typeof resetFun == "function" ){
