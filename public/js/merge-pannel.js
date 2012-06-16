@@ -49,13 +49,13 @@ MergerPannel.prototype.init = function()
 	
 	
 	
-	console.log('-------------') ;
-	this.layout.calculateMinMax(
-			$('#topList_new_2-0-vagrants')
-		) ;
-	this.layout.assignSize(
-			$('#topList_new_2-0-vagrants')
-		) ;
+//	console.log('-------------') ;
+//	this.layout.calculateMinMax(
+//			$('#topList_new_2-0-vagrants')
+//		) ;
+//	this.layout.assignSize(
+//			$('#topList_new_2-0-vagrants')
+//		) ;
 }
 
 MergerPannel.prototype.resizeDialog = function ()

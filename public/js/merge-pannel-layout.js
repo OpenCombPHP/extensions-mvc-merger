@@ -68,7 +68,6 @@ MergerPannel.Layout.prototype.init = function() {
 			realthis.topFrame.push( jquery(b) );
 		}
 	});
-	console.log(realthis.topFrame);
 }
 /**
  * 初始化界面
@@ -472,22 +471,26 @@ MergerPannel.Layout.prototype.assignSize = function(container) {
 		return $(b).data('min-width') - $(a).data('min-width');
 	});
 	
-	realthis.log('assignSize-------------------');
 	// realthis.log(container);
 	if(container.hasClass('jc-frame-horizontal')){
-		var unassignSpace = container.width() ;		// !!!!!!!!!!!
-		realthis.log("剩余空间:"+unassignSpace);
+		var unassignSpace = container.width() ;
 		children.each(function(key,item){
+			unassignSpace -= $(item).outerWidth(true) - $(item).width();   //排除border和padding等的宽度
+		});
+		realthis.log("横向分配,总可用空间:"+unassignSpace);
+		
+		children.each(function(key,item){
+			realthis.log("开始给"+item.id+"分配空间,目前可用空间:"+unassignSpace);
 			// 剩余空间 不够一个item的最小值要求
 			if( unassignSpace < $(item).data('min-width') )
 			{
-				throw new Error( $(item)) ;
+				throw new Error( $(item).attr('id') ) ;
 			}
 
 			// 未分配的item 平分 剩余空间
 			var assign = unassignSpace / ( children.length - key ) ;
 			realthis.log("还剩"+(children.length - key)+"个item；平分："+assign);
-			realthis.log("item min, max: "+$(item).data('min-width')+', '+$(item).data('max-width'));
+			realthis.log(item.id+" min, max: "+$(item).data('min-width')+', '+$(item).data('max-width'));
 			
 			// 分配值不够item要求的最小值
 			if(  $(item).data('min-width') > assign )	
@@ -501,32 +504,32 @@ MergerPannel.Layout.prototype.assignSize = function(container) {
 			}
 
 			realthis.log("实际分配："+assign);
-			
 		
 			// 剩余未分配空间
 			unassignSpace -= assign ;
-		
+
 			// 应用计算可行的 分配空间
-			 $(item).width( assign ); 	// !!!!!!!!!!!
+			$(item).width( assign );
 		
 			// 递归分配item的下级
-			if(  $(item).hasClass('jc-frame') )
+			if( $(item).hasClass('jc-frame') )
 			{
 				assignSize( $(item) ) ;
 			}
 		});
 	}else{
-		var max_Width = children.first().width();
+		var maxMinWidth = children.first().data('min-width');
 
 		var unassignSpace = container.width() ;
-		
-		if( unassignSpace < max_Width )
+		realthis.log("纵向分配,总可用空间:"+unassignSpace+" . 最大的子元素最小宽度:"+maxMinWidth);
+		if( unassignSpace < maxMinWidth )
 		{
 			throw new Error('不行!回滚数值') ;
 		}
 		
 		children.each(function(key,layout){
 			if($(layout).data('min-width') != $(layout).data('max-width')){
+				realthis.log(layout.id+"的宽度设置为:"+max_Width);
 				$(layout).width(max_Width);
 			}
 			// 递归分配item的下级
@@ -951,15 +954,18 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 	if(typeof mapMVCMergerItemProperties != 'undefined'
 		&& typeof event !='undefined'
 		&& (event.currentTarget.id == 'mergepannel-props-ipt-width' || event.currentTarget.id == 'mergepannel-props-ipt-height')
-		){
-		
+	){
 		var type = event.currentTarget.id.split('-')[3];
 		var oldValue = mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type];
+		
 		mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = $("#"+event.currentTarget.id).val();
+		
 		realthis.log("变值initarea");
 		realthis.initArea(function(){
 			mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = oldValue;
 		});
+		
+		$(realthis.eleSelectedItem).css( type , $('#'+this.mapPropertyNames[type]).val() );
 	}
 	
 	//display特殊处理 , 如果结果为"隐藏",则半透明treenode
@@ -1011,7 +1017,9 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 	}
 	
 	for( var propertyName in this.mapPropertyNames){
-		if(propertyName == 'class' || propertyName == 'skin' || propertyName == 'style'){
+		if(propertyName == 'class' || propertyName == 'skin' || propertyName == 'style'
+			|| propertyName == 'width' || propertyName == 'height'
+		){
 			continue;
 		}
 		if( (propertyName =='position' && $('#'+this.mapPropertyNames[propertyName]).val() == 'static')
