@@ -89,24 +89,31 @@ MergerPannel.Layout.prototype._initUi = function() {
 
 	$('#mergepannel-props-frame-clearwidth-btn').click(function() {
 		$(realThis.eleSelectedItem).children('.jc-layout').width('');
+		//重新计算布局
+		realThis.updateLayout();
 	});
 	$('#mergepannel-props-frame-clearheight-btn').click(function() {
 		$(realThis.eleSelectedItem).children('.jc-layout').height('');
+		//重新计算布局
+		realThis.updateLayout();
 	});
 	$('#mergepannel-props-frame-center-btn').click(
 			function() {
-				$(realThis.eleSelectedItem).children('.jc-layout').toggleClass(
-						'place_center');
+				$(realThis.eleSelectedItem).children('.jc-layout').toggleClass( 'place_center');
+				//重新计算布局
+				realThis.updateLayout();
 			});
 	$('#mergepannel-props-frame-delete-btn').click(
 			function() {
-				realThis.deleteFrame(realThis.eleSelectedItem,
-						realThis.dataSelectedItem);
+				realThis.deleteFrame(realThis.eleSelectedItem, realThis.dataSelectedItem);
+				//重新计算布局
+				realThis.updateLayout();
 			});
 	$('#mergepannel-props-frame-new-btn').click(
 			function() {
-				realThis.addChildFrame(realThis.eleSelectedItem,
-						realThis.dataSelectedItem);
+				realThis.addChildFrame(realThis.eleSelectedItem, realThis.dataSelectedItem);
+				//重新计算布局
+				realThis.updateLayout();
 			});
 
 	// 属性
@@ -148,7 +155,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 	//自动选中第一个
 	$("#mergepannel-viewtree").find('a:first').click();
 	
-	//border特殊处理
+	//border 详细form
 	$('#mergepannel-props-ipt-borders-showmore').toggle(function(){
 		$(this).removeClass('mergepannel-props-ipt-borders-arrow-left').addClass('mergepannel-props-ipt-borders-arrow-down');
 		$("#mergepannel-props-ipt-borders").show();
@@ -282,6 +289,8 @@ MergerPannel.Layout.prototype._initZtree = function() {
 										realThis.moveIn(eleView, eleTargetItem);
 									}
 								}
+								//重新计算布局
+								realThis.updateLayout();
 							}
 
 							// 点击 frame/view ，打开旁边的属性界面
@@ -342,32 +351,6 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 						}
 					});
 }
-
-MergerPannel.Layout.prototype.initArea = function(resetFun) {
-	var realthis = this;
-	var layouts = realthis.topFrame;
-	try{
-		jquery.each(layouts,function(v,b){
-			realthis.calculateMinMax( jquery(b) );
-			realthis.assignSpace( jquery(b) );
-		});
-	}catch(e){
-		
-		realthis.log(e.message);
-		
-		//回滚
-		if( typeof resetFun == "function" ){
-			resetFun();
-		}
-		
-		jquery.each(layouts,function(v,b){
-			realthis.calculateMinMax( jquery(b) );
-			realthis.assignSpace( jquery(b) );
-		});
-	}
-}
-
-
 
 /**
  * 扫描网页上的视图div，建立frame/view 树形结构
@@ -601,9 +584,9 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 	aNode.layout = sType;
 
 	this.layoutFrame(frame, aNode);
-	realthis.log("layout initarea");
-	this.initArea(function(){
+	this.updateLayout(function(){
 		realthis.setFrameLayout(frame,oldLayout);
+		this.updateLayout();
 	});
 };
 MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
@@ -788,9 +771,10 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		
 		mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = $("#"+event.currentTarget.id).val();
 		
-		realthis.log("变值initarea");
-		realthis.initArea(function(){
+		realthis.log("变值 updateLayout");
+		realthis.updateLayout(function(){
 			mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = oldValue;
+			this.updateLayout();
 		});
 		
 		$(realthis.eleSelectedItem).css( type , $('#'+this.mapPropertyNames[type]).val() );
@@ -954,22 +938,28 @@ MergerPannel.Layout.prototype.log = function(msg){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-MergerPannel.Layout.prototype.updateLayout = function()
+MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 {
 	var realthis = this ;
 	
-	jquery('.jc-layout').each(function(v,b){
-		if( !jquery(b).parent().hasClass('jc-frame') )
-		{
-			// 计算 最小/最大 空间要求
-			realthis.calculateMinMax( jquery(b) );
-			
-			// 分配空间
-			realthis.assignSpace( jquery(b) );
+	try{
+		jquery('.jc-layout').each(function(v,b){
+			if( !jquery(b).parent().hasClass('jc-frame') )
+			{
+				// 计算 最小/最大 空间要求
+				realthis.calculateMinMax( jquery(b) );
+				
+				// 分配空间
+				realthis.assignSpace( jquery(b) );
+			}
+		});
+	}catch(e){
+		realthis.log(e.message);
+		//回滚
+		if( typeof resetFun == "function" ){
+			resetFun();
 		}
-	});
-	
-	
+	}
 }
 
 
@@ -1017,7 +1007,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item) {
 	this.log("计算 item "+item.attr('id')+"的空间要求：") ;
 	
 	// 基本规则 (for view)
-	if( mapMVCMergerItemProperties[item[0].id]['width'] == '' )
+	if(  mapMVCMergerItemProperties[item[0].id]['width'] == '' )
 	{
 		item.data('min-width' , defaultMin);
 		item.data('max-width' , -1);
@@ -1027,7 +1017,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item) {
 		item.data('min-width' , mapMVCMergerItemProperties[item[0].id]['width']);
 		item.data('max-width' , mapMVCMergerItemProperties[item[0].id]['width']);
 	}
-	if( mapMVCMergerItemProperties[item[0].id]['height'] == '' )
+	if(  	mapMVCMergerItemProperties[item[0].id]['height'] == '' )
 	{
 		item.data('min-height' , -1);
 	}

@@ -31,6 +31,7 @@ MergerPannel.prototype.init = function()
 //		}
 		, success: function(html) {
 			$("#mergepannel-controllermerger").html(html);
+			clearJCLayout();
 		}
 	}) ;
 	
@@ -46,16 +47,11 @@ MergerPannel.prototype.init = function()
 		return false;
 	});
 	
-	
-	
-	
-//	console.log('-------------') ;
-//	this.layout.calculateMinMax(
-//			$('#topList_new_2-0-vagrants')
-//		) ;
-//	this.layout.assignSize(
-//			$('#topList_new_2-0-vagrants')
-//		) ;
+	clearJCLayout();
+	//清理视图布局编辑器中的layout class 防止编辑器认错
+	function clearJCLayout(){
+		$('#mergepannel-dialog').find('.jc-layout').removeClass('jc-layout');
+	}
 }
 
 MergerPannel.prototype.resizeDialog = function ()
