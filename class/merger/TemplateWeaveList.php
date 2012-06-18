@@ -34,13 +34,16 @@ class TemplateWeaveList extends ControlPanel
 	}
 	
 	protected function actionDelete(){
-		if(!$this->params->has('template') OR !$this->params->has('xpath') OR !$this->params->has('position') OR !$this->params->has('source')){
+		if(!$this->params->has('template')
+				 OR !$this->params->has('xpath')
+				 OR !$this->params->has('position')
+				 OR !$this->params->has('key')){
 			return;
 		}
 		list($sNamespace,$sTemplate) = explode(':',$this->params['template']) ;
 		$sXpath = $this->params->get('xpath');
 		$sPostion =  $this->params->get('position');
-		$sSource =  $this->params->get('source');
+		$sKey =  $this->params->get('key');
 		// 在setting中搜寻配置
 		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
 		$arrPatchs = $aKey->item('arrPatchs',array()) ;
@@ -51,10 +54,11 @@ class TemplateWeaveList extends ControlPanel
 			$arrPatchKeys = array_keys($arrPatchs[$sXpath]);
 			foreach($arrPatchKeys as $nKey){
 				if($arrPatchs[$sXpath][$nKey][0] == $sPostion 
-						&& $arrPatchs[$sXpath][$nKey][1] == str_replace("\n","",$sSource)){
+						&& $nKey == $sKey ){
 					unset($arrPatchs[$sXpath][$nKey]);
 				}
 			}
+			
 			if(count($arrPatchs[$sXpath])==0){
 				unset($arrPatchs[$sXpath]);
 				if(count($arrPatchs)==0){
