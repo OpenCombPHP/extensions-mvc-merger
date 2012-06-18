@@ -956,14 +956,16 @@ MergerPannel.Layout.prototype.log = function(msg){
 
 MergerPannel.Layout.prototype.updateLayout = function()
 {
+	var realthis = this ;
+	
 	jquery('.jc-layout').each(function(v,b){
 		if( !jquery(b).parent().hasClass('jc-frame') )
 		{
 			// 计算 最小/最大 空间要求
-			this.calculateMinMax( aTopFrame );
+			realthis.calculateMinMax( jquery(b) );
 			
 			// 分配空间
-			this.assignSpace( aTopFrame );
+			realthis.assignSpace( jquery(b) );
 		}
 	});
 	
