@@ -219,7 +219,7 @@ ub = {
 		for(var b in json){
 			jQuery('#ub_merge_list').find('ul').first().append(
 						'<li><div style="position:relative;"><h4 style="margin-left:16px;">'+json[b][0]+'</h4>'
-						+'<a class="delPatch" style="display:block;position:absolute;top:0;left:0;" href="#"><img src="extensions/mvc-merger/0.1/public/image/delete.png"/></a></div>'
+						+'<a class="delPatch" key="'+b+'" style="display:block;position:absolute;top:0;left:0;" href="#"><img src="extensions/mvc-merger/0.1/public/image/delete.png"/></a></div>'
 						+'<div>'+ub.html_encode(json[b][1])+'</div></li>'
 					);
 		}
@@ -228,7 +228,7 @@ ub = {
 				return false;
 			}
 			var position = jQuery(this).prev().text();
-			var source = jQuery(this).parent('div').next().text();
+			var key = jQuery(this).attr('key');
 			//删除编织节点
 			jQuery.ajax( {
 				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=delete'
@@ -236,7 +236,7 @@ ub = {
 					template: jquery('#ub_template').val()
 					, xpath: jquery('#ub_xpath').val()
 					, position: position
-					, source: source
+					, key: key
 				}
 				, type: 'POST'
 				, dataType: 'json'
@@ -245,8 +245,9 @@ ub = {
 					{
 						if(confirm('删除节点成功,需要刷新页面才能看到删除后效果,点击\"确定\"刷新页面,点击\"取消\"停留在现在的页面')){							
 							window.location.reload();
+						}else{
+							ub.setTagPatchsInfoToEditForm(ub.aRunningZTree.getSelectedNodes()[0]);
 						}
-						ub.setTagPatchsInfoToEditForm(ub.aRunningZTree.getSelectedNodes()[0]);
 					}
 					else
 					{
