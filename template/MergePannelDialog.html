@@ -23,15 +23,15 @@
 						<h2 id="mergepannel-props-id-text"> 控制子元素的样式 </h2>
 						<div id="mergepannel-props-frame-type">
 							类型： <label>
-								<input id="mergepannel-props-frame-ipt-v"
+								<input id="mergepannel-props-frame-v"
 								class="mergepannel-props-frame-type"
 								name='mergepannel-props-frame-type' type="radio" value="v" />
 								纵向 </label><label>
-								<input id="mergepannel-props-frame-ipt-h"
+								<input id="mergepannel-props-frame-h"
 								class="mergepannel-props-frame-type"
 								name='mergepannel-props-frame-type' type="radio" value="h" />
 								横向 </label><label>
-								<input id="mergepannel-props-frame-ipt-s"
+								<input id="mergepannel-props-frame-s"
 								class="mergepannel-props-frame-type"
 								name='mergepannel-props-frame-type' type="radio" value="s"
 								disabled />
@@ -56,7 +56,7 @@
 							<dl>
 								<dt><h3>样式:</h3></dt>
 								<dd>
-								选择样式<select id='mergepannel-props-ipt-skin' >
+								选择样式<select id='mergepannel-props-skin' >
 											<option value="">无</option>
 											<option value="jc-view-decorater-oc">蜂巢默认样式</option>
 										</select>
@@ -87,9 +87,9 @@
 								<dt><h3>宽高:</h3></dt>
 								<dd>
 								宽
-								<input style="width: 50px" id="mergepannel-props-ipt-width" class="mergepannel-tippalbe-element" title="设置视图或布局框架的宽度,可以使用百分比或单位,默认的单位是px" />
+								<input style="width: 50px" id="mergepannel-props-width" class="mergepannel-tippalbe-element" title="设置视图或布局框架的宽度,可以使用百分比或单位,默认的单位是px" />
 								x 高
-								<input style="width: 50px" id="mergepannel-props-ipt-height" class="mergepannel-tippalbe-element" title="设置视图或布局框架的高度,可以使用百分比或单位,默认的单位是px" />
+								<input style="width: 50px" id="mergepannel-props-height" class="mergepannel-tippalbe-element" title="设置视图或布局框架的高度,可以使用百分比或单位,默认的单位是px" />
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
@@ -115,22 +115,22 @@
 							<dl>
 								<dt><h3>位置:</h3></dt>
 								<dd>
-								位置模式<select id="mergepannel-props-ipt-position">
+								位置模式<select id="mergepannel-props-position">
 									<option value="static">正常</option>
 									<option value="relative">相对</option>
 									<option value="absolute">绝对</option>
 									<option value="fixed">窗口绝对</option>
 								</select>
-								高度<input style="width: 33px" id="mergepannel-props-ipt-zindex" type="text"/>
+								高度<input style="width: 33px" id="mergepannel-props-zindex" type="text"/>
 								<br/>
 								上
-								<input style="width: 33px" id="mergepannel-props-ipt-top" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-top" type="text"/>
 								左
-								<input style="width: 33px" id="mergepannel-props-ipt-left" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-left" type="text"/>
 								下
-								<input style="width: 33px" id="mergepannel-props-ipt-bottom" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-bottom" type="text"/>
 								右
-								<input style="width: 33px" id="mergepannel-props-ipt-right" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-right" type="text"/>
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
@@ -138,13 +138,13 @@
 							<dl>
 								<dt><h3>边框:</h3></dt>
 								<dd>
-								<a id="mergepannel-props-ipt-borders-showmore" href="#" title="详细设定" class="mergepannel-props-ipt-borders-arrow-left"></a>
+								<a id="mergepannel-props-borders-showmore" href="#" title="详细设定" class="mergepannel-props-borders-arrow-left"></a>
 								宽
-								<input style="width: 40px" id="mergepannel-props-ipt-border-width" type="text"/>
+								<input style="width: 40px" id="mergepannel-props-border-width" type="text"/>
 								色
-								<input style="width: 40px" id="mergepannel-props-ipt-border-color" type="text"/>
+								<input style="width: 40px" id="mergepannel-props-border-color" type="text"/>
 								样
-								<select id="mergepannel-props-ipt-border-style" style='width:50px;display:inline;'>
+								<select id="mergepannel-props-border-style" style='width:50px;display:inline;'>
 									<option value="none">无</option>
 									<option value="solid">实线</option>
 									<option value="dotted">点状</option>
@@ -155,14 +155,14 @@
 									<option value="inset">3D 内部</option>
 									<option value="outset">3D 外部</option>
 								</select>
-								<div id='mergepannel-props-ipt-borders'>
+								<div id='mergepannel-props-borders'>
 									<h3>上:</h3>
 									宽
-									<input style="width: 40px" id="mergepannel-props-ipt-border-top-width" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-top-width" type="text"/>
 									色
-									<input style="width: 40px" id="mergepannel-props-ipt-border-top-color" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-top-color" type="text"/>
 									样
-									<select id="mergepannel-props-ipt-border-top-style" style='width:50px;'>
+									<select id="mergepannel-props-border-top-style" style='width:50px;'>
 										<option value="none">无</option>
 										<option value="solid">实线</option>
 										<option value="dotted">点状</option>
@@ -175,11 +175,11 @@
 									</select><br/>
 									<h3>右:</h3>
 									宽
-									<input style="width: 40px" id="mergepannel-props-ipt-border-right-width" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-right-width" type="text"/>
 									色
-									<input style="width: 40px" id="mergepannel-props-ipt-border-right-color" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-right-color" type="text"/>
 									样
-									<select id="mergepannel-props-ipt-border-right-style" style='width:50px;'>
+									<select id="mergepannel-props-border-right-style" style='width:50px;'>
 										<option value="none">无</option>
 										<option value="solid">实线</option>
 										<option value="dotted">点状</option>
@@ -192,11 +192,11 @@
 									</select><br/>
 									<h3>下:</h3>
 									宽
-									<input style="width: 40px" id="mergepannel-props-ipt-border-bottom-width" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-bottom-width" type="text"/>
 									色
-									<input style="width: 40px" id="mergepannel-props-ipt-border-bottom-color" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-bottom-color" type="text"/>
 									样
-									<select id="mergepannel-props-ipt-border-bottom-style" style='width:50px;'>
+									<select id="mergepannel-props-border-bottom-style" style='width:50px;'>
 										<option value="none">无</option>
 										<option value="solid">实线</option>
 										<option value="dotted">点状</option>
@@ -209,11 +209,11 @@
 									</select><br/>
 									<h3>左:</h3>
 									宽
-									<input style="width: 40px" id="mergepannel-props-ipt-border-left-width" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-left-width" type="text"/>
 									色
-									<input style="width: 40px" id="mergepannel-props-ipt-border-left-color" type="text"/>
+									<input style="width: 40px" id="mergepannel-props-border-left-color" type="text"/>
 									样
-									<select id="mergepannel-props-ipt-border-left-style" style='width:50px;'>
+									<select id="mergepannel-props-border-left-style" style='width:50px;'>
 										<option value="none">无</option>
 										<option value="solid">实线</option>
 										<option value="dotted">点状</option>
@@ -232,10 +232,10 @@
 							<dl>
 								<dt><h3>边距:</h3></dt>
 								<dd>
-								上<input style="width: 33px" id="mergepannel-props-ipt-margin-top" type="text"/>
-								右<input style="width: 33px" id="mergepannel-props-ipt-margin-right" type="text"/>
-								下<input style="width: 33px" id="mergepannel-props-ipt-margin-bottom" type="text"/>
-								左<input style="width: 33px" id="mergepannel-props-ipt-margin-left" type="text"/>
+								上<input style="width: 33px" id="mergepannel-props-margin-top" type="text"/>
+								右<input style="width: 33px" id="mergepannel-props-margin-right" type="text"/>
+								下<input style="width: 33px" id="mergepannel-props-margin-bottom" type="text"/>
+								左<input style="width: 33px" id="mergepannel-props-margin-left" type="text"/>
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
@@ -243,10 +243,10 @@
 							<dl>
 								<dt><h3>留白:</h3></dt>
 								<dd>
-								上<input style="width: 33px" id="mergepannel-props-ipt-padding-top" type="text"/>
-								右<input style="width: 33px" id="mergepannel-props-ipt-padding-right" type="text"/>
-								下<input style="width: 33px" id="mergepannel-props-ipt-padding-bottom" type="text"/>
-								左<input style="width: 33px" id="mergepannel-props-ipt-padding-left" type="text"/>
+								上<input style="width: 33px" id="mergepannel-props-padding-top" type="text"/>
+								右<input style="width: 33px" id="mergepannel-props-padding-right" type="text"/>
+								下<input style="width: 33px" id="mergepannel-props-padding-bottom" type="text"/>
+								左<input style="width: 33px" id="mergepannel-props-padding-left" type="text"/>
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
