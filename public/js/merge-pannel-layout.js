@@ -1342,10 +1342,10 @@ MergerPannel.Layout.prototype.applySpace = function(item,assignedWidth,assignedH
 
 MergerPannel.Layout.prototype.getMapMVCMergerItemProperties = function(id,propertyName){
 	if(typeof mapMVCMergerItemProperties == 'undefined'){
-		mapMVCMergerItemProperties = new Array();
+		mapMVCMergerItemProperties = {};
 	}
 	if(typeof mapMVCMergerItemProperties[id] == 'undefined'){
-		mapMVCMergerItemProperties[id] = new Array();
+		mapMVCMergerItemProperties[id] = {};
 	}
 	if(typeof mapMVCMergerItemProperties[id][propertyName] == 'undefined'){
 		mapMVCMergerItemProperties[id][propertyName] = '';
