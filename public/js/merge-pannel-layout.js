@@ -1087,18 +1087,10 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item) {
 	var $ = jquery;
 	var realthis = this;
 	var defaultMin = 50 ;
-		
-	var children = item.children('.jc-layout') ;
 
-	//排除编辑控件自身
-	for(var i=children.length-1;i>=0;i--)
-	{
-		if( children[i].id == 'MergePannelDialog-0' )
-		{
-			children.splice(i,1) ;
-		}
-	}
-	
+	var children = item.children('.jc-layout') ;
+	this.filterChildren(children) ;
+
 	// 计算下级最小值
 	if( item.hasClass('jc-frame') )
 	{
@@ -1195,16 +1187,9 @@ MergerPannel.Layout.prototype.assignSpace = function(container)
 {
 	var $ = jquery;
 	var realthis = this;
+
 	var children = container.children('.jc-layout');
-	
-	//排除编辑控件自身
-	for(var i=children.length-1;i>=0;i--)
-	{
-		if( children[i].id == 'MergePannelDialog-0' )
-		{
-			children.splice(i,1) ;
-		}
-	}
+	this.filterChildren(children) ;
 
 	var assignableWidth = container.width() ;
 	var assignableHeight = container.height() ;
@@ -1338,6 +1323,22 @@ MergerPannel.Layout.prototype.applySpace = function(item,assignedWidth,assignedH
 	}
 	
 	return {"w":assignedWidth,"h":assignedHeight} ;
+}
+
+MergerPannel.Layout.prototype.filterChildren = function(children)
+{
+	var $ = jquery ;
+	for(var i=children.length-1;i>=0;i--)
+	{
+		// 排除空的 frame
+		if( $(children[i]).hasClass('jc-frame') && $(children[i]).children('.jc-layout').size()==0 )
+		{
+			this.log('empty frame: '+children[i].id) ;
+			$(children[i]).width(0) ;
+			$(children[i]).height(0) ;
+			children.splice(i,1) ;
+		}
+	}
 }
 
 MergerPannel.Layout.prototype.getMapMVCMergerItemProperties = function(id,propertyName){

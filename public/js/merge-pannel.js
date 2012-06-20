@@ -46,11 +46,12 @@ MergerPannel.prototype.init = function()
 		}
 		return false;
 	});
-	
+
 	clearJCLayout();
 	//清理视图布局编辑器中的layout class 防止编辑器认错
 	function clearJCLayout(){
 		$('#mergepannel-dialog').find('.jc-layout').removeClass('jc-layout');
+		$('#MergePannelDialog-0').removeClass('jc-layout') ;
 	}
 }
 
