@@ -312,9 +312,6 @@ MergerPannel.Layout.prototype._initZtree = function() {
 	// 全部展开
 	this.aZtree.expandAll(true);
 	
-	//隐藏编辑面板自身节点
-	jquery( "#" + this.aZtree.getNodeByParam('id', 'MergePannelDialog-0' )['tId'] ).hide();
-	
 	// ztree node 的样式
 	this._initZtreeNodesStylte();
 }

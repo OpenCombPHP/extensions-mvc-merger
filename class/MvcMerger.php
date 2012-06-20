@@ -49,11 +49,11 @@ class MvcMerger extends Extension
 				, Response::beforeRespond
 				, array(__CLASS__,'onBeforeRespond')
 		)
-		->registerEventHandle(
+		/*->registerEventHandle(
 				'org\\jecat\\framework\\mvc\\view\\ViewAssembler'
 				, ViewAssembler::assemble
 				, array(__CLASS__,'onAssemble')
-		)
+		)*/
 		->registerEventHandle(/*视图布局*/
 				'org\\jecat\\framework\\mvc\\controller\\Controller'
 				, Controller::afterMainRun
@@ -270,12 +270,14 @@ class MvcMerger extends Extension
 				$arrProperties['properties'] = array();
 			}
 			// 向控制器插入 mvc pannel dialog 视图
-			$aView = new View('MergePannelDialog','mvc-merger:MergePannelDialog.html') ;
+			$aView = new View('mvc-merger:MergePannelDialog.html') ;
 			$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
 			$aView->variables()->set('sImageFolder',$sImageFolder) ;
 			$aView->variables()->set('sControllerClass',$sClassName) ;
 			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;
-			$aController->mainView()->add($aView) ;
+			$aView->removeWrapperClasses('jc-layout') ;
+			$aView->removeWrapperClasses('jc-view') ;
+			$aController->view()->addView('MergePannelDialog',$aView) ;
 		}
 	}
 	static public function onAssemble(ViewAssembler $aViewAssembler,Controller $aController)
