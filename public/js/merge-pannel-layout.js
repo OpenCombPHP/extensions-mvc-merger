@@ -313,7 +313,7 @@ MergerPannel.Layout.prototype._initZtree = function() {
 	this.aZtree.expandAll(true);
 	
 	//隐藏编辑面板自身节点
-	jquery( "#" + this.aZtree.getNodeByParam('id', 'MergePannelDialog-0' )['tId'] ).hide();
+	jquery( "#" + this.aZtree.getNodeByParam('id', 'mvc-merger:MergePannelDialog.html-0' )['tId'] ).hide();
 	
 	// ztree node 的样式
 	this._initZtreeNodesStylte();
@@ -332,6 +332,8 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 							// 鼠标移过 item 时， 对应的 frame/view 闪烁样式
 							var aNode = realThis.aZtree.getNodeByTId(this.parentNode.parentNode.id);
 							var flashing = $('<div id="mergepannel-layout-flashing"></div>');
+							console.log(aNode.id);
+							console.log($('#' + aNode.id));
 							var position = $('#' + aNode.id).position();
 							var width = $('#' + aNode.id).outerWidth(true);
 							var height = $('#' + aNode.id).outerHeight(true);
