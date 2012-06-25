@@ -1049,19 +1049,21 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 	try{
 		jquery('.jc-layout').each(function(v,b){
 			if( !jquery(b).parent().hasClass('jc-frame') )
-			{
-				// 计算 最小/最大 空间要求
-				realthis.calculateMinMax( jquery(b) );
-				
-				// 分配空间
-				realthis.assignSpace( jquery(b) );
+			{				
+				// 先计算分配宽度
+				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_width );
+				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_width );
+
+				// 确定宽度后，将视图的auto高度做为最小高度，然后计算分配高度
+				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_height );
+				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_height );
 			}
 		});
 	}catch(e){
 		realthis.log(e.message);
 		//回滚
 		if( typeof resetFun == "function" ){
-			resetFun();
+			// resetFun();
 		}
 	}
 }
@@ -1082,7 +1084,9 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
  * 如果用户给框体指定了宽度500,那么数值应该是这个样子:min-width=500,max-width=500,就是说宽度只能是500,没有浮动余地,
  * max = -1 代表不限宽高最大值
  * */
-MergerPannel.Layout.prototype.calculateMinMax = function(item) {
+MergerPannel.Layout.flag_width = 1 ;
+MergerPannel.Layout.flag_height = 2 ;
+MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 	
 	var $ = jquery;
 	var realthis = this;
@@ -1095,7 +1099,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item) {
 	if( item.hasClass('jc-frame') )
 	{
 		children.each(function(key,child){
-			realthis.calculateMinMax( $(child) ) ;
+			realthis.calculateMinMax( $(child), flag ) ;
 		});
 	}
 	
@@ -1103,23 +1107,33 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item) {
 	this.log("计算 item "+item.attr('id')+"的空间要求：") ;
 	
 	// 基本规则 (for view)
-	if( realthis.getMapMVCMergerItemProperties( item[0].id , 'width' ) == '' )
+	if( flag&MergerPannel.Layout.flag_width )
 	{
-		item.data('min-width' , defaultMin);
-		item.data('max-width' , -1);
+		var nCusWidth = realthis.getMapMVCMergerItemProperties( item[0].id , 'width' ) ;
+		if( nCusWidth == '' )
+		{
+			item.data('min-width' , defaultMin);
+			item.data('max-width' , -1);
+		}
+		else
+		{
+			item.data('min-width' , nCusWidth);
+			item.data('max-width' , nCusWidth);
+		}
 	}
-	else
+	if( flag&MergerPannel.Layout.flag_height )
 	{
-		item.data('min-width' , mapMVCMergerItemProperties[item[0].id]['width']);
-		item.data('max-width' , mapMVCMergerItemProperties[item[0].id]['width']);
-	}
-	if( realthis.getMapMVCMergerItemProperties( item[0].id , 'height' ) == '' )
-	{
-		item.data('min-height' , -1);
-	}
-	else
-	{
-		item.data('min-height' , mapMVCMergerItemProperties[item[0].id]['height']);
+		var nCusHeight = realthis.getMapMVCMergerItemProperties( item[0].id , 'width' ) ;
+		if( nCusHeight == '' )
+		{
+			item.data('min-height',item.height('').outerHeight(true));
+			item.data('max-height' , -1);
+		}
+		else
+		{
+			item.data('min-height' , nCusHeight);
+			item.data('max-height' , nCusHeight);
+		}
 	}
 
 	// 容器规则：最大值不可以小于 所有成员的最大值总和 (for frame)
@@ -1133,15 +1147,21 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item) {
 			var nChildMinWidth = parseInt($(child).data('min-width')) ;
 			var nChildMinHeight = parseInt($(child).data('min-height')) ;
 			
+
+			realthis.log("child id："+child.id+": "+nChildMinWidth+"x"+nChildMinHeight) ;
+			
 			// 横向
 			if( item.hasClass('jc-frame-horizontal') )
 			{
-				realthis.log("横向frame：累成员加宽，取最大成员高") ;
+				realthis.log("横向frame：累加成员宽，取最大成员高") ;
 				
 				// 累成员加宽
-				childrenMinWidth += nChildMinWidth ;
+				if( flag&MergerPannel.Layout.flag_width )
+				{
+					childrenMinWidth += nChildMinWidth ;
+				}
 				// 取最大成员高
-				if( childrenMinHeight<nChildMinHeight )
+				if( flag&MergerPannel.Layout.flag_height & childrenMinHeight<nChildMinHeight )
 				{
 					childrenMinHeight = nChildMinHeight ;
 				}
@@ -1149,41 +1169,55 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item) {
 			// 纵向
 			else
 			{
-				realthis.log("纵向frame：取最大成员宽，累成员加高") ;
+				realthis.log("纵向frame：取最大成员宽，累加成员高 / "+flag) ;
 				
 				// 取最大成员宽
-				if( childrenMinWidth<nChildMinWidth )
+				if( flag&MergerPannel.Layout.flag_width && childrenMinWidth<nChildMinWidth )
 				{
 					childrenMinWidth = nChildMinWidth ;
 				}
 				// 累加成员高
-				if( nChildMinHeight>0 )
+				if( flag&MergerPannel.Layout.flag_height && nChildMinHeight>0 )
 				{
 					childrenMinHeight += nChildMinHeight ;
 				}
 			}
 		});
+
+		// 加上自己的 panding,margin,border
+		childrenMinWidth+= item.outerWidth(true) - item.width() ;
+		childrenMinHeight+= item.outerHeight(true) - item.height() ;
 		
-		if( item.data('min-width') < childrenMinWidth )
+		// 重新设置 item 的 min/max
+		if( flag&MergerPannel.Layout.flag_width & item.data('min-width') < childrenMinWidth )
 		{
 			item.data('min-width' , childrenMinWidth );
 		}
-		if( childrenMinHeight>0 && item.data('min-height') < childrenMinHeight )
+		//realthis.log("最小高："+item.data('min-height')) ;
+		//realthis.log("成员最小高之和："+childrenMinHeight) ;
+		if( flag&MergerPannel.Layout.flag_height && childrenMinHeight>0 && item.data('min-height') < childrenMinHeight )
 		{
+			//realthis.log("最小高小于成员最小高之和："+childrenMinHeight) ;
 			item.data('min-height' , childrenMinHeight );
 		}
 
-		// 还要加上自己的 panding,margin,border
-		// todo ...
+		
 	}
-	
-	this.log( "min/max width:"+item.data('min-width')+"/"+item.data('max-width')+";  min height:"+item.data('min-height') );
+
+	if(flag&MergerPannel.Layout.flag_width)
+	{
+		this.log( "min/max width:"+item.data('min-width')+"/"+item.data('max-width') );
+	}
+	if(flag&MergerPannel.Layout.flag_height)
+	{
+		this.log( " min height:"+item.data('min-height') );
+	}
 }
 
 /**
  * 为frame和view计算宽高
  */
-MergerPannel.Layout.prototype.assignSpace = function(container)
+MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 {
 	var $ = jquery;
 	var realthis = this;
@@ -1191,71 +1225,80 @@ MergerPannel.Layout.prototype.assignSpace = function(container)
 	var children = container.children('.jc-layout');
 	this.filterChildren(children) ;
 
-	var assignableWidth = container.width() ;
-	var assignableHeight = container.height() ;
+	// var assignableWidth = container.width() ;
+	// var assignableHeight = container.height() ;
 	// realthis.log( "总可用空间:"+assignableWidth+"/"+assignableHeight ) ;
-	
-	// 横向 frame
-	if(container.hasClass('jc-frame-horizontal'))
+
+	if(flag==MergerPannel.Layout.flag_width)
 	{
-		// 横向 frame 按照 min-width 逆向排列成员
+		var assignable = container.width() ;
+		var minKey = 'min-width' ;
+		var bSameSpace = container.hasClass('jc-frame-vertical') ;
+		var bExpandable = false ;
+	}
+	else
+	{
+		var assignable = container.height() ;
+		var minKey = 'min-height' ;
+		var bSameSpace = container.hasClass('jc-frame-horizontal') ;
+		var bExpandable = true ;
+	}
+	
+	// 所有下级成员空间相同
+	if( bSameSpace )
+	{
+		children.each(function(key,item){
+			realthis.applySpace(item,assignable,flag) ;
+		}) ;
+	}
+	
+	// 下级成员平分空间
+	else
+	{
+		// 横向 frame 按照 min值 逆向排列成员
 		children.sort(function(a,b){
-			return $(b).data('min-width') - $(a).data('min-width');
+			return $(b).data(minKey) - $(a).data(minKey);
 		});
+		
+		var nTotalAssigned = 0 ;
+		var remain = assignable ;
 		
 		children.each(function(key,item){
 
 			// 剩余空间 不够一个item的最小值要求
-			if( assignableWidth < $(item).data('min-width') )
+			if( !bExpandable && remain < $(item).data(minKey) )
 			{
-				throw new Error( "无法为layout item:"+$(item).attr('id')+"分配空间：item 要求的最小值("+$(item).data('min-width')+")超出了可以分配的空间("+assignableWidth+")" ) ;
+				throw new Error( "无法为layout item:"+$(item).attr('id')+"分配空间：item 要求的最小值("+$(item).data(minKey)+")超出了可以分配的空间("+remain+")" ) ;
 			}
 			
 			// 未分配的item 平分 剩余空间
-			var assignedWidth = Math.floor( assignableWidth / ( children.length - key ) ) ;
-			realthis.log(container.id+" 目前可用空间:"+assignableWidth+"; 还剩"+(children.length - key)+"个item；平分："+assignedWidth);
+			var assigned = Math.floor( remain / ( children.length - key ) ) ;
+			realthis.log(container.id+" 目前可用空间:"+remain+"; 还剩"+(children.length - key)+"个item；平分："+assigned);
 			
 			// 应用分配到的空间
-			var assignedSpace = realthis.applySpace(item,assignedWidth,assignableHeight) ;
-			
-			// 剩余未分配空间
-			assignableWidth -= assignedSpace.w ;
-			
-		});
-	}
-	
-	// 纵向 frame
-	else
-	{
-		// 纵向 frame 按照 min-height 逆向排列成员
-		children.sort(function(a,b){
-			return $(b).data('min-height') - $(a).data('min-height');
-		});
+			var assigned = realthis.applySpace(item,assigned,flag) ;
+			nTotalAssigned+= assigned ;
 				
-		children.each(function(key,item)
-		{
-			// 剩余空间 不够一个item的最小值要求
-			if( assignableWidth < $(item).data('min-width') )
-			{
-				throw new Error( "无法为layout item:"+$(item).attr('id')+"分配空间：item 要求的最小值("+$(item).data('min-width')+")超出了可以分配的空间("+assignableWidth+")" ) ;
-			}
-			
-			// 未分配的item 平分 剩余空间
-			var assignedHeight = Math.floor( assignableHeight / ( children.length - key ) ) ;
-			realthis.log(assignedHeight) ;
-			
-			var assignedSpace = realthis.applySpace(item,assignableWidth,assignedHeight) ;
-
 			// 剩余未分配空间
-			assignableHeight -= assignedSpace.h ;
+			remain -= assigned ;
+			
 		});
+		
+		// 扩张自己的空间
+		if( bExpandable && assignable<nTotalAssigned )
+		{
+			if(flag==MergerPannel.Layout.flag_height)
+			{
+				container.height(nTotalAssigned) ;
+			}
+		}
 	}
 }
 
 /**
  * 尝试将分配到的空间应用到元素上
  */
-MergerPannel.Layout.prototype.applySpace = function(item,assignedWidth,assignedHeight)
+MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag)
 {
 	var $ = jquery;
 	
@@ -1264,65 +1307,68 @@ MergerPannel.Layout.prototype.applySpace = function(item,assignedWidth,assignedH
 	
 	
 	// 分配宽度-----------------------------------
-	
-	// 分配值不够item要求的最小值
-	if(  $(item).data('min-width') > assignedWidth )	
+	if(flag&MergerPannel.Layout.flag_width)
 	{
-		assignedWidth =  $(item).data('min-width') ;
-	}
-	// 分配值超出item限制的最大值
-	else if( $(item).data('max-width')>=0 && $(item).data('max-width') < assignedWidth )	
-	{
-		assignedWidth =  $(item).data('max-width') ;
-	}
-
-	// 应用计算可行的 分配空间
-	// this.log($(item).outerWidth()-$(item).width()+$(item).innerWidth()) ;
-	var outer = parseInt($(item).css('border-left-width')) ;
-	outer+= parseInt($(item).css('border-right-width')) ;
-	outer+= parseInt($(item).css('padding-left')) ;
-	outer+= parseInt($(item).css('padding-right')) ;
-	outer+= parseInt($(item).css('margin-left')) ;
-	outer+= parseInt($(item).css('margin-right')) ;
-	var width = assignedWidth - outer ;
-
-	this.log("item "+$(item).attr('id')+" 实际分配宽度："+assignedWidth+", 外部宽度："+outer+", 内部宽度："+width);
+		// 分配值不够item要求的最小值
+		if(  $(item).data('min-width') > assigned )	
+		{
+			assigned =  $(item).data('min-width') ;
+		}
+		// 分配值超出item限制的最大值
+		else if( $(item).data('max-width')>=0 && $(item).data('max-width') < assigned )	
+		{
+			assigned =  $(item).data('max-width') ;
+		}
 	
-	$(item).width(width) ;
+		// 应用计算可行的 分配空间
+		// this.log($(item).outerWidth()-$(item).width()+$(item).innerWidth()) ;
+		var outer = parseInt($(item).css('border-left-width')) ;
+		outer+= parseInt($(item).css('border-right-width')) ;
+		outer+= parseInt($(item).css('padding-left')) ;
+		outer+= parseInt($(item).css('padding-right')) ;
+		outer+= parseInt($(item).css('margin-left')) ;
+		outer+= parseInt($(item).css('margin-right')) ;
+		var width = assigned - outer ;
 	
-	this.log("item 最后生效的内部宽度："+$(item).width());
+		this.log("item "+$(item).attr('id')+" 实际分配宽度："+assigned+", 外部宽度："+outer+", 内部宽度："+width);
+		
+		$(item).width(width) ;
+		
+		this.log("item 最后生效的内部宽度："+$(item).width());
+	}
 	
 	
 	// 分配高度-----------------------------------
-
-	// 分配值不够item要求的最小值
-	if(  $(item).data('min-height') > assignedHeight )	
+	if(flag&MergerPannel.Layout.flag_height)
 	{
-		assignedHeight =  $(item).data('min-height') ;
+		// 分配值不够item要求的最小值
+		if(  $(item).data('min-height') > assigned )	
+		{
+			assigned =  $(item).data('min-height') ;
+		}
+		
+		outer = parseInt($(item).css('border-top-width')) ;
+		outer+= parseInt($(item).css('border-bottom-width')) ;
+		outer+= parseInt($(item).css('padding-top')) ;
+		outer+= parseInt($(item).css('padding-bottom')) ;
+		outer+= parseInt($(item).css('margin-top')) ;
+		outer+= parseInt($(item).css('margin-bottom')) ;
+		var height = assigned - outer ;
+	
+		this.log("item "+$(item).attr('id')+" 实际分配高度："+assigned+", 外部高度："+outer+", 内部高度："+height);
+		
+		$(item).height(height) ;
+		
+		this.log("item 最后生效的内部高度："+$(item).height());
 	}
-	
-	outer = parseInt($(item).css('border-top-width')) ;
-	outer+= parseInt($(item).css('border-bottom-width')) ;
-	outer+= parseInt($(item).css('padding-top')) ;
-	outer+= parseInt($(item).css('padding-bottom')) ;
-	outer+= parseInt($(item).css('margin-top')) ;
-	outer+= parseInt($(item).css('margin-bottom')) ;
-	var height = assignedHeight - outer ;
 
-	this.log("item "+$(item).attr('id')+" 实际分配高度："+assignedHeight+", 外部高度："+outer+", 内部高度："+height);
-	
-	$(item).height(height) ;
-	
-	this.log("item 最后生效的内部高度："+$(item).height());
-
-	
 	// 递归分配item的下级
 	if( $(item).hasClass('jc-frame') )
 	{
-		this.assignSpace( $(item) ) ;
+		this.assignSpace( $(item), flag ) ;
 	}
 	
-	return {"w":assignedWidth,"h":assignedHeight} ;
+	return assigned ;
 }
 
 MergerPannel.Layout.prototype.filterChildren = function(children)
