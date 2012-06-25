@@ -275,6 +275,8 @@ class MvcMerger extends Extension
 			$aView->variables()->set('sImageFolder',$sImageFolder) ;
 			$aView->variables()->set('sControllerClass',$sClassName) ;
 			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;
+			$aView->removeWrapperClasses('jc-layout') ;
+			$aView->removeWrapperClasses('jc-frame') ;
 			$aController->mainView()->add($aView) ;
 		}
 	}
