@@ -95,7 +95,6 @@ ub = {
 			}
 		}, arrZtreeData);
 		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("ub_template_list");
-		
 		//添加补丁个数显示
 		var arrNodes = ub.aRunningZTree.getNodesByFilter(function(node){
 			if( typeof(node.data) != "undefined" && typeof(node.data.patchNum) != "undefined"){
