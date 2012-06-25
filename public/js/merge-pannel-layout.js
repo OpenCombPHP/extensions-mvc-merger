@@ -473,6 +473,14 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 	if(sParams == '' || $("#mergepannel-layout-saveType").val() == 'type'){
 		sParams = '*';
 	}
+	
+	//补上编辑对话框,以防下次启动的时候被忽略
+	mapRootNodes['frameView-0-pos0']['items'].push({
+			type : 'view',
+			id : 'MergePannelDialog-0',
+			style : ''
+	});
+	
 	$.ajax({
 		type : "POST",
 		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=save',
@@ -804,7 +812,7 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		case 'mergepannel-props-width' :
 		case 'mergepannel-props-height' :
 			if(typeof mapMVCMergerItemProperties != 'undefined'){
-				var type = event.currentTarget.id.split('-')[3];
+				var type = event.currentTarget.id.split('-')[2];
 				var oldValue = realthis.getMapMVCMergerItemProperties(realthis.eleSelectedItem.id , type);
 				
 				mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = $("#"+event.currentTarget.id).val();
