@@ -270,14 +270,12 @@ class MvcMerger extends Extension
 				$arrProperties['properties'] = array();
 			}
 			// 向控制器插入 mvc pannel dialog 视图
-			$aView = new View('mvc-merger:MergePannelDialog.html') ;
+			$aView = new View('MergePannelDialog','mvc-merger:MergePannelDialog.html') ;
 			$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
 			$aView->variables()->set('sImageFolder',$sImageFolder) ;
 			$aView->variables()->set('sControllerClass',$sClassName) ;
 			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;
-			$aView->removeWrapperClasses('jc-layout') ;
-			$aView->removeWrapperClasses('jc-view') ;
-			$aController->view()->addView('MergePannelDialog',$aView) ;
+			$aController->mainView()->add($aView) ;
 		}
 	}
 	static public function onAssemble(ViewAssembler $aViewAssembler,Controller $aController)
