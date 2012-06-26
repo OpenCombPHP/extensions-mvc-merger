@@ -2,7 +2,6 @@
 namespace org\opencomb\mvcmerger ;
 
 
-use org\jecat\framework\mvc\view\Webpage;
 use org\jecat\framework\mvc\view\View;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\model\IModel;
@@ -280,7 +279,7 @@ class MvcMerger extends Extension
 			$aController->view()->addView('MergePannelDialog',$aView) ;
 		}
 	}
-	static public function onAssemble(Response $aResponse, Webpage $aWebpage,Controller $aController)
+	static public function onAssemble(Response $aResponse, View $aWebpage,Controller $aController)
 	{
 		$sClassName = str_replace('\\','.',get_class($aController)) ;
 		
