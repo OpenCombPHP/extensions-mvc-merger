@@ -548,7 +548,7 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
  * 移动 frame/view 到另一个 frame 内 参数 view, frame 都是 html div 元素 将 view 移动到 frame 里面
  */
 MergerPannel.Layout.prototype.moveIn = function(view, frame) {
-	$ = jquery;
+	var $ = jquery;
 	if ($(frame).children('.jc-layout-item-end').size() < 1) {
 		$(view).appendTo($(frame));
 	} else {
@@ -562,7 +562,7 @@ MergerPannel.Layout.prototype.moveIn = function(view, frame) {
  * behindItem 的前面
  */
 MergerPannel.Layout.prototype.moveBefore = function(view, behindItem) {
-	$ = jquery;
+	var $ = jquery;
 	$(view).insertBefore($(behindItem));
 	// frame 重新布局
 	this.layoutFrame(behindItem.parentNode);
@@ -572,7 +572,7 @@ MergerPannel.Layout.prototype.moveBefore = function(view, behindItem) {
  * frontItem 的后面
  */
 MergerPannel.Layout.prototype.moveAfter = function(view, frontItem) {
-	$ = jquery;
+	var $ = jquery;
 	$(view).insertAfter($(frontItem));
 	// frame 重新布局
 	this.layoutFrame(frontItem.parentNode);
@@ -597,7 +597,7 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	var $ = jquery;
 
-	if (typeof (node) !== 'undefine') {
+	if (typeof (node) === 'undefine') {
 		var node = this.getDataByEleId(frame.id);
 	}
 	// 清理样式
@@ -685,7 +685,6 @@ MergerPannel.Layout.prototype.getDataByEleId = function(eleId) {
  */
 MergerPannel.Layout.prototype.openProperty = function(itemData, itemEle) {
 	var $ = jquery;
-
 	$('#mergepannel-props-id').html(itemData.id);
 
 	// frame
@@ -981,6 +980,7 @@ MergerPannel.Layout.prototype.saveProperties = function(sId) {
  * 删除一个frame（只有用户添加的frame可以被删除）
  */
 MergerPannel.Layout.prototype.deleteFrame = function(itemEle, itemData) {
+	var $ = jquery;
 	if ($(itemEle).children('.jc-layout').size()) {
 		alert('请先移除布局框架下的成员，再删除布局框架。');
 		return;
@@ -994,7 +994,7 @@ MergerPannel.Layout.prototype.deleteFrame = function(itemEle, itemData) {
  */
 MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	var $ = jquery;
-	var sEleId = 'frame-' + (this.nAssignedFrameId++);
+	var sEleId = 'cusFrame-' + (this.nAssignedFrameId++);
 
 	this.aZtree.addNodes(itemData, {
 		// ztree的属性
@@ -1011,16 +1011,15 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	});
 	// ztree node 的样式
 	this._initZtreeNodesStylte();
-
+	
 	// 创建html元素
-	$(itemEle)
-			.append(
-					"<div id=\""
+	var aNewFrame = $("<div id=\""
 							+ sEleId
 							+ "\" class=\"jc-layout jc-frame cusframe\"><div class=\"jc-layout-item-end\"></div></div>");
+	$(itemEle).append( aNewFrame );
 
 	// 移动
-	this.moveIn(document.getElementById(sEleId), itemEle);
+	this.moveIn( aNewFrame[0] , itemEle);
 }
 MergerPannel.Layout.prototype.log = function(msg){
 	if(typeof console == 'object'){

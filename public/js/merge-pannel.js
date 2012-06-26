@@ -6,6 +6,7 @@ MergerPannel.prototype.init = function()
 {
 	var $ = jquery ;
 	var thisMergerPannel = this ;
+	
 	$('#mergepannel-dialog').dialog({
 		width: 600
 		, height: 450
