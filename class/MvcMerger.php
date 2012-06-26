@@ -3,7 +3,6 @@ namespace org\opencomb\mvcmerger ;
 
 
 use org\jecat\framework\mvc\view\Webpage;
-
 use org\jecat\framework\mvc\view\View;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\model\IModel;
@@ -275,7 +274,9 @@ class MvcMerger extends Extension
 			$sImageFolder = Service::singleton()->publicFolders()->find('image','mvc-merger',true) ;
 			$aView->variables()->set('sImageFolder',$sImageFolder) ;
 			$aView->variables()->set('sControllerClass',$sClassName) ;
-			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;
+			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;			$aView->removeWrapperClasses('jc-layout') ;
+			$aView->removeWrapperClasses('jc-layout') ;
+			$aView->removeWrapperClasses('jc-frame') ;
 			$aController->view()->addView('MergePannelDialog',$aView) ;
 		}
 	}
