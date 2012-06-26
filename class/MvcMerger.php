@@ -299,12 +299,15 @@ class MvcMerger extends Extension
 		if(!$arrLayout){
 			$arrLayout = $aSetting->item('/merge/layout/'.$sClassName, '*' ,null) ;
 		}
-		if( isset($arrLayout['assemble']) and $arrLayout['assemble'] )
+		if(! isset($arrLayout['assemble']) || $arrLayout['assemble'] == array() )
 		{
-			return EventReturnValue::returnByRef($arrLayout['assemble']) ;
+			return;
+		}
+		
+		foreach ( $arrLayout['assemble'] as $value){
+			
 		}
 	}
-
 
 	/**
 	 * @example /MVC模型/视图/模板编织/应用补丁

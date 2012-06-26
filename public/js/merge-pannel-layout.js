@@ -434,7 +434,9 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 	// 分析frame/view 结构, 并整理成后端PHP所需的数据格式
 	var mapItemDatas = {};
 	var mapRootNodes = {};
-	$('.jc-layout').each(function() {
+	$('.jc-layout')
+	.not('#mvc_merger_MergePannelDialog_html-0')
+	.each(function() {
 		var aNode = realThis.getDataByEleId(this.id);
 		if (!aNode) {
 			return;
@@ -448,9 +450,10 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 		var aLayoutItem = {
 			type : aNode.type,
 			id : this.id,
-			'cssClass' : [ skinAndClass ],
+			cssClass : [ skinAndClass ],
 			style : $(this).attr("style"),
-			items : []
+			items : [],
+			xpath : $('#'+this.id).attr('xpath')
 		};
 
 		// frame 类型
@@ -469,13 +472,15 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 	});
 
 	// ajax 提交给PHP
+		//配置作用方式
 	var sParams = $("#mergepannel-layout-save-parmas").val().replace(/&/g,'@').replace(/=/g,'^');
 	if(sParams == '' || $("#mergepannel-layout-saveType").val() == 'type'){
 		sParams = '*';
 	}
+	
 	$.ajax({
 		type : "POST",
-		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=save',
+		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&a[]=/merger.PostViewLayoutSetting::save',
 		data : {
 			layout : mapRootNodes
 			, controller : sMvcMergerController
@@ -503,7 +508,7 @@ MergerPannel.Layout.prototype.cleanLayout = function() {
 	}
 	$.ajax({
 		type : "POST",
-		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&act=clean',
+		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&a[]=/merger.PostViewLayoutSetting::clean',
 		data : {
 			controller : sMvcMergerController
 			, requestparams : sParams
@@ -804,7 +809,7 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		case 'mergepannel-props-width' :
 		case 'mergepannel-props-height' :
 			if(typeof mapMVCMergerItemProperties != 'undefined'){
-				var type = event.currentTarget.id.split('-')[3];
+				var type = event.currentTarget.id.split('-')[2];
 				var oldValue = realthis.getMapMVCMergerItemProperties(realthis.eleSelectedItem.id , type);
 				
 				mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = $("#"+event.currentTarget.id).val();
@@ -812,7 +817,7 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 				realthis.log("变值 updateLayout");
 				realthis.updateLayout(function(){
 					mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = oldValue;
-					realthis.updateLayout();
+					$("#"+event.currentTarget.id).val(oldValue).change();
 				});
 				
 				$(realthis.eleSelectedItem).css( type , $('#'+realthis.mapPropertyNames[type]).val() );
@@ -949,9 +954,7 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 			
 		default:
 			var propertyName = event.currentTarget.id.split('mergepannel-props-')[1];
-			
 			$(realthis.eleSelectedItem).css( propertyName , $(event.currentTarget).val() );
-			
 			realthis.saveProperties();
 	}
 }

@@ -18,11 +18,10 @@ class PostViewLayoutSetting extends ControlPanel
 	{
 		//权限
 		$this->requirePurview(Id::PLATFORM_ADMIN,'coresystem',PurviewQuery::ignore,'您没有权限执行正在请求的操作。');
-
-		$this->doActions() ;
+		$this->doActions();
 	}
 	
-	protected function actionClean()
+	protected function clean()
 	{
 		if( empty($this->params['controller']) )
 		{
@@ -44,7 +43,7 @@ class PostViewLayoutSetting extends ControlPanel
 		$this->createMessage(Message::success,"视图设置已经清空。刷新页面查看更改。") ;
 	}
 	
-	protected function actionSave()
+	protected function save()
 	{
 		if( empty($this->params['layout']) )
 		{
