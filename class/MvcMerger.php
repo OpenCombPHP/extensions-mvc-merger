@@ -414,14 +414,4 @@ class MvcMerger extends Extension
 		}
 		rmdir($dir);
 	}
-
-	static public function buildControlPanelMenu(array & $arrConfig)
-	{
-		// 合并配置数组，增加菜单
-		BeanFactory::mergeConfig(
-				$arrConfig
-				, BeanFactory::singleton()->findConfig('widget/control-panel-frame-menu', 'mvc-merger')
-		) ;
-	
-	}
 }

@@ -597,7 +597,7 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	var $ = jquery;
 
-	if (typeof (node) === 'undefine') {
+	if (typeof node === 'undefined') {
 		var node = this.getDataByEleId(frame.id);
 	}
 	// 清理样式
