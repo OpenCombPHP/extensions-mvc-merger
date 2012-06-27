@@ -315,19 +315,46 @@ class MvcMerger extends Extension
 			return;
 		}
 		$aRootView = $aRootController->view();
-		if(!$aParentView = View::findXPath( $aRootView,$arrParent['xpath'])){
+		if(!$aContainerView = View::findXPath( $aRootView,$arrParent['xpath'])){
 			return;
 		}
-		foreach($arrParent['items'] as $arrChild){
-			if(!$aChildView = View::findXPath( $aRootView,$arrChild['xpath'])){
-				//还原自定义frame
-				if(isset($arrChild['customFrame']) and $arrChild['customFrame']){
-					$aChildView = new View() ;
-					$aChildView->setFrameType("jc-frame");
-					$aChildView->addWrapperClasses('cusframe');
+		if(isset($arrParent['items'])){
+			foreach($arrParent['items'] as $arrChild){
+				if(!$aChildView = View::findXPath( $aRootView,$arrChild['xpath'])){
+					//还原自定义frame
+					if(isset($arrChild['customFrame']) and $arrChild['customFrame']){
+						$aChildView = new View() ;
+						$aChildView->setFrameType("jc-frame");
+						$aChildView->addWrapperClasses('cusframe');
+						if(isset($arrChild['cssClass'])){
+							foreach( $arrChild['cssClass'] as $sClass ){
+								$aChildView->addWrapperClasses($sClass);
+							}
+						}
+						$aChildView->setId($arrChild['id']);
+						
+						$aParentView = View::findXPath( $aRootView,dirname($arrChild['xpath']));
+						$aParentView->addView($arrChild['id'], $aChildView);
+					}else{
+						//do nothing , 如果有找不到的view或者frame,干脆就不管了
+					}
+				}
+				if(isset($arrChild['layout'])){
+					if($arrChild['layout'] == 'v'){
+						$aChildView->addWrapperClasses('jc-frame-vertical');
+					}else if($arrChild['layout'] == 'h'){
+						$aChildView->addWrapperClasses('jc-frame-horizontal');
+					}else{
+						//tab?
+					}
+				}
+				$aChildView->setWrapperStyle($arrChild['style']);
+				$aContainerView->assemble( $aChildView , IAssemblable::zhard );
+					
+				if(isset($arrChild['items'])){
+					self::assembleViewAndFrame($aRootController,$arrChild);
 				}
 			}
-			$aParentView->assemble( $aChildView , IAssemblable::zhard );
 		}
 	}
 
