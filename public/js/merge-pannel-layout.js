@@ -1029,6 +1029,7 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	this.moveIn( aNewFrame[0] , itemEle);
 }
 MergerPannel.Layout.prototype.log = function(msg){
+	return ;
 	if(typeof console == 'object'){
 		console.log(msg);
 	}

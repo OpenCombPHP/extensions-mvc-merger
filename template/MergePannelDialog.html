@@ -291,6 +291,9 @@
 				<button id="mergepannel-layout-cleanbtn">
 					清理
 				</button>
+				<button onclick="MergerPannel.instance.layout.updateLayout()">
+					dbg:重算
+				</button>
 			</div>
 			
 			<div style="clear:both"></div>
@@ -310,8 +313,8 @@ var sMvcMergerController = '{=$sControllerClass}' ;
 var mapMVCMergerItemProperties = {=$arrLayoutProperties} ;
 
 jquery(document).ready(function(){
-	var mergerpannel = new MergerPannel() ;
-	mergerpannel.init() ;
+	MergerPannel.instance = new MergerPannel() ;
+	MergerPannel.instance.init() ;
 	
 	//颜色选择器
 	if(jquery('#mergepannel-props-background-color').val() != ''){

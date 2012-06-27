@@ -17,34 +17,29 @@ use org\opencomb\coresystem\mvc\controller\ControlPanel;
 
 class ControllerMerger extends ControlPanel
 {
-	public function createBeanConfig()
-	{
-		return array(
-			'title'=>'模板编制',
-			'view:form' => array(
-					'template' => 'ControllerMerger.html' ,
-					'class' => 'form' ,
+	protected $arrConfig = array(
+		'title'=>'模板编制',
+		'view:form' => array(
+				'template' => 'ControllerMerger.html' ,
+				'class' => 'form' ,
+		) ,
+		'perms' => array(
+			// 权限类型的许可
+			'perm.purview'=>array(
+				'namespace'=>'coresystem',
+				'name' => Id::PLATFORM_ADMIN,
 			) ,
-			'perms' => array(
-				// 权限类型的许可
-				'perm.purview'=>array(
-					'namespace'=>'coresystem',
-					'name' => Id::PLATFORM_ADMIN,
-				) ,
-			) ,
-		) ;
-	}
+		) ,
+	) ;
 
 	public function process()
 	{
-		$this->checkPermissions('您没有使用这个功能的权限,无法继续浏览',array()) ;
-		
 		$this->doActions() ;
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
 		
-		$this->form->variables()->set('arrMergedControllers',$arrMergedControllers) ;
+		$this->view->variables()->set('arrMergedControllers',$arrMergedControllers) ;
 		
 		//表单默认值
 		$sRequestC ='';
@@ -62,13 +57,13 @@ class ControllerMerger extends ControlPanel
 				}
 			}
 		}
-		$this->form->variables()->set('sRequestC',AccessRouter::singleton()->transControllerClass($sRequestC)) ;
-		$this->form->variables()->set('sRequestParams',implode('&', $arrRequest)) ;
+		$this->view->variables()->set('sRequestC',AccessRouter::singleton()->transControllerClass($sRequestC)) ;
+		$this->view->variables()->set('sRequestParams',implode('&', $arrRequest)) ;
 	}
 	
 	protected function actionMerge()
 	{
-		if( !$this->form->isSubmit($this->params) )
+		if( !$this->view->isSubmit($this->params) )
 		{
 			return ;
 		}
@@ -80,17 +75,17 @@ class ControllerMerger extends ControlPanel
 		{
 			if( empty($this->params[$sDataName]) )
 			{
-				$this->form->createMessage(Message::error,"%s 不能为空",$sName) ;
+				$this->view->createMessage(Message::error,"%s 不能为空",$sName) ;
 				return ;
 			}
 			if( !class_exists($this->params[$sDataName]) )
 			{
-				$this->form->createMessage(Message::error,"输入的%s控制器类不存在：%s",array($sName,$this->params[$sDataName])) ;
+				$this->view->createMessage(Message::error,"输入的%s控制器类不存在：%s",array($sName,$this->params[$sDataName])) ;
 				return ;
 			}
 			if( $this->params[$sDataName] instanceof \org\jecat\framework\mvc\controller\Controller )
 			{
-				$this->form->createMessage(Message::error,"输入的%s不是有效的控制器类：%s",array($sName,$this->params[$sDataName])) ;
+				$this->view->createMessage(Message::error,"输入的%s不是有效的控制器类：%s",array($sName,$this->params[$sDataName])) ;
 				return ;
 			}
 	
@@ -110,14 +105,14 @@ class ControllerMerger extends ControlPanel
 		// 清理平台缓存
 		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton());
 	
-		$this->form->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
+		$this->view->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
 	}
 	
 	protected function actionRemoveMerge()
 	{
 		if( empty($this->params['target']) )
 		{
-			$this->form->createMessage(Message::error,"缺少target参数") ;
+			$this->view->createMessage(Message::error,"缺少target参数") ;
 			return ;
 		}
 		
@@ -126,7 +121,7 @@ class ControllerMerger extends ControlPanel
 		
 		if( empty($arrMergedControllers[$this->params['target']]) )
 		{
-			$this->form->createMessage(Message::error,"target参数无效") ;
+			$this->view->createMessage(Message::error,"target参数无效") ;
 			return ;
 		}
 		
@@ -138,12 +133,12 @@ class ControllerMerger extends ControlPanel
 			unset($arrMergedControllers[$this->params['target']]) ;
 			
 			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
-			$this->form->createMessage(Message::success,"清除了控制器 %s 的所有融合设置",array($this->params['target'])) ;
+			$this->view->createMessage(Message::success,"清除了控制器 %s 的所有融合设置",array($this->params['target'])) ;
 		}
 		// 删除指定的融合
 		else if( empty($arrMergedControllers[$this->params['target']][$nIdx]) )
 		{
-			$this->form->createMessage(Message::error,"idx参数无效") ;
+			$this->view->createMessage(Message::error,"idx参数无效") ;
 			return ;
 		}
 		else
@@ -157,7 +152,7 @@ class ControllerMerger extends ControlPanel
 			
 			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
 			
-			$this->form->createMessage(Message::success,"删除了控制器 %s 的指定融合设置",array($this->params['target'])) ;
+			$this->view->createMessage(Message::success,"删除了控制器 %s 的指定融合设置",array($this->params['target'])) ;
 		}
 			
 		// 清理 class 编译缓存
