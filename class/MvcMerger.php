@@ -324,7 +324,7 @@ class MvcMerger extends Extension
 				if(isset($arrChild['customFrame']) and $arrChild['customFrame']){
 					$aChildView = new View() ;
 					$aChildView->setFrameType("jc-frame");
-// 					$aChildView->setCssClass('cusframe');
+					$aChildView->addWrapperClasses('cusframe');
 				}
 			}
 			$aParentView->assemble( $aChildView , IAssemblable::zhard );
