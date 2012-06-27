@@ -2,6 +2,8 @@
 namespace org\opencomb\mvcmerger ;
 
 
+use org\jecat\framework\mvc\view\IAssemblable;
+
 use org\jecat\framework\mvc\view\View;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\model\IModel;
@@ -303,9 +305,29 @@ class MvcMerger extends Extension
 		{
 			return;
 		}
-		
 		foreach ( $arrLayout['assemble'] as $value){
-			
+			self::assembleViewAndFrame($aController,$value);
+		}
+	}
+	
+	private function assembleViewAndFrame(\org\opencomb\coresystem\mvc\controller\Controller $aRootController,$arrParent){
+		if($arrParent === array()){
+			return;
+		}
+		$aRootView = $aRootController->view();
+		if(!$aParentView = View::findXPath( $aRootView,$arrParent['xpath'])){
+			return;
+		}
+		foreach($arrParent['items'] as $arrChild){
+			if(!$aChildView = View::findXPath( $aRootView,$arrChild['xpath'])){
+				//还原自定义frame
+				if(isset($arrChild['customFrame']) and $arrChild['customFrame']){
+					$aChildView = new View() ;
+					$aChildView->setFrameType("jc-frame");
+// 					$aChildView->setCssClass('cusframe');
+				}
+			}
+			$aParentView->assemble( $aChildView , IAssemblable::zhard );
 		}
 	}
 

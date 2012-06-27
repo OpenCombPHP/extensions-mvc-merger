@@ -460,7 +460,12 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 		if (aNode.type == 'frame') {
 			aLayoutItem.layout = aNode.layout;
 		}
-
+		
+		//自定义frame?
+		if( aNode.id.split('cusFrame').length > 1 ){
+			aLayoutItem['customFrame'] = true;
+		}
+		
 		mapItemDatas[this.id] = aLayoutItem;
 
 		var eleParentFrame = $(this).parents('.jc-layout').get(0);
@@ -1017,6 +1022,8 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 							+ sEleId
 							+ "\" class=\"jc-layout jc-frame cusframe\"><div class=\"jc-layout-item-end\"></div></div>");
 	$(itemEle).append( aNewFrame );
+	
+	aNewFrame.attr('xpath', aNewFrame.parents('.jc-frame:first').attr('xpath') + '/' + sEleId );
 
 	// 移动
 	this.moveIn( aNewFrame[0] , itemEle);
