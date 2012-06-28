@@ -194,6 +194,15 @@ MergerPannel.Layout.prototype._initUi = function() {
 			$("#mergepannel-layout-save-parmas").hide(0);
 		}
 	});
+	
+	//初始化nAssignedFrameId
+	$('div.cusframe').each(function(v,b){
+		var maxNum = $(b).attr('id').split('cusFrame-') - 0;
+		if(this.nAssignedFrameId < maxNum)
+		{
+			this.nAssignedFrameId = maxNum;
+		}
+	});
 }
 /**
  * 初始化 ztree
