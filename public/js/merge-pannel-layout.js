@@ -1029,11 +1029,17 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	// 移动
 	this.moveIn( aNewFrame[0] , itemEle);
 }
-MergerPannel.Layout.prototype.log = function(msg){
-	return ;
-	if(typeof console == 'object'){
+MergerPannel.Layout.prototype.log = function(msg)
+{
+	if( !jquery('#mergepannel-log-enable').attr('checked') )
+	{
+		return ;
+	}
+	if(typeof console == 'object')
+	{
 		console.log(msg);
 	}
+	jquery('#mergepannel-log-output'). val( jquery('#mergepannel-log-output').val() + msg + "\r\n" ) ;
 };
 
 
@@ -1331,14 +1337,8 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag)
 			assigned =  $(item).data('max-width') ;
 		}
 	
-		// 应用计算可行的 分配空间
-		// this.log($(item).outerWidth()-$(item).width()+$(item).innerWidth()) ;
-		var outer = parseInt($(item).css('border-left-width')) ;
-		outer+= parseInt($(item).css('border-right-width')) ;
-		outer+= parseInt($(item).css('padding-left')) ;
-		outer+= parseInt($(item).css('padding-right')) ;
-		outer+= parseInt($(item).css('margin-left')) ;
-		outer+= parseInt($(item).css('margin-right')) ;
+		// 应用计算可行的 分配空间		
+		var outer = $(item).outerWidth(true) - $(item).width() ;
 		var width = assigned - outer ;
 	
 		this.log("item "+$(item).attr('id')+" 实际分配宽度："+assigned+", 外部宽度："+outer+", 内部宽度："+width);
@@ -1358,12 +1358,7 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag)
 			assigned =  $(item).data('min-height') ;
 		}
 		
-		outer = parseInt($(item).css('border-top-width')) ;
-		outer+= parseInt($(item).css('border-bottom-width')) ;
-		outer+= parseInt($(item).css('padding-top')) ;
-		outer+= parseInt($(item).css('padding-bottom')) ;
-		outer+= parseInt($(item).css('margin-top')) ;
-		outer+= parseInt($(item).css('margin-bottom')) ;
+		outer = $(item).outerHeight(true) - $(item).height() ;
 		var height = assigned - outer ;
 	
 		this.log("item "+$(item).attr('id')+" 实际分配高度："+assigned+", 外部高度："+outer+", 内部高度："+height);
@@ -1381,6 +1376,7 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag)
 	
 	return assigned ;
 }
+
 
 MergerPannel.Layout.prototype.filterChildren = function(children)
 {

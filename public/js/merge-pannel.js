@@ -10,7 +10,7 @@ MergerPannel.prototype.init = function()
 	$('#mergepannel-dialog').dialog({
 		width: 600
 		, height: 450
-		, title: "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='ub_dialog'>模板编织</a><a href='javascript:;' tab='mergepannel-controllermerger'>网页融合</a>"
+		, title: "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='ub_dialog'>模板编织</a><a href='javascript:;' tab='mergepannel-controllermerger'>网页融合</a>	<a href='javascript:;' tab='mergepannel-log'>log</a>"
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
 	}) ;
@@ -58,5 +58,10 @@ MergerPannel.prototype.init = function()
 
 MergerPannel.prototype.resizeDialog = function ()
 {
+	// layout
 	this.layout.resizeDialog();
+	
+	// log
+	jquery('#mergepannel-log-output').height( jquery('#mergepannel-dialog').height()-40 ) ;
+	jquery('#mergepannel-log-output').width( jquery('#mergepannel-log').width() ) ;
 }
