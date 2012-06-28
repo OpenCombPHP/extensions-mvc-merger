@@ -614,7 +614,8 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	// 设置样式
 	var sLayout = node.layout;
 	$(frame).addClass( MergerPannel.Layout.mapLayoutFrameStyles[sLayout] )
-			.children('.jc-layout').addClass( MergerPannel.Layout.mapLayoutItemStyles[sLayout] );
+			.children('.jc-layout')
+			.addClass( MergerPannel.Layout.mapLayoutItemStyles[sLayout] );
 };
 MergerPannel.Layout.mapLayoutFrameStyles = {
 	h : 'jc-frame-horizontal',
