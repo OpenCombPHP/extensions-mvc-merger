@@ -310,50 +310,56 @@ class MvcMerger extends Extension
 		}
 	}
 	
-	private function assembleViewAndFrame(\org\opencomb\coresystem\mvc\controller\Controller $aRootController,$arrParent){
-		if($arrParent === array()){
+	private function assembleViewAndFrame($aRootController,$arrView , $aContainerView=null){
+		if($arrView === array()){
 			return;
 		}
+		
 		$aRootView = $aRootController->view();
-		if(!$aContainerView = View::findXPath( $aRootView,$arrParent['xpath'])){
-			return;
+		if(!$aView = View::findXPath( $aRootView,$arrView['xpath'])){
+			//还原自定义frame
+			if(isset($arrView['customFrame']) and $arrView['customFrame']){
+				$aView = new View() ;
+				$aView->setFrameType("jc-frame");
+				$aView->addWrapperClasses('cusframe');
+				if(isset($arrView['cssClass'])){
+					foreach( $arrView['cssClass'] as $sClass ){
+						$aView->addWrapperClasses($sClass);
+					}
+				}
+				$aView->setId($arrView['id']);
+				$aParentView = View::findXPath( $aRootView , dirname($arrView['xpath']));
+				$aParentView->addView($arrView['id'], $aView);
+			}else{
+				//do nothing , 如果有找不到的view或者frame,又不是自定义frame,就不管了
+				return;
+			}
 		}
-		if(isset($arrParent['items'])){
-			foreach($arrParent['items'] as $arrChild){
-				if(!$aChildView = View::findXPath( $aRootView,$arrChild['xpath'])){
-					//还原自定义frame
-					if(isset($arrChild['customFrame']) and $arrChild['customFrame']){
-						$aChildView = new View() ;
-						$aChildView->setFrameType("jc-frame");
-						$aChildView->addWrapperClasses('cusframe');
-						if(isset($arrChild['cssClass'])){
-							foreach( $arrChild['cssClass'] as $sClass ){
-								$aChildView->addWrapperClasses($sClass);
-							}
-						}
-						$aChildView->setId($arrChild['id']);
-						
-						$aParentView = View::findXPath( $aRootView,dirname($arrChild['xpath']));
-						$aParentView->addView($arrChild['id'], $aChildView);
-					}else{
-						//do nothing , 如果有找不到的view或者frame,干脆就不管了
-					}
-				}
-				if(isset($arrChild['layout'])){
-					if($arrChild['layout'] == 'v'){
-						$aChildView->addWrapperClasses('jc-frame-vertical');
-					}else if($arrChild['layout'] == 'h'){
-						$aChildView->addWrapperClasses('jc-frame-horizontal');
-					}else{
-						//tab?
-					}
-				}
-				$aChildView->setWrapperStyle($arrChild['style']);
-				$aContainerView->assemble( $aChildView , IAssemblable::zhard );
-					
-				if(isset($arrChild['items'])){
-					self::assembleViewAndFrame($aRootController,$arrChild);
-				}
+// 		var_dump($aView->id());
+
+		if(isset($arrView['layout'])){
+			if($arrView['layout'] == 'v'){
+				$aView->addWrapperClasses('jc-frame-vertical');
+				$aView->removeWrapperClasses('jc-frame-horizontal');
+			}else if($arrView['layout'] == 'h'){
+				$aView->removeWrapperClasses('jc-frame-vertical');
+				$aView->addWrapperClasses('jc-frame-horizontal');
+			}else{
+				//tab?
+			}
+		}
+		
+		if(isset($arrView['style'])){
+			$aView->setWrapperStyle($arrView['style']);
+		}
+		
+		if($aContainerView !== null){
+			$aContainerView->assemble( $aView , IAssemblable::zhard );
+		}
+		
+		if(isset($arrView['items'])){
+			foreach($arrView['items'] as $arrChild){
+				self::assembleViewAndFrame($aRootController,$arrChild,$aView);
 			}
 		}
 	}
