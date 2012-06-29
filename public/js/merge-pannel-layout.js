@@ -197,10 +197,10 @@ MergerPannel.Layout.prototype._initUi = function() {
 	
 	//初始化nAssignedFrameId
 	$('div.cusframe').each(function(v,b){
-		var maxNum = $(b).attr('id').split('cusFrame-') - 0;
-		if(this.nAssignedFrameId < maxNum)
+		var maxNum = $(b).attr('id').split('cusFrame-')[1] - 0;
+		if(realThis.nAssignedFrameId <= maxNum)
 		{
-			this.nAssignedFrameId = maxNum;
+			realThis.nAssignedFrameId = maxNum+1;
 		}
 	});
 }
@@ -1089,7 +1089,7 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 		realthis.log(e.message);
 		//回滚
 		if( typeof resetFun == "function" ){
-			// resetFun();
+			 resetFun();
 		}
 	}
 }
@@ -1113,7 +1113,6 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 MergerPannel.Layout.flag_width = 1 ;
 MergerPannel.Layout.flag_height = 2 ;
 MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
-	
 	var $ = jquery;
 	var realthis = this;
 	var defaultMin = 50 ;
@@ -1167,7 +1166,6 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		
 		var childrenMinWidth = 0 ;
 		var childrenMinHeight = 0 ;
-		
 		children.each(function(v,child)
 		{
 			var nChildMinWidth = parseInt($(child).data('min-width')) ;
@@ -1213,7 +1211,6 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		// 加上自己的 panding,margin,border
 		childrenMinWidth+= item.outerWidth(true) - item.width() ;
 		childrenMinHeight+= item.outerHeight(true) - item.height() ;
-		
 		// 重新设置 item 的 min/max
 		if( flag&MergerPannel.Layout.flag_width & item.data('min-width') < childrenMinWidth )
 		{
@@ -1227,7 +1224,6 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			item.data('min-height' , childrenMinHeight );
 		}
 	}
-
 	if(flag&MergerPannel.Layout.flag_width)
 	{
 		this.log( "min/max width:"+item.data('min-width')+"/"+item.data('max-width') );
