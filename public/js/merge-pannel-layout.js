@@ -1075,7 +1075,7 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 	try{
 		jquery('.jc-layout').each(function(v,b){
 			if( !jquery(b).parent().hasClass('jc-frame') )
-			{				
+			{
 				// 先计算分配宽度
 				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_width );
 				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_width );
@@ -1187,7 +1187,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 					childrenMinWidth += nChildMinWidth ;
 				}
 				// 取最大成员高
-				if( flag&MergerPannel.Layout.flag_height & childrenMinHeight<nChildMinHeight )
+				if( flag&MergerPannel.Layout.flag_height && childrenMinHeight<nChildMinHeight )
 				{
 					childrenMinHeight = nChildMinHeight ;
 				}
@@ -1226,8 +1226,6 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			//realthis.log("最小高小于成员最小高之和："+childrenMinHeight) ;
 			item.data('min-height' , childrenMinHeight );
 		}
-
-		
 	}
 
 	if(flag&MergerPannel.Layout.flag_width)
