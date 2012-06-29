@@ -320,7 +320,11 @@ class MvcMerger extends Extension
 			//还原自定义frame
 			if(isset($arrView['customFrame']) and $arrView['customFrame']){
 				$aView = new View() ;
-				$aView->setFrameType("jc-frame");
+				if($arrView['layout'] == 'v'){
+					$aView->setFrameType('jc-frame-vertical');
+				}else{
+					$aView->setFrameType('jc-frame-horizontal');
+				}
 				$aView->addWrapperClasses('cusframe');
 				if(isset($arrView['cssClass'])){
 					foreach( $arrView['cssClass'] as $sClass ){
@@ -339,16 +343,13 @@ class MvcMerger extends Extension
 
 		if(isset($arrView['layout'])){
 			if($arrView['layout'] == 'v'){
-				$aView->addWrapperClasses('jc-frame-vertical');
-				$aView->removeWrapperClasses('jc-frame-horizontal');
+				$aView->setFrameType('jc-frame-vertical');
 			}else if($arrView['layout'] == 'h'){
-				$aView->removeWrapperClasses('jc-frame-vertical');
-				$aView->addWrapperClasses('jc-frame-horizontal');
+				$aView->setFrameType('jc-frame-horizontal');
 			}else{
 				//tab?
 			}
 		}
-		
 		if(isset($arrView['style'])){
 			$aView->setWrapperStyle($arrView['style']);
 		}
