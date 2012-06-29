@@ -1254,6 +1254,8 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 	// var assignableHeight = container.height() ;
 	// realthis.log( "总可用空间:"+assignableWidth+"/"+assignableHeight ) ;
 
+	var bChildWidthAuto = !container.hasClass('jc-frame-horizontal') ;
+	
 	if(flag==MergerPannel.Layout.flag_width)
 	{
 		var assignable = container.width() ;
@@ -1273,7 +1275,7 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 	if( bSameSpace )
 	{
 		children.each(function(key,item){
-			realthis.applySpace(item,assignable,flag) ;
+			realthis.applySpace(item,assignable,flag,bChildWidthAuto) ;
 		}) ;
 	}
 	
@@ -1301,7 +1303,7 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 			realthis.log(container.id+" 目前可用空间:"+remain+"; 还剩"+(children.length - key)+"个item；平分："+assigned);
 			
 			// 应用分配到的空间
-			var assigned = realthis.applySpace(item,assigned,flag) ;
+			var assigned = realthis.applySpace(item,assigned,flag,bChildWidthAuto) ;
 			nTotalAssigned+= assigned ;
 				
 			// 剩余未分配空间
@@ -1323,7 +1325,7 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 /**
  * 尝试将分配到的空间应用到元素上
  */
-MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag)
+MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag,bWidthAuto)
 {
 	var $ = jquery;
 	
@@ -1344,16 +1346,29 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag)
 		{
 			assigned =  $(item).data('max-width') ;
 		}
+		else if(bWidthAuto)
+		{
+			assigned = 'auto' ;
+		}
+		
 	
 		// 应用计算可行的 分配空间		
-		var outer = $(item).outerWidth(true) - $(item).width() ;
-		var width = assigned - outer ;
-	
-		this.log("item "+$(item).attr('id')+" 实际分配宽度："+assigned+", 外部宽度："+outer+", 内部宽度："+width);
+		if( assigned==='auto' )
+		{
+			$(item).width(assigned) ;
+		}
+		else
+		{
+			var outer = $(item).outerWidth(true) - $(item).width() ;
+			var width = assigned - outer ;
 		
-		$(item).width(width) ;
+			this.log("item "+$(item).attr('id')+" 实际分配宽度："+assigned+", 外部宽度："+outer+", 内部宽度："+width);
+
+			$(item).width(width) ;
+			
+			this.log("item 最后生效的内部宽度："+$(item).width());
+		}
 		
-		this.log("item 最后生效的内部宽度："+$(item).width());
 	}
 	
 	
