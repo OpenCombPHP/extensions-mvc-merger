@@ -97,6 +97,11 @@ MergerPannel.Layout.prototype._initUi = function() {
 		//重新计算布局
 		realThis.updateLayout();
 	});
+	$('#mergepannel-props-frame-autoheight-btn').click(function() {
+		realThis.autoItemsHeight( realThis.eleSelectedItem , realThis.dataSelectedItem);
+		//重新计算布局
+		realThis.updateLayout();
+	});
 	$('#mergepannel-props-frame-center-btn').click(
 			function() {
 				$(realThis.eleSelectedItem).children('.jc-layout').toggleClass( 'place_center');
@@ -1081,8 +1086,8 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_width );
 
 				// 确定宽度后，将视图的auto高度做为最小高度，然后计算分配高度
-				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_height );
-				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_height );
+//				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_height );
+//				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_height );
 			}
 		});
 	}catch(e){
