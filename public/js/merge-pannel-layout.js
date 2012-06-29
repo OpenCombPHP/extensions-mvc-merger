@@ -1086,7 +1086,7 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_width );
 
 				// 确定宽度后，将视图的auto高度做为最小高度，然后计算分配高度
-//				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_height );
+				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_height );
 //				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_height );
 			}
 		});
@@ -1156,7 +1156,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		var nCusHeight = realthis.getMapMVCMergerItemProperties( item[0].id , 'width' ) ;
 		if( nCusHeight == '' )
 		{
-			item.data('min-height',item.height('').outerHeight(true));
+			item.data('min-height',item.height('').outerHeight(true));   //
 			item.data('max-height' , -1);
 		}
 		else
@@ -1165,12 +1165,16 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			item.data('max-height' , nCusHeight);
 		}
 	}
-
+	
 	// 容器规则：最大值不可以小于 所有成员的最大值总和 (for frame)
 	if( item.hasClass('jc-frame') ){
 		
 		var childrenMinWidth = 0 ;
 		var childrenMinHeight = 0 ;
+		if(item[0].id == 'cusFrame-0')
+		{
+			console.log(children);
+		}
 		children.each(function(v,child)
 		{
 			var nChildMinWidth = parseInt($(child).data('min-width')) ;
@@ -1237,6 +1241,15 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 	{
 		this.log( " min height:"+item.data('min-height') );
 	}
+	
+	//临时最小值,让后面的元素计算高度时不会被这个元素影响
+//	if( item.hasClass('jc-frame') ){
+//		if(item[0].id == 'cusFrame-0')
+//			{
+//				console.log(item.data('min-height')- (item.outerHeight(true) - item.innerHeight()));
+//			}
+//		item.height( item.data('min-height')- (item.outerHeight(true) - item.innerHeight()));
+//	}
 }
 
 /**
