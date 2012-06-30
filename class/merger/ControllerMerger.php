@@ -2,9 +2,7 @@
 namespace org\opencomb\mvcmerger\merger ;
 
 use org\jecat\framework\system\AccessRouter;
-
 use org\jecat\framework\mvc\controller\Request;
-
 use org\opencomb\coresystem\auth\Id;
 use org\opencomb\platform\service\ServiceSerializer;
 use org\opencomb\mvcmerger\MvcMerger;
@@ -19,9 +17,8 @@ class ControllerMerger extends ControlPanel
 {
 	protected $arrConfig = array(
 		'title'=>'模板编制',
-		'view:form' => array(
+		'view' => array(
 				'template' => 'ControllerMerger.html' ,
-				'class' => 'form' ,
 		) ,
 		'perms' => array(
 			// 权限类型的许可
@@ -40,7 +37,6 @@ class ControllerMerger extends ControlPanel
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
 		
 		$this->view->variables()->set('arrMergedControllers',$arrMergedControllers) ;
-		
 		//表单默认值
 		$sRequestC ='';
 		$arrRequest = array();
@@ -61,7 +57,7 @@ class ControllerMerger extends ControlPanel
 		$this->view->variables()->set('sRequestParams',implode('&', $arrRequest)) ;
 	}
 	
-	protected function actionMerge()
+	protected function merge()
 	{
 		if( !$this->view->isSubmit($this->params) )
 		{
@@ -108,7 +104,7 @@ class ControllerMerger extends ControlPanel
 		$this->view->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
 	}
 	
-	protected function actionRemoveMerge()
+	protected function removeMerge()
 	{
 		if( empty($this->params['target']) )
 		{
@@ -159,6 +155,6 @@ class ControllerMerger extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['target']) ;
 		
 		// 清理平台缓存
-		PlatformFactory::singleton()->clearRestoreCache(Service::singleton()) ;
+// 		PlatformFactory::singleton()->clearRestoreCache(Service::singleton()) ;
 	}
 }

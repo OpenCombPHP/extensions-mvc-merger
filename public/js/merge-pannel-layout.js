@@ -673,23 +673,26 @@ MergerPannel.Layout.prototype.autoItemsWidth = function(frame, node) {
 MergerPannel.Layout.prototype.autoItemsHeight = function(frame, node) {
 	var nMaxH = 0;
 	var $ = jquery;
+	var realthis = this;
 	var aChildren = $(frame).children('.jc-layout');
 	var nHeight = 0;
 	if (node.layout === 'h') {
 		aChildren.each(function(v,b){
-			if($(b).height() > nHeight){
-				nHeight = $(b).height();
+			if( $(b).outerHeight(true)  > nHeight){
+				nHeight = $(b).outerHeight(true);
 			}
 		});
-	} else if (node.layout === 'v') {
-		if (aChildren.size() < 1) {
-			return;
-		}
-		nHeight = Math.floor($(frame).height() / aChildren.size());
-	}
-	aChildren.height(nHeight);
+	} 
+//	else if (node.layout === 'v') {
+//		if (aChildren.size() < 1) {
+//			return;
+//		}
+//		nHeight = Math.floor($(frame).height() / aChildren.size());
+//	}
 	aChildren.each(function(v,b){
-		mapMVCMergerItemProperties[b.id]['height'] = nHeight;
+		var borderheight = nHeight - ($(b).outerHeight(true) - $(b).height() ); 
+		$(b).height(borderheight);
+		mapMVCMergerItemProperties[b.id]['height'] = borderheight;
 	});
 }
 
@@ -839,7 +842,17 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 					$("#"+event.currentTarget.id).val(oldValue).change();
 				});
 				
-				$(realthis.eleSelectedItem).css( type , $('#'+realthis.mapPropertyNames[type]).val() );
+				if(type == 'width'){
+					$(realthis.eleSelectedItem).css( type , 
+							$('#'+realthis.mapPropertyNames[type]).val()
+							- ($(realthis.eleSelectedItem).outerWidth(true) - $(realthis.eleSelectedItem).width())
+					);
+				}else{
+					$(realthis.eleSelectedItem).css( type , 
+							$('#'+realthis.mapPropertyNames[type]).val()
+							- ($(realthis.eleSelectedItem).outerHeight(true) - $(realthis.eleSelectedItem).height())
+					);
+				}
 			}
 			break;
 			
@@ -1151,12 +1164,13 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			item.data('max-width' , nCusWidth);
 		}
 	}
+	
 	if( flag&MergerPannel.Layout.flag_height )
 	{
-		var nCusHeight = realthis.getMapMVCMergerItemProperties( item[0].id , 'width' ) ;
+		var nCusHeight = realthis.getMapMVCMergerItemProperties( item[0].id , 'height' ) ;
 		if( nCusHeight == '' )
 		{
-			item.data('min-height',item.height('').outerHeight(true));   //
+			item.data('min-height',item.height('').outerHeight(true));
 			item.data('max-height' , -1);
 		}
 		else
@@ -1171,16 +1185,11 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		
 		var childrenMinWidth = 0 ;
 		var childrenMinHeight = 0 ;
-		if(item[0].id == 'cusFrame-0')
-		{
-			console.log(children);
-		}
 		children.each(function(v,child)
 		{
 			var nChildMinWidth = parseInt($(child).data('min-width')) ;
 			var nChildMinHeight = parseInt($(child).data('min-height')) ;
 			
-
 			realthis.log("child id："+child.id+": "+nChildMinWidth+"x"+nChildMinHeight) ;
 			
 			// 横向
@@ -1241,7 +1250,6 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 	{
 		this.log( " min height:"+item.data('min-height') );
 	}
-	
 	//临时最小值,让后面的元素计算高度时不会被这个元素影响
 //	if( item.hasClass('jc-frame') ){
 //		if(item[0].id == 'cusFrame-0')

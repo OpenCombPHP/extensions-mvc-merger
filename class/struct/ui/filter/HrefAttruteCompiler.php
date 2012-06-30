@@ -14,12 +14,12 @@ class HrefAttruteCompiler extends TextCompiler
 	{
 		Type::check("org\\jecat\\framework\\ui\\xhtml\\AttributeValueLink",$aObject) ;
 
-		$aDev->write("\$__oriDeviceForLinkHrefStrategy = \$aDevice ;");
-		$aDev->write("\$aDevice = \\org\\opencomb\\mvcmerger\\struct\\ui\\filter\\UILinkHrefFilter::singleton() ;");
+		$aDev->putCode("\$__oriDeviceForLinkHrefStrategy = \$aDevice ;");
+		$aDev->putCode("\$aDevice = \\org\\opencomb\\mvcmerger\\struct\\ui\\filter\\UILinkHrefFilter::singleton() ;");
 
 		parent::compile($aObject, $aObjectContainer, $aDev, $aCompilerManager) ;
 		
-		$aDev->write("\$__oriDeviceForLinkHrefStrategy->write( \$aDevice->output() ) ;") ;
-		$aDev->write("\$aDevice = \$__oriDeviceForLinkHrefStrategy ;") ;
+		$aDev->putCode("\$__oriDeviceForLinkHrefStrategy->write( \$aDevice->output() ) ;") ;
+		$aDev->putCode("\$aDevice = \$__oriDeviceForLinkHrefStrategy ;") ;
 	}
 }

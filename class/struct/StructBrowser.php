@@ -7,22 +7,19 @@ use org\opencomb\coresystem\mvc\controller\ControlPanel;
 
 class StructBrowser extends ControlPanel
 {
-	public function createBeanConfig()
-	{
-		return array(
-			'title'=>'浏览模板编制项',
-			'view:browser'=>array(
-				'template' => 'StructBrowser.html' ,
+	protected $arrConfig = array(
+		'title'=>'浏览模板编制项',
+		'view'=>array(
+			'template' => 'StructBrowser.html' ,
+		) ,
+		'perms' => array(
+			// 权限类型的许可
+			'perm.purview'=>array(
+				'namespace'=>'coresystem',
+				'name' => Id::PLATFORM_ADMIN,
 			) ,
-			'perms' => array(
-				// 权限类型的许可
-				'perm.purview'=>array(
-					'namespace'=>'coresystem',
-					'name' => Id::PLATFORM_ADMIN,
-				) ,
-			) ,
-		) ;
-	}
+		) ,
+	) ;
 
 	public function process()
 	{
@@ -32,6 +29,4 @@ class StructBrowser extends ControlPanel
     {
     	return Controller::defaultFrameConfig() ;
     }
-
 }
-
