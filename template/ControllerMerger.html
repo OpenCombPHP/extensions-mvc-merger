@@ -24,10 +24,23 @@ function browserController(sClassType ,sSelectType)
 }
 
 jquery(function(){
+	var $ = jquery;
 	jquery('#controllerMergeForm').submit(function(){
 		jquery.ajax({
-			url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::merge'
+			url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue'
 			, data:jquery('#controllerMergeForm').serialize()
+			, dataType:'html'
+			, success: function(html) {
+				jquery("#ControllerMerger_msgqueue").html(html);
+			}
+		}) ;
+		return false;
+	});
+	
+	$('a.ajaxUrl').click(function(){
+		var that = $(this);
+		jquery.ajax({
+			url: that.attr('href')
 			, dataType:'html'
 			, success: function(html) {
 				jquery("#ControllerMerger_msgqueue").html(html);
@@ -73,7 +86,7 @@ jquery(function(){
 		<div>
 			控制器类：
 			<a href="?c={=str_replace('\\','.',$sTargetControllerClass)}" target='_blank'>{=$sTargetControllerClass}</a>
-			<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&act=removeMerge&target={=$sTargetControllerClass}&idx=-1">取消</a>
+			<a class='ajaxUrl' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx=-1">取消</a>
 		</div>
 		
 		<div>
@@ -83,7 +96,7 @@ jquery(function(){
 				<li>
 					<div>
 						<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
-						<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&act=removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
+						<a class='ajaxUrl' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
 					</div>
 					<if "$arrMerged['name']">
 						<div>名称：{=$arrMerged['name']}</div>

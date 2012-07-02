@@ -57,12 +57,8 @@ class ControllerMerger extends ControlPanel
 		$this->view->variables()->set('sRequestParams',implode('&', $arrRequest)) ;
 	}
 	
-	protected function merge()
+	protected function form()
 	{
-		if( !$this->view->isSubmit($this->params) )
-		{
-			return ;
-		}
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
@@ -155,6 +151,7 @@ class ControllerMerger extends ControlPanel
 		MvcMerger::clearClassCompiled($this->params['target']) ;
 		
 		// 清理平台缓存
+		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton());
 // 		PlatformFactory::singleton()->clearRestoreCache(Service::singleton()) ;
 	}
 }
