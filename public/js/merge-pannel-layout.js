@@ -837,22 +837,27 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 				mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = $("#"+event.currentTarget.id).val();
 				
 				realthis.log("变值 updateLayout");
+				
+				
+				
+				if(type == 'width'){
+					var newWidth = $('#'+realthis.mapPropertyNames[type]).val()
+						- ($(realthis.eleSelectedItem).outerWidth(true) - $(realthis.eleSelectedItem).width());
+					if(newWidth && newWidth > 0){
+						$(realthis.eleSelectedItem).width( newWidth );
+					}
+				}else{
+					var newHeight = $('#'+realthis.mapPropertyNames[type]).val()
+					- ($(realthis.eleSelectedItem).outerHeight(true) - $(realthis.eleSelectedItem).height());
+					if(newHeight && newHeight > 0){
+						$(realthis.eleSelectedItem).height(newHeight);
+					}
+				}
+				
 				realthis.updateLayout(function(){
 					mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = oldValue;
 					$("#"+event.currentTarget.id).val(oldValue).change();
 				});
-				
-				if(type == 'width'){
-					$(realthis.eleSelectedItem).css( type , 
-							$('#'+realthis.mapPropertyNames[type]).val()
-							- ($(realthis.eleSelectedItem).outerWidth(true) - $(realthis.eleSelectedItem).width())
-					);
-				}else{
-					$(realthis.eleSelectedItem).css( type , 
-							$('#'+realthis.mapPropertyNames[type]).val()
-							- ($(realthis.eleSelectedItem).outerHeight(true) - $(realthis.eleSelectedItem).height())
-					);
-				}
 			}
 			break;
 			
@@ -1137,7 +1142,6 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 
 	var children = item.children('.jc-layout') ;
 	this.filterChildren(children) ;
-
 	// 计算下级最小值
 	if( item.hasClass('jc-frame') )
 	{
@@ -1189,6 +1193,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		{
 			var nChildMinWidth = parseInt($(child).data('min-width')) ;
 			var nChildMinHeight = parseInt($(child).data('min-height')) ;
+//			console.log($(child) ,$(child).data('min-height') );
 			
 			realthis.log("child id："+child.id+": "+nChildMinWidth+"x"+nChildMinHeight) ;
 			
@@ -1250,6 +1255,8 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 	{
 		this.log( " min height:"+item.data('min-height') );
 	}
+	
+	
 	//临时最小值,让后面的元素计算高度时不会被这个元素影响
 //	if( item.hasClass('jc-frame') ){
 //		if(item[0].id == 'cusFrame-0')
