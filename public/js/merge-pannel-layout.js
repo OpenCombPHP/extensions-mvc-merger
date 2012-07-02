@@ -208,7 +208,25 @@ MergerPannel.Layout.prototype._initUi = function() {
 			realThis.nAssignedFrameId = maxNum+1;
 		}
 	});
+	
+	//"可填充容器"的选项
+	$('#mergepannel-frame-autoFill').click(function(){
+		mapMVCMergerItemProperties[realThis.eleSelectedItem.id]['autoFill'] = $(this)[0].checked;
+	});
+	
 }
+
+MergerPannel.Layout.prototype.isAutoFill = function(aFrame){
+	if(!aFrame || aFrame.length === 0){
+		return;
+	}
+	if(mapMVCMergerItemProperties[aFrame[0].id]['autoFill'] === 'true'){
+		return true;
+	}else{
+		return false;
+	}
+};
+
 /**
  * 初始化 ztree
  */
@@ -731,7 +749,7 @@ MergerPannel.Layout.prototype.openProperty = function(itemData, itemEle) {
 }
 
 /**
- * 显示选中的 frame/view 对应属性表单值
+ * 显示选中的 frame/view 对应属性表单值 (还原表单)
  */
 MergerPannel.Layout.prototype.updateProperties = function() {
 	var $ = jquery;
@@ -750,6 +768,13 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 		} else {
 			$('#' + sInputId).val('');
 		}
+	}
+	
+	//autoFill  自动填充frame
+	$("#mergepannel-frame-autoFill").get(0).checked = false;
+	if(typeof (mapMVCMergerItemProperties[sId]) != 'undefined'
+		&& typeof (mapMVCMergerItemProperties[sId]['autoFill']) != 'undefined'){
+		$("#mergepannel-frame-autoFill").attr('checked',mapMVCMergerItemProperties[sId]['autoFill']=='true');
 	}
 
 	// 从页面中的属性来处理skin控件的值

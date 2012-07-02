@@ -26,7 +26,7 @@ function browserController(sClassType ,sSelectType)
 jquery(function(){
 	jquery('#controllerMergeForm').submit(function(){
 		jquery.ajax({
-			url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue'
+			url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::merge'
 			, data:jquery('#controllerMergeForm').serialize()
 			, dataType:'html'
 			, success: function(html) {
@@ -60,7 +60,6 @@ jquery(function(){
 		注释：<input type="text" style="width:400px" name="source_controller_comment" />
 	</div>
 	
-	<input type="hidden" value="merge" name="act" />
 	<input type="submit" value="融合" />
 
 </form>

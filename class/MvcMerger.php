@@ -165,16 +165,19 @@ class MvcMerger extends Extension
 		$sJsCode.= "{$sIndent}	name:\"{$sViewNameEsc}\"\r\n" ;
 		$sJsCode.= "{$sIndent}	, template:\"{$sTemplateEsc}\"\r\n" ;
 		
-		$sJsCode.= "{$sIndent}	, views:[" ;
-		foreach($aView->nameIterator() as $idx=>$sChildViewName)
+		if($aView->viewNames())
 		{
-			if($idx)
+			$sJsCode.= "{$sIndent}	, views:[" ;
+			foreach($aView->viewNames() as $idx=>$sChildViewName)
 			{
-				$sJsCode.= "\r\n{$sIndent}	, " ;
+				if($idx)
+				{
+					$sJsCode.= "\r\n{$sIndent}	, " ;
+				}
+				$sJsCode.= self::generateViewStructJcCode($aView->viewByName($sChildViewName),$sChildViewName,$nIndent+1) ;
 			}
-			$sJsCode.= self::generateViewStructJcCode($aView->getByName($sChildViewName),$sChildViewName,$nIndent+1) ;
+			$sJsCode.= "]\r\n" ;
 		}
-		$sJsCode.= "]\r\n" ;
 		
 		$sJsCode.= $sIndent."}" ;
 		
@@ -207,28 +210,31 @@ class MvcMerger extends Extension
 		$sJsCode.= $sIndent."	, params: \"".http_build_query($arrParams)."\"\r\n" ;
 		
 		// models
-		$sJsCode.= $sIndent."	, models: [ " ;
-		foreach($aController->modelNameIterator() as $idx=>$sModelName)
-		{
-			if($idx)
-			{
-				$sJsCode.= "\r\n{$sIndent}	, " ;
-			}
-			$sJsCode.= self::generateModelStructJcCode($aController->modelByName($sModelName),$sModelName,$sIndent+1) ;
-		}
-		$sJsCode.= $sIndent." ]\r\n" ;
+// 		$sJsCode.= $sIndent."	, models: [ " ;
+// 		foreach($aController->modelNameIterator() as $idx=>$sModelName)
+// 		{
+// 			if($idx)
+// 			{
+// 				$sJsCode.= "\r\n{$sIndent}	, " ;
+// 			}
+// 			$sJsCode.= self::generateModelStructJcCode($aController->modelByName($sModelName),$sModelName,$sIndent+1) ;
+// 		}
+// 		$sJsCode.= $sIndent." ]\r\n" ;
 		
 		// views
-		$sJsCode.= $sIndent."	, views: [ " ;
-		foreach($aController->mainView()->nameIterator() as $idx=>$sViewName)
-		{
-			if($idx)
+		if($aController->view()->viewNames()){
+			$sJsCode.= $sIndent."	, views: [ " ;
+			foreach($aController->view()->viewNames() as $idx=>$sViewName)
 			{
-				$sJsCode.= "\r\n{$sIndent}	, " ;
+				if($idx)
+				{
+					$sJsCode.= "\r\n{$sIndent}	, " ;
+				}
+				$sJsCode.= self::generateViewStructJcCode($aController->view()->viewByName($sViewName),$sViewName,$sIndent+1) ;
 			}
-			$sJsCode.= self::generateViewStructJcCode($aController->mainView()->getByName($sViewName),$sViewName,$sIndent+1) ;
+			$sJsCode.= $sIndent." ]\r\n" ;
 		}
-		$sJsCode.= $sIndent." ]\r\n" ;
+		
 		
 		// controllers
 		$sJsCode.= $sIndent."	, controllers: [ " ;

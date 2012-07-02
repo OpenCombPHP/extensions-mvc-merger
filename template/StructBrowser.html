@@ -77,14 +77,13 @@ structBrowser._loadView = function(aView)
 };
 structBrowser._loadViewList = function(arrViews)
 {
-	if(arrViews.length)
+	if(arrViews && arrViews.length)
 	{
 		var source = jQuery('<ul></ul>') ;
-		for(var i=0;i<arrViews.length;i++)
+		for(var i = 0;i < arrViews.length;i++)
 		{
 			source.append(structBrowser._loadView(arrViews[i])) ;
 		}
-		
 		return source ;
 	}
 	else
@@ -98,8 +97,9 @@ structBrowser._loadController = function(aController)
 		return;
 	}
 	var source = jQuery('<li><span class="folder controller">[C] '+aController.name+'</span></li>') ;
-	source.append(structBrowser._loadModelList(aController.models))
-			.append(structBrowser._loadViewList(aController.views))
+	source
+			//.append(structBrowser._loadModelList(aController.models))
+			.append(structBrowser._loadViewList(aController['views']))
 			.append(structBrowser._loadControllerList(aController.controllers));
 	source.find('.controller:first').data("class",aController['class'])
 								.data("params",aController.params)
