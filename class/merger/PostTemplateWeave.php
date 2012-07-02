@@ -10,11 +10,12 @@ use org\opencomb\coresystem\mvc\controller\ControlPanel;
 
 class PostTemplateWeave extends ControlPanel
 {
-	protected function actionClear()
-	{
+	
+	public function process(){
+		$this->doActions();
 	}
 	
-	protected function actionSave()
+	protected function save()
 	{
 		if( empty($this->params['template']) )
 		{
@@ -63,7 +64,7 @@ class PostTemplateWeave extends ControlPanel
 		MvcMerger::clearTemplateCompiled($sTemplate,$sNamespace) ;
 	}
 	
-	protected function actionList()
+	protected function doList()
 	{
 		if( empty($this->params['template']) )
 		{

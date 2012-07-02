@@ -161,7 +161,7 @@ ub = {
 		var uixpath = treeNode.data.uixpath;
 		//个tab页面填充信息
 		jQuery.ajax( {
-			url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=list'
+			url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&a[]=/merger.TemplateWeaveList::doList'
 			, data:{ 
 				namespace:templateNamespace
 				,xpath : uixpath
@@ -231,7 +231,7 @@ ub = {
 			var key = jQuery(this).attr('key');
 			//删除编织节点
 			jQuery.ajax( {
-				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&act=delete'
+				url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&a[]=/merger.TemplateWeaveList::delete'
 				, data:{ 
 					template: jquery('#ub_template').val()
 					, xpath: jquery('#ub_xpath').val()
@@ -360,8 +360,9 @@ ub = {
 	},
 	saveSetting:function() {
 		jquery('#ub_save_message').html('正在保存 ... ...') ;
-		jquery.ajax( '?c=org.opencomb.mvcmerger.merger.PostTemplateWeave&rspn=msgqueue&act=save',{
-			data: {
+		jquery.ajax({
+			url : '?c=org.opencomb.mvcmerger.merger.PostTemplateWeave&rspn=msgqueue&a[]=/merger.PostTemplateWeave::save'
+			, data: {
 				template: jquery('#ub_template').val()
 				, xpath: jquery('#ub_xpath').val()
 				, position: jquery('#ub_position').val()

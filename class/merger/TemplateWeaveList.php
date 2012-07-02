@@ -14,7 +14,7 @@ class TemplateWeaveList extends ControlPanel
 		$this->doActions() ;
 	}
 	
-	protected function actionList(){
+	protected function doList(){
 		
 		if(!$this->params->has('namespace') OR !$this->params->has('xpath')){
 			return;
@@ -33,7 +33,7 @@ class TemplateWeaveList extends ControlPanel
 		}
 	}
 	
-	protected function actionDelete(){
+	protected function delete(){
 		if(!$this->params->has('template')
 				 OR !$this->params->has('xpath')
 				 OR !$this->params->has('position')
