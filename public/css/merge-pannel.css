@@ -8,8 +8,13 @@
 	float:left;
 }
 #ui-dialog-title-mergepannel-dialog .selected_mvcmerger{
-	background:white;
+	background:#FDE49E;
 }
+.ui-dialog-title a{
+	text-align:center;
+	line-height:14px;
+}
+
 #mergepannel-viewtree-dropping-tip{
 	z-index: 300;
 	position: absolute;
@@ -29,8 +34,21 @@
 }
 .mergepannel-layout-frame-flashing {
 	border: 1px solid green;
-}*/
+}
 
+*/
+
+#mergepannel-dialog .ui-state-default a 
+, #mergepannel-dialog .ui-state-default a:link
+, #mergepannel-dialog .ui-state-default a:visited{
+background:#FFCC4D;
+color: white;
+}
+
+#mergepannel-dialog .ui-state-active.ui-tabs-selected a{
+background:white;
+color: #EB8F00;
+}
 
 /*对话框内部*/
 #mergepannel-layout-flashing{
@@ -343,7 +361,14 @@
 #ub_select_dom{
 	background:url(../image/select.gif) center center no-repeat;
 }
-
+#view_select_dom{
+	width:26px;
+	height:26px;
+	background:url(../image/select.gif) center center no-repeat;
+}
+.domToNode{
+	border:blue 2px solid ;
+}
 
 .mvcmerger_template_namespace{
 	color: #999999 ;

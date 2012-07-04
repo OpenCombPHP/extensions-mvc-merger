@@ -214,7 +214,48 @@ MergerPannel.Layout.prototype._initUi = function() {
 		mapMVCMergerItemProperties[realThis.eleSelectedItem.id]['autoFill'] = $(this)[0].checked;
 	});
 	
-}
+	//启动fselecter ,用来从dom选择treenode
+	jQuery("#view_select_dom").live('click',function(){
+		if(jQuery(this).hasClass("domToNode")){
+			realThis.closeSelectDomMode();
+		}else{
+			realThis.openSelectDomMode();
+		}
+	});
+};
+
+MergerPannel.Layout.prototype.openSelectDomMode = function(){
+	jQuery("#view_select_dom").addClass("domToNode");
+	//绑定选择dom的方法
+	jQuery('div.jc-layout').on("mouseenter",{realThis:this},this.highLightDom);
+	jQuery('div.jc-layout').on("click",{realThis:this},this.selectDomAndFindTag);
+};
+MergerPannel.Layout.prototype.closeSelectDomMode = function(){
+	jQuery("#view_select_dom").removeClass("domToNode");
+	//卸载选择dom的方法
+	jQuery('div.jc-layout').off("mouseenter",this.highLightDom);
+	jQuery('div.jc-layout').off("click",this.selectDomAndFindTag);
+};
+MergerPannel.Layout.prototype.highLightDom = function(e){
+	jQuery(e.currentTarget).fselecter();
+	jQuery('div.fselecter_highlight').mouseover(e.data.realThis.lowLightDom);
+	e.stopPropagation();
+};
+MergerPannel.Layout.prototype.lowLightDom = function(e){
+	jQuery('.fselecter_highlight_block').remove();
+	e.stopPropagation();
+};
+MergerPannel.Layout.prototype.selectDomAndFindTag = function(e){
+	var sId = e.currentTarget.id;
+	
+	jQuery('.fselecter_highlight_block').remove();
+	e.data.realThis.closeSelectDomMode();
+	
+	e.data.realThis.aZtree.selectNode(e.data.realThis.aZtree.getNodeByParam('id', sId ));
+	
+	e.stopPropagation();
+	return false;
+};
 
 MergerPannel.Layout.prototype.isAutoFill = function(aFrame){
 	if(!aFrame || aFrame.length === 0){
@@ -363,6 +404,8 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 						if (event.type == 'mouseover') {
 							// 鼠标移过 item 时， 对应的 frame/view 闪烁样式
 							var aNode = realThis.aZtree.getNodeByTId(this.parentNode.parentNode.id);
+							var item = $('#' + aNode.id);
+//							item.fselecter();
 							var flashing = $('<div id="mergepannel-layout-flashing"></div>');
 							var position = $('#' + aNode.id).position();
 							var width = $('#' + aNode.id).outerWidth(true);
@@ -379,6 +422,7 @@ MergerPannel.Layout.prototype._initZtreeNodesStylte = function() {
 							flashing.show();
 						} else if (event.type == 'mouseout') {
 							// 取消 item 对应的 frame/view 闪烁样式
+//							jQuery('.fselecter_highlight_block').remove();
 							$('#mergepannel-layout-flashing').remove();
 						}
 					});
@@ -517,7 +561,7 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 	
 	$.ajax({
 		type : "POST",
-		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=msgqueue&a[]=/merger.PostViewLayoutSetting::save',
+		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=noframe&a[]=/merger.PostViewLayoutSetting::save',
 		data : {
 			layout : mapRootNodes
 			, controller : sMvcMergerController
@@ -555,6 +599,10 @@ MergerPannel.Layout.prototype.cleanLayout = function() {
 			$('#mergepannel-layout-msgqueue').html(req.responseText);
 			// 重新计算ui布局(消息队列可能影响ui界面)
 			realThis.resizeDialog();
+			
+			if(confirm('是否刷新页面以查看改动')){
+				location.reload();
+			}
 		}
 	});
 }
@@ -578,6 +626,7 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 			- $('#mergepannel-layout-struct-title').parent('div:first').outerHeight(true) 
 			- ( $('#mergepannel-viewtree').outerHeight() - $('#mergepannel-viewtree').height() )
 			- 10
+			- 26 //选择按钮的高度
 	);
 }
 

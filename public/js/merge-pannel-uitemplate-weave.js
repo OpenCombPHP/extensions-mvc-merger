@@ -50,6 +50,11 @@ ub = {
 		ub.openDialog();
 		ub.initTagList();
 		ub.bindEvent();
+		
+		//隐藏右侧
+		jquery('#tabs').hide();
+		jquery('#ub_right').append('<div id="ub_warning" style="width:100%;height:20px;padding:5px 0;text-align:center">请先在左侧选择一个HTML节点</div>');
+		
 	},
 	//获得模板结构信息
 	getUiTemplates:function(){
@@ -125,8 +130,12 @@ ub = {
 	//**************选择tag列表中的元素**************
 	selectTag:function(event, treeId, treeNode){
 		if(!treeNode.getParentNode()){
+			jquery('#tabs').hide();
+			jquery('#ub_warning').show();
 			return;
 		}
+		jquery('#tabs').show();
+		jquery('#ub_warning').hide();
 		ub.setTagPatchsInfoToEditForm(treeNode);
 		ub.sentTagInfoToEditForm(treeNode);
 		event.stopPropagation();
@@ -293,7 +302,7 @@ ub = {
 	},
 	selectDomAndFindTag:function(e){
 		var dom = jQuery(e.target);
-		dom.removeClass("highlight");
+		jQuery('.fselecter_highlight_block').remove();
 		var uixpath = dom.attr("uixpath");
 		var template = dom.parents('uitemplate:first').attr("file");
 		//收起已经展开的tag
@@ -316,12 +325,11 @@ ub = {
 	},
 	highLightDom:function(e){
 		var dom = jQuery(e.target);
-		dom.addClass("highlight");
+		dom.fselecter();
 		e.stopPropagation();
 	},
 	lowLightDom:function(e){
-		var dom = jQuery(e.target);
-		dom.removeClass("highlight");
+		jQuery('.fselecter_highlight_block').remove();
 		e.stopPropagation();
 	},
 	closeTree:function(){
@@ -355,8 +363,8 @@ ub = {
 		}
 		var dom = jQuery("uitemplate[file='"+TopParentNode['templateNameAndNameSpace']+"']")
 					.find("*[uixpath='"+tag.data.uixpath+"']");
-		dom.addClass("highlight");
-		setTimeout(function(){dom.removeClass("highlight")} , sec*1000);
+		dom.fselecter();
+		setTimeout(function(){jQuery('.fselecter_highlight_block').remove()} , sec*500);
 	},
 	saveSetting:function() {
 		jquery('#ub_save_message').html('正在保存 ... ...') ;
