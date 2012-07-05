@@ -215,6 +215,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 			mapMVCMergerItemProperties[realThis.eleSelectedItem.id] = {};
 		}
 		mapMVCMergerItemProperties[realThis.eleSelectedItem.id]['autoFill'] = $(this)[0].checked;
+		realThis.updateLayout();
 	});
 	
 	//启动fselecter ,用来从dom选择treenode
@@ -264,7 +265,8 @@ MergerPannel.Layout.prototype.isAutoFill = function(aFrame){
 	if(!aFrame || aFrame.length === 0){
 		return;
 	}
-	if(mapMVCMergerItemProperties[aFrame[0].id]['autoFill'] === 'true'){
+	if(mapMVCMergerItemProperties[aFrame[0].id]['autoFill'] === 'true'
+		|| mapMVCMergerItemProperties[aFrame[0].id]['autoFill'] === true){
 		return true;
 	}else{
 		return false;
@@ -712,6 +714,18 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 		}
 		mapMVCMergerItemProperties[b.id]['class'] = $(b).attr('class');
 	});
+	
+	var endDiv = $(frame).find('.jc-layout-item-end');
+	//底部clear:both
+	if(sLayout == 'v'){
+		if(endDiv.length > 0){
+			endDiv.remove();
+		}
+	}else{
+		if(endDiv.length == 0){
+			$(frame).append('<div class="jc-layout-item-end"></div>');
+		}
+	}
 };
 MergerPannel.Layout.mapLayoutFrameStyles = {
 	h : 'jc-frame-horizontal',
