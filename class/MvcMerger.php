@@ -81,6 +81,13 @@ class MvcMerger extends Extension
 	
 	public function addController($aController ,& $arrBean)
 	{
+		return;
+		
+		////$aController->params()->sortQuery($aController->params()->toUrlQuery())
+		
+		
+		
+		
 		$sClassName = get_class($aController);
 		
 		// 扩展 mvc-merger 的 Setting对象
@@ -91,8 +98,20 @@ class MvcMerger extends Extension
 		if( !empty($arrControllers[$sClassName]) )
 		{
 			$nNum = 0; //命名计数
-			foreach($arrControllers[$sClassName] as $arrMerge)
+			foreach($arrControllers[$sClassName] as $sKey => $arrMergeArray)
 			{
+				if($sKey == 'type'){
+					foreach($arrMergeArray as $arrMerge){
+						
+					}
+				}else{
+					
+				}
+				
+				
+				
+				
+				
 				$arrControllersBean = array();
 				if( empty($arrMerge['params']) )
 				{
@@ -332,11 +351,7 @@ class MvcMerger extends Extension
 					$aView->setFrameType('jc-frame-horizontal');
 				}
 				$aView->addWrapperClasses('cusframe');
-				if(isset($arrView['cssClass'])){
-					foreach( $arrView['cssClass'] as $sClass ){
-						$aView->addWrapperClasses($sClass);
-					}
-				}
+				
 				$aView->setId($arrView['id']);
 				$aParentView = View::findXPath( $aRootView , dirname($arrView['xpath']));
 				$aParentView->addView($arrView['id'], $aView);
@@ -356,6 +371,14 @@ class MvcMerger extends Extension
 				//tab?
 			}
 		}
+		
+		if(isset($arrView['cssClass'])){
+			$aView->clearWrapperClasses();
+			foreach( $arrView['cssClass'] as $sClass ){
+				$aView->addWrapperClasses($sClass);
+			}
+		}
+		
 		if(isset($arrView['style'])){
 			$aView->setWrapperStyle($arrView['style']);
 		}

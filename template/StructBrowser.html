@@ -188,6 +188,7 @@ jQuery(function(){
 		}
 		if(structBrowser.selectType == "handle"){
 			jQuery(structBrowser.parentObject.document).find("#source_controller_class").val(jQuery("#classname").val());
+			jQuery(structBrowser.parentObject.document).find("#source_controller_class_text").html(jQuery("#classname").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_name']").val(jQuery("#name").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_params']").val(jQuery("#args").val());
 			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");

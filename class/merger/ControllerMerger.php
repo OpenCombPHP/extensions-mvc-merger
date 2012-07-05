@@ -59,7 +59,6 @@ class ControllerMerger extends ControlPanel
 	
 	protected function form()
 	{
-		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
 		
@@ -82,8 +81,17 @@ class ControllerMerger extends ControlPanel
 			}
 	
 		}
-	
-		$arrMergedControllers[ $this->params['target_controller_class'] ][] = array(
+		
+		$sSaveType = '';
+		//如果针对指定页面
+		if($this->params['source_controller_saveType'] == 'current'){
+			$sSaveType = $this->params->string('source_controller_params');
+		}else{
+			//针对一类网页
+			$sSaveType = 'type';
+		}
+		
+		$arrMergedControllers[ $this->params['target_controller_class'] ][$sSaveType][] = array(
 					'controller' => $this->params['source_controller_class'] ,
 					'params' => $this->params->string('source_controller_params') ,
 					'name' => $this->params->string('source_controller_name') ,

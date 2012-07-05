@@ -48,6 +48,35 @@ jquery(function(){
 		}) ;
 		return false;
 	});
+	
+	$('#source_controller_ad').click(function(){
+		ad(this.checked);
+	});
+	
+	$('#source_controller_class').change(function(){
+		$('#source_controller_class_text').html($(this).val());
+	});
+	
+	//高级模式?
+	function ad(bAd){
+		var sDisplay = 'none';
+		if(bAd){
+			sDisplay = 'block';
+		}
+		
+		$('#target_controller_class').parent('div').css('display' , sDisplay);
+		$('#target_controller_params').parent('div').css('display' , sDisplay);
+		
+		$('#source_controller_class').css('display' , sDisplay);
+		$('#source_controller_class_text').css('display' , bAd?'none':'block');
+		$('#source_controller_name').parent('div').css('display' , sDisplay);
+		$('#source_controller_params').parent('div').css('display' , sDisplay);
+		$('#source_controller_comment').parent('div').css('display' , sDisplay);
+		
+		$('#source_controller_saveType').parent('div').css('display' , sDisplay);
+	}
+	
+	ad(false);
 });
 
 </script>
@@ -55,27 +84,43 @@ jquery(function(){
 <div id="ControllerMerger_msgqueue"></div>
 
 <form id="controllerMergeForm" method="post" action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
-	<!-- 目标控制器类： -->
-	<input type="hidden" name="target_controller_class" id="target_controller_class" value="{=$sRequestC}" />
-	<!-- 参数： -->
-	<input type="hidden" name="target_controller_params"  value="{=$sRequestParams}"/>
 	<div>
-		被并入的控制器类：<input type="text" style="width:300px" name="source_controller_class" id="source_controller_class" value="org\opencomb\opencms\article\CreateArticle" />
-		<input type="button" value="浏览查找 ..." onclick="browserController('c','handle')" />
+		<h3>目标控制器类 :</h3>
+		控制器类名称 : <input type="text" style="width:350px" name="target_controller_class" id="target_controller_class" value="{=$sRequestC}" />
 	</div>
 	<div>
-		名称：<input type="text" style="width:200px" name="source_controller_name" />
+		参数：<input type="text" style="width:400px" id='target_controller_params' name="target_controller_params"  value="{=$sRequestParams}"/>
 	</div>
 	<div>
-		参数：<input type="text" style="width:400px" name="source_controller_params" />
+		<h3>被并入的控制器类 :</h3>
+		<input type="button" id="source_controller_select" style="width:100px;float:left;" value="选择并入的页面 ..." onclick="browserController('c','handle')" />
+		<span id='source_controller_class_text' > 没有选择控制器 </span>
+		<input type="text" style="width:300px;float:left;" name="source_controller_class" id="source_controller_class" />
+	</div>
+	<div style="clear:both">
+		名称：<input type="text" style="width:400px" id='source_controller_name' name="source_controller_name" />
 	</div>
 	<div>
-		注释：<input type="text" style="width:400px" name="source_controller_comment" />
+		参数：<input type="text" style="width:400px" name="source_controller_params" id="source_controller_params" />
+	</div>
+	<div>
+		注释：<input type="text" style="width:400px" name="source_controller_comment" id="source_controller_comment" />
 	</div>
 	
-	<input type="submit" value="融合" />
-
+	<div style="clear:both">
+		<select id="source_controller_saveType" name='source_controller_saveType'>
+			<option value="current">仅当前网页生效</option>
+			<option value="type">对同类网页生效</option>
+		</select>	
+	</div>
+	
+	<div style="clear:both">
+		<input type="submit" value="融合" />
+	</div>
+	
 </form>
+
+<label style="position:absolute;top:115px;right:40px;"><input type="checkbox" id="source_controller_ad"/>高级</label>
 
 <hr />
 <h2>已经完成融合的控制器</h2>
