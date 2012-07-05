@@ -1209,7 +1209,7 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 
 				// 确定宽度后，将视图的auto高度做为最小高度，然后计算分配高度
 				realthis.calculateMinMax( jquery(b), MergerPannel.Layout.flag_height );
-//				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_height );
+				realthis.assignSpace( jquery(b), MergerPannel.Layout.flag_height );
 			}
 		});
 	}catch(e){
@@ -1399,7 +1399,7 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 	{
 		var assignable = container.height() ;
 		var minKey = 'min-height' ;
-		var bSameSpace = container.hasClass('jc-frame-horizontal') ;
+		var bSameSpace = container.hasClass('jc-frame-horizontal') && this.isAutoFill(container) ;
 		var bExpandable = true ;
 	}
 	
