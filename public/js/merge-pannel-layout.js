@@ -122,7 +122,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 			});
 
 	// 属性
-	$('#mergepannel-props-common input').blur(function(event) {
+	$('#mergepannel-props-common input').change(function(event) {
 		realThis.applyProperties(event);
 	});
 	$('#mergepannel-props-common select').change(function(event) {
@@ -224,6 +224,13 @@ MergerPannel.Layout.prototype._initUi = function() {
 			realThis.closeSelectDomMode();
 		}else{
 			realThis.openSelectDomMode();
+		}
+	});
+	
+	//有些node不可拖拽
+	jQuery('.jc-layout').each(function(v,b){
+		if(jquery(b).data('object')['inframe'] == false){
+			jquery('#'+realThis.aZtree.getNodeByParam('id', b.id ).tId).find('a:first').css('cursor' , 'no-drop');
 		}
 	});
 };
@@ -337,8 +344,7 @@ MergerPannel.Layout.prototype._initZtree = function() {
 
 							// 判断是否允许放置
 							,
-							beforeDrop : function(treeId, treeNodes,
-									targetNode, moveType) {
+							beforeDrop : function(treeId, treeNodes,targetNode, moveType) {
 								// 移动到目标的 前/后，需要判断目标的上级是否是一个 frame
 								if (moveType == 'prev' || moveType == 'next') {
 									return targetNode.inframe;
@@ -716,7 +722,7 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	});
 	
 	//底部clear:both
-	var endDiv = $(frame).find('.jc-layout-item-end');
+	var endDiv = $(frame).find('>.jc-layout-item-end');
 	if(sLayout == 'v'){
 		if(endDiv.length > 0){
 			endDiv.remove();
@@ -943,7 +949,6 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 			$('#mergepannel-props-skin').val(className).change();
 		});
 	}
-	
 	switch( event.currentTarget.id ){
 		//width height 的特殊处理,这里避免框架上出现auto宽度和高度,并计算jc-layout的最小宽高最大宽高
 		case 'mergepannel-props-width' :
@@ -955,8 +960,6 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 				mapMVCMergerItemProperties[realthis.eleSelectedItem.id][type] = $("#"+event.currentTarget.id).val();
 				
 				realthis.log("变值 updateLayout");
-				
-				
 				
 				if(type == 'width'){
 					var newWidth = $('#'+realthis.mapPropertyNames[type]).val()
@@ -1000,7 +1003,7 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 			
 		//border 特殊处理
 		case 'mergepannel-props-border-width' :
-			$('#mergepannel-props-border-top-width').val($(event.currentTarget).val()).change();
+			$('#mergepannel-props-border-top-width').val($(event.currentTarget).val()).trigger('change');
 			$('#mergepannel-props-border-left-width').val($(event.currentTarget).val()).change();
 			$('#mergepannel-props-border-right-width').val($(event.currentTarget).val()).change();
 			$('#mergepannel-props-border-bottom-width').val($(event.currentTarget).val()).change();
@@ -1010,7 +1013,6 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		case 'mergepannel-props-border-right-width' :		
 		case 'mergepannel-props-border-bottom-width' :
 			var propertyName = event.currentTarget.id.split('mergepannel-props-')[1];
-			
 			$(realthis.eleSelectedItem).css( propertyName , $(event.currentTarget).val() );
 			
 			realthis.updateLayout(function(){
@@ -1049,8 +1051,10 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		case 'mergepannel-props-border-bottom-style' :
 			var propertyName = event.currentTarget.id.split('mergepannel-props-')[1];
 			
+			var styleValue = $(event.currentTarget).val();
+			
 			if($(event.currentTarget).val() != 'none'){
-				$(realthis.eleSelectedItem).css( propertyName , $(event.currentTarget).val() );
+				$(realthis.eleSelectedItem).css( propertyName , styleValue );
 			}
 			
 			realthis.saveProperties();
@@ -1155,7 +1159,7 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 
 	this.aZtree.addNodes(itemData, {
 		// ztree的属性
-		name : 'frame',
+		name : '布局框架',
 		icon : sMvcMergerPublicFolderUrl + '/frame.png',
 		children : []
 		// 非ztree的属性

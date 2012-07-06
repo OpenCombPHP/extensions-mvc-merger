@@ -38,6 +38,10 @@
 
 */
 
+#mergepannel-dialog .ztree li a{
+	cursor: move;
+}
+
 #mergepannel-dialog .ui-state-default a 
 , #mergepannel-dialog .ui-state-default a:link
 , #mergepannel-dialog .ui-state-default a:visited{

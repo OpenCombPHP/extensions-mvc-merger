@@ -15,9 +15,12 @@ MergerPannel.prototype.init = function()
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
 		, maximize:false
-		, close: function(event, ui) {
+		, beforeClose: function(event, ui) {
 			//退出编辑模式
-			location.href = location.href.split('&mvcmerger=1').join('');
+			if(confirm('是否退出编辑模式?')){
+				location.href = location.href.split('&mvcmerger=1').join('');
+			}
+			return false;
 		}
 	}) ;
 	
