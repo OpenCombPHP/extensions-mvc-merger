@@ -11,7 +11,7 @@ MergerPannel.prototype.init = function()
 		width: 600
 		, height: 450
 //		, title: "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='ub_dialog'>模板编织</a><a href='javascript:;' tab='mergepannel-controllermerger'>网页融合</a>	<a href='javascript:;' tab='mergepannel-log'>log</a>"
-		, title: "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='ub_dialog'>模板编织</a><a href='javascript:;' tab='mergepannel-controllermerger'>网页融合</a>	"
+		, title: "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='mergepannel-controllermerger'>添加视图</a><a href='javascript:;' tab='ub_dialog'>模板编织</a>	"
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
 		, maximize:false
@@ -53,33 +53,6 @@ MergerPannel.prototype.init = function()
 		}
 		return false;
 	});
-	
-	//最小化按钮
-//	var minButton = jquery('<a href="#" class="ui-dialog-titlebar-minus ui-corner-all" role="button">'
-//		+	'<span class="ui-icon ui-icon-minusthick">最小化</span></a>')	;
-//	$('#mergepannel-dialog').parent('.ui-dialog').find('.ui-dialog-titlebar-close').before(minButton);
-//	minButton.hover(function(){
-//		$(this).addClass('ui-state-hover');
-//	},function(){
-//		$(this).removeClass('ui-state-hover');
-//	});
-//	
-//	var oldWidth = 0; 
-//	var oldHeight = 0; 
-//	minButton.toggle(function(){
-//		$('#mergepannel-dialog').hide();
-//		oldWidth = ui_dialog.width();
-//		oldHeight = ui_dialog.height();
-//		ui_dialog.width(40).height(40);
-//	},function(){
-//		ui_dialog.width(oldWidth).height(oldHeight);
-//		$('#mergepannel-dialog').show();
-//		
-//	});
-//	jquery('#mergepannel-dialog').hide();
-//	jquery('.ui-dialog').find('.ui-dialog-title').hide();
-//	jquery('.ui-dialog').width(40).height(40);
-////	jquery('#mergepannel-dialog').dialog('option',{width:20,height:20});
 	
 	clearJCLayout();
 	//清理视图布局编辑器中的layout class 防止编辑器认错

@@ -81,12 +81,7 @@ class MvcMerger extends Extension
 	
 	public function addController($aController ,& $arrBean)
 	{
-		return;
-		
-		////$aController->params()->sortQuery($aController->params()->toUrlQuery())
-		
-		
-		
+		$sTargetParms = $aController->params()->sortQuery($aController->params()->toUrlQuery());
 		
 		$sClassName = get_class($aController);
 		
@@ -102,34 +97,51 @@ class MvcMerger extends Extension
 			{
 				if($sKey == 'type'){
 					foreach($arrMergeArray as $arrMerge){
+						$arrControllersBean = array();
+						if( empty($arrMerge['params']) )
+						{
+							$aParams = null ;
+						}
+						else
+						{
+							$arrParams = explode('&', $arrMerge['params']);
+							foreach($arrParams as $arrPar){
+								$arrKeyValue = explode('=', $arrPar);
+								$arrControllersBean['params'][$arrKeyValue[0]] = $arrKeyValue[1];
+							}
+						}
+						$arrControllersBean['class'] = $arrMerge['controller'];
+						$arrControllersBeanName = empty($arrMerge['name'])? 'mergeControllerBySystem'.$nNum : $arrMerge['name'];
 						
-					}
-				}else{
-					
-				}
-				
-				
-				
-				
-				
-				$arrControllersBean = array();
-				if( empty($arrMerge['params']) )
-				{
-					$aParams = null ;
-				}
-				else
-				{
-					$arrParams = explode('&', $arrMerge['params']);
-					foreach($arrParams as $arrPar){
-						$arrKeyValue = explode('=', $arrPar);
-						$arrControllersBean['params'][$arrKeyValue[0]] = $arrKeyValue[1];
+						$arrBean['controllers'][$arrControllersBeanName] = $arrControllersBean;
+						$nNum++;
 					}
 				}
-				$arrControllersBean['class'] = $arrMerge['controller'];
-				$arrControllersBeanName = empty($arrMerge['name'])? 'mergeControllerBySystem'.$nNum : $arrMerge['name'];
 				
-				$arrBean['controllers'][$arrControllersBeanName] = $arrControllersBean;
-				$nNum++;
+				if($sKey != 'type'){
+					if(strpos(  $sTargetParms , $sKey) !== false){
+						foreach($arrMergeArray as $arrMerge){
+							$arrControllersBean = array();
+							if( empty($arrMerge['params']) )
+							{
+								$aParams = null ;
+							}
+							else
+							{
+								$arrParams = explode('&', $arrMerge['params']);
+								foreach($arrParams as $arrPar){
+									$arrKeyValue = explode('=', $arrPar);
+									$arrControllersBean['params'][$arrKeyValue[0]] = $arrKeyValue[1];
+								}
+							}
+							$arrControllersBean['class'] = $arrMerge['controller'];
+							$arrControllersBeanName = empty($arrMerge['name'])? 'mergeControllerBySystem'.$nNum : $arrMerge['name'];
+							
+							$arrBean['controllers'][$arrControllersBeanName] = $arrControllersBean;
+							$nNum++;
+						}
+					}
+				}
 			}
 		}
 	}

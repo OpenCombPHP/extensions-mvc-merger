@@ -715,8 +715,8 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 		mapMVCMergerItemProperties[b.id]['class'] = $(b).attr('class');
 	});
 	
-	var endDiv = $(frame).find('.jc-layout-item-end');
 	//底部clear:both
+	var endDiv = $(frame).find('.jc-layout-item-end');
 	if(sLayout == 'v'){
 		if(endDiv.length > 0){
 			endDiv.remove();

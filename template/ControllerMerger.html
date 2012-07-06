@@ -136,9 +136,10 @@ jquery(function(){
 		
 		<div>
 			融入的控制器：
-			<ul>
-			<foreach for="$arrControllers" item="arrMerged" key="nIdx">
-				<li>
+			<ul style="text-indent:2em;">
+			<foreach for="$arrControllers" item="arrMergeType" key="sIdx">
+				<foreach for="$arrMergeType" item="arrMerged" key="nIdx">
+				<li style="margin:5px 0;">
 					<div>
 						<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
 						<a class='ajaxUrl' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
@@ -149,8 +150,10 @@ jquery(function(){
 					<if "$arrMerged['params']">
 						<div>参数：{=$arrMerged['params']}</div>
 					</if>
+					<div>{=$sIdx=='type'?"针对此类网页":"只针对这个网页"}</div>
 					<div>{=$arrMerged['comment']}</div>
 				</li>
+				</foreach>
 			</foreach>
 			</ul>
 		</div>

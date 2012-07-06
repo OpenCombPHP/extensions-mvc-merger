@@ -35,7 +35,6 @@ class ControllerMerger extends ControlPanel
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
-		
 		$this->view->variables()->set('arrMergedControllers',$arrMergedControllers) ;
 		//表单默认值
 		$sRequestC ='';
@@ -61,6 +60,7 @@ class ControllerMerger extends ControlPanel
 	{
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		$nNum = $aSetting->item('/merge/controller','num',0) ; //命名计数
 		
 		foreach(array('目标控制器类'=>'target_controller_class','融入控制器类'=>'source_controller_class') as $sName=>$sDataName)
 		{
@@ -85,19 +85,21 @@ class ControllerMerger extends ControlPanel
 		$sSaveType = '';
 		//如果针对指定页面
 		if($this->params['source_controller_saveType'] == 'current'){
-			$sSaveType = $this->params->string('source_controller_params');
+			$sSaveType = $this->params->string('target_controller_params');
 		}else{
 			//针对一类网页
 			$sSaveType = 'type';
 		}
 		
-		$arrMergedControllers[ $this->params['target_controller_class'] ][$sSaveType][] = array(
+		$arrMergedControllers[ $this->params['target_controller_class'] ][$sSaveType][$nNum+1] = array(
 					'controller' => $this->params['source_controller_class'] ,
 					'params' => $this->params->string('source_controller_params') ,
 					'name' => $this->params->string('source_controller_name') ,
 					'comment' => $this->params->string('source_controller_comment') ,
 		) ;
+		
 		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
+		$aSetting->setItem('/merge/controller','num',$nNum+1) ;
 		
 		// 清理类编译缓存
 		MvcMerger::clearClassCompiled($this->params['target_controller_class']) ;
@@ -118,8 +120,7 @@ class ControllerMerger extends ControlPanel
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
-		
-		if( empty($arrMergedControllers[$this->params['target']]) )
+		if( $arrMergedControllers[$this->params['target']] === null)
 		{
 			$this->view->createMessage(Message::error,"target参数无效") ;
 			return ;
@@ -136,14 +137,26 @@ class ControllerMerger extends ControlPanel
 			$this->view->createMessage(Message::success,"清除了控制器 %s 的所有融合设置",array($this->params['target'])) ;
 		}
 		// 删除指定的融合
-		else if( empty($arrMergedControllers[$this->params['target']][$nIdx]) )
-		{
-			$this->view->createMessage(Message::error,"idx参数无效") ;
-			return ;
-		}
+// 		else if( empty($arrMergedControllers[$this->params['target']][$nIdx]) )
+// 		{
+// 			$this->view->createMessage(Message::error,"idx参数无效") ;
+// 			return ;
+// 		}
 		else
 		{
-			unset($arrMergedControllers[$this->params['target']][$nIdx]) ;
+			foreach($arrMergedControllers[$this->params['target']] as $sSaveType => $arrSaveType){
+				foreach($arrSaveType as $key => $arrPatchs){
+					if($key != $nIdx){
+						continue;
+					}
+					unset($arrMergedControllers[$this->params['target']][$sSaveType][$nIdx]) ;
+						
+					if(empty($arrMergedControllers[$this->params['target']][$sSaveType]))
+					{
+						unset($arrMergedControllers[$this->params['target']][$sSaveType]) ;
+					}
+				}
+			}
 			
 			if(empty($arrMergedControllers[$this->params['target']]))
 			{
