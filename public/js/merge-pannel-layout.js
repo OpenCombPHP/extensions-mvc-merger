@@ -1269,7 +1269,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 	}
 	
 	this.log(" ") ;
-	this.log("计算 item "+item.attr('id')+"的空间要求：") ;
+	this.log("计算 item "+item.attr('id')+"的空间要求("+flag+")：") ;
 	
 	// 基本规则 (for view)
 	if( flag&MergerPannel.Layout.flag_width )
@@ -1301,6 +1301,15 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			item.data('max-height' , nCusHeight);
 		}
 	}
+
+	if( item.hasClass('jc-frame-horizontal') )
+	{
+		realthis.log("横向frame：累加成员宽，取最大成员高") ;
+	}
+	else
+	{
+		realthis.log("纵向frame：取最大成员宽，累加成员高 / "+flag) ;
+	}
 	
 	// 容器规则：最大值不可以小于 所有成员的最大值总和 (for frame)
 	if( item.hasClass('jc-frame') ){
@@ -1317,9 +1326,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			
 			// 横向
 			if( item.hasClass('jc-frame-horizontal') )
-			{
-				realthis.log("横向frame：累加成员宽，取最大成员高") ;
-				
+			{				
 				// 累成员加宽
 				if( flag&MergerPannel.Layout.flag_width )
 				{
@@ -1333,9 +1340,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			}
 			// 纵向
 			else
-			{
-				realthis.log("纵向frame：取最大成员宽，累加成员高 / "+flag) ;
-				
+			{				
 				// 取最大成员宽
 				if( flag&MergerPannel.Layout.flag_width && childrenMinWidth<nChildMinWidth )
 				{
@@ -1407,14 +1412,16 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 		var assignable = container.width() ;
 		var minKey = 'min-width' ;
 		var bSameSpace = container.hasClass('jc-frame-vertical') ;
-		var bExpandable = false ;
+		var bExpandable = false ;										// 不允许扩张
+		var bTottingup = container.hasClass('jc-frame-horizontal') ;	// 是否累加成员的空间
 	}
 	else
 	{
 		var assignable = container.height() ;
 		var minKey = 'min-height' ;
 		var bSameSpace = container.hasClass('jc-frame-horizontal') && this.isAutoFill(container) ;
-		var bExpandable = true ;
+		var bExpandable = true ;										// 允许扩张
+		var bTottingup = container.hasClass('jc-frame-vertical') ;		// 是否累加成员的空间
 	}
 	
 	// 所有下级成员空间相同
@@ -1446,11 +1453,21 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 			
 			// 未分配的item 平分 剩余空间
 			var assigned = Math.floor( remain / ( children.length - key ) ) ;
-			realthis.log(container.id+" 目前可用空间:"+remain+"; 还剩"+(children.length - key)+"个item；平分："+assigned);
+			realthis.log(container.attr('id')+" 目前可用空间:"+remain+"; 还剩"+(children.length - key)+"个item；平分："+assigned);
 			
 			// 应用分配到的空间
 			var assigned = realthis.applySpace(item,assigned,flag,bChildWidthAuto) ;
-			nTotalAssigned+= assigned ;
+			
+			// 累加分配给成员的空间
+			if(bTottingup)
+			{
+				nTotalAssigned+= assigned ;
+			}
+			// 不累加分配给成员的空间，使用成员的最大值
+			else if(assigned>nTotalAssigned)
+			{
+				nTotalAssigned = assigned ;
+			}
 				
 			// 剩余未分配空间
 			remain -= assigned ;
@@ -1462,6 +1479,8 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 		{
 			if(flag==MergerPannel.Layout.flag_height)
 			{
+				this.log("成员分配到的高度"+nTotalAssigned+"大于frame"+container.attr('id')+"的高度"+assignable+"，自动扩充高度到"+nTotalAssigned) ;
+				
 				container.height(nTotalAssigned) ;
 			}
 		}
@@ -1476,7 +1495,7 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag,bWidthAut
 	var $ = jquery;
 	
 	this.log(" ") ;
-	this.log("开始分配 item "+$(item).attr('id')+"的空间：") ;
+	this.log("开始分配 item "+$(item).attr('id')+"的空间 ("+flag+")：") ;
 	
 	
 	// 分配宽度-----------------------------------
@@ -1534,7 +1553,7 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag,bWidthAut
 		
 		$(item).height(height) ;
 		
-		this.log("item 最后生效的内部高度："+$(item).height());
+		this.log("item "+$(item).attr('id')+"最后生效的内部高度："+$(item).height());
 	}
 
 	// 递归分配item的下级
