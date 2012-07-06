@@ -303,9 +303,6 @@
 				<button id="mergepannel-layout-cleanbtn">
 					清理
 				</button>
-				<button onclick="MergerPannel.instance.layout.updateLayout()">
-					dbg:重算
-				</button>
 			</div>
 			
 			<div style="clear:both"></div>
@@ -319,11 +316,15 @@
 	<div id="mergepannel-log" class='mvcmerger_pages' style="display:none">
 		<textarea id="mergepannel-log-output"></textarea>
 		<div>
-			<button onclick="jquery('#mergepannel-log-output').text('')">清空</button>
 			<label>
 				<input type="checkbox" id="mergepannel-log-enable" />
 				激活
 			</label>
+			<button onclick="jquery('#mergepannel-log-output').text('')">清空</button>
+			|
+			<button onclick="MergerPannel.instance.layout.updateLayout()">
+				dbg:重算
+			</button>
 		</div>
 	</div>
 </div>
