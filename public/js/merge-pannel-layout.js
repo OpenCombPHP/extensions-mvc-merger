@@ -1293,7 +1293,7 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		if( nCusHeight == '' )
 		{
 			item.data('min-height',item.height('').outerHeight(true));
-			item.data('max-height' , -1);
+			item.data('max-height', -1);
 		}
 		else
 		{
@@ -1505,7 +1505,7 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag,bSpaceAut
 	// 分配高度-----------------------------------
 	if(flag&MergerPannel.Layout.flag_height)
 	{
-		if(bSpaceAuto)
+		if( bSpaceAuto && $(item).data('max-height')<0 )
 		{
 			this.log("item "+$(item).attr('id')+" 高度：auto");
 			$(item).height('') ;
