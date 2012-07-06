@@ -81,7 +81,7 @@ class MvcMerger extends Extension
 	
 	public function addController($aController ,& $arrBean)
 	{
-		$sTargetParms = $aController->params()->sortQuery($aController->params()->toUrlQuery());
+		$arrTargetParms = explode('&', $aController->params()->toUrlQuery());
 		
 		$sClassName = get_class($aController);
 		
@@ -119,7 +119,7 @@ class MvcMerger extends Extension
 				}
 				
 				if($sKey != 'type'){
-					if(strpos(  $sTargetParms , $sKey) !== false){
+					if( array_intersect(  explode('&', $sKey) , $arrTargetParms ) == explode('&', $sKey)){
 						foreach($arrMergeArray as $arrMerge){
 							$arrControllersBean = array();
 							if( empty($arrMerge['params']) )

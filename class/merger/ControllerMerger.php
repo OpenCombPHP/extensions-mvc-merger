@@ -90,6 +90,9 @@ class ControllerMerger extends ControlPanel
 			//针对一类网页
 			$sSaveType = 'type';
 		}
+		if($sSaveType == ''){
+			$sSaveType = 'type';
+		}
 		
 		$arrMergedControllers[ $this->params['target_controller_class'] ][$sSaveType][$nNum+1] = array(
 					'controller' => $this->params['source_controller_class'] ,
