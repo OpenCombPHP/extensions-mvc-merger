@@ -863,6 +863,46 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 			$("#mergepannel-frame-autoFill").attr('checked',true);
 		}
 	}
+	
+	//border , 从元素中提取样式
+	$('.mergepannel-border').each(function(v,b){
+		if(b.nodeName == 'INPUT'){
+			$(b).val('');
+		}else{
+			$(b).val('none');
+		}
+	});
+	var arrPositons = ['top','bottom','left','right'];
+	for(var nPKey in arrPositons){
+		$('#mergepannel-props-border-'+arrPositons[nPKey]+'-width').val( $('#'+sId).css('border-'+arrPositons[nPKey]+'-width').split('px')[0] );
+		$('#mergepannel-props-border-'+arrPositons[nPKey]+'-color').val( colorRGBToHex($('#'+sId).css('border-'+arrPositons[nPKey]+'-color')) );
+		$('#mergepannel-props-border-'+arrPositons[nPKey]+'-style').val( $('#'+sId).css('border-'+arrPositons[nPKey]+'-style') );
+	}
+	
+	function colorRGBToHex(color){
+	　　var regexpRGB=/^(rgb|RGB)\([0-9]{1,3},\s?[0-9]{1,3},\s?[0-9]{1,3}\)/;//RGB
+	　　if(regexpRGB.test(color)){
+	　　　　color=color.replace(/((|)|rgb|RGB)*/g,"").split(",");
+	　　　　var colorHex="#";
+	　　　　for(var i=0;i<color.length;i++){
+				if(i==0){
+					color[i] = color[i].substr(1);
+				}
+				if(i==2){
+					color[i] = color[i].split(')')[0];
+				}
+	　　　　　　var hex=Number(color[i]).toString(16);
+	　　　　　　if(hex.length==1){
+					hex="0"+hex;
+				}
+	　　　　　　colorHex+=hex;
+	　　　　}
+	　　　　return colorHex;
+	　　}else{
+	　　　　return color;
+	　　}
+	}
+	
 
 	// 从页面中的属性来处理skin控件的值
 	/* 规则: 
@@ -1051,11 +1091,7 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		case 'mergepannel-props-border-bottom-style' :
 			var propertyName = event.currentTarget.id.split('mergepannel-props-')[1];
 			
-			var styleValue = $(event.currentTarget).val();
-			
-			if($(event.currentTarget).val() != 'none'){
-				$(realthis.eleSelectedItem).css( propertyName , styleValue );
-			}
+			$(realthis.eleSelectedItem).css( propertyName , $(event.currentTarget).val() );
 			
 			realthis.saveProperties();
 			
