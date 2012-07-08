@@ -342,18 +342,23 @@ class MvcMerger extends Extension
 		{
 			return;
 		}
+		
+		$arrViewsInStore = array();
 		foreach ( $arrLayout['assemble'] as $value){
-			self::assembleViewAndFrame($aController,$value);
+			self::assembleViewAndFrame($aController , $value , null, & $arrViewsInStore);
 		}
 	}
 	
-	private function assembleViewAndFrame($aRootController,$arrView , $aContainerView=null){
+	private function assembleViewAndFrame($aRootController, $arrView , $aContainerView=null ,& $arrViewsInStore){
 		if($arrView === array()){
 			return;
 		}
 		
 		$aRootView = $aRootController->view();
-		if(!$aView = View::findXPath( $aRootView,$arrView['xpath'])){
+		
+		$aView = isset($arrViewsInStore[$arrView['xpath']]) ? $arrViewsInStore[$arrView['xpath']] : null;
+		
+		if(!$aView && !$aView = View::findXPath( $aRootView,$arrView['xpath'])){
 			//还原自定义frame
 			if(isset($arrView['customFrame']) and $arrView['customFrame']){
 				$aView = new View() ;
@@ -372,7 +377,8 @@ class MvcMerger extends Extension
 				return;
 			}
 		}
-// 		var_dump($aView->id());
+		
+		$arrViewsInStore[$arrView['xpath']] = $aView;
 
 		if(isset($arrView['layout'])){
 			if($arrView['layout'] == 'v'){
@@ -401,7 +407,7 @@ class MvcMerger extends Extension
 		
 		if(isset($arrView['items'])){
 			foreach($arrView['items'] as $arrChild){
-				self::assembleViewAndFrame($aRootController,$arrChild,$aView);
+				self::assembleViewAndFrame($aRootController,$arrChild,$aView ,& $arrViewsInStore);
 			}
 		}
 	}
