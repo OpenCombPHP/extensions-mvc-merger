@@ -178,4 +178,8 @@ class ControllerMerger extends ControlPanel
 		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton());
 // 		PlatformFactory::singleton()->clearRestoreCache(Service::singleton()) ;
 	}
+	
+	protected function doList(){
+		$this->view->variables()->set( 'onlyList' , true ); 
+	}
 }

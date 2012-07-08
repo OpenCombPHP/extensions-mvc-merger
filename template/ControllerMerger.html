@@ -1,162 +1,197 @@
 <lib name='jquery' />
-<css name="ControllerMerger.css"/>
+<css name="ControllerMerger.css" />
 
-<h2>控制器融合</h2>
-
-<p>
-	在蜂巢系统中，每个网页都是一个独立的控制器，控制器可以包含其它控制器。控制器融合可以将多个独立的控制器包含到指定的目标控制器中。
-</p>
-<p>
-	同时，目标控制器也可以融合到其它控制器中，系统对融合层次没有限制。
-</p>
-<p>
-	完成控制器的融合设置后，可以通过<a href="?c=org.opencomb.mvcmerger.merger.ViewLayerout">视图布局</a>对融合后的网页视图进行布局调整。
-</p>
-
-<br/>
-<script>
-
-function browserController(sClassType ,sSelectType)
-{
-	window.showModalDialog("?c=org.opencomb.mvcmerger.struct.StructBrowser",
-			{parent:self,allowSelectClass:sClassType,selectType:sSelectType},
-			"dialogWidth=820px;dialogHeight=450px;status=0");
-}
-
-jquery(function(){
-	var $ = jquery;
-	jquery('#controllerMergeForm').submit(function(){
-		jquery.ajax({
-			url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue'
-			, data:jquery('#controllerMergeForm').serialize()
-			, dataType:'html'
-			, success: function(html) {
-				jquery("#ControllerMerger_msgqueue").html(html);
-			}
-		}) ;
-		return false;
-	});
+<if "!$onlyList">
+	<h2>控制器融合</h2>
 	
-	$('a.ajaxUrl').click(function(){
-		var that = $(this);
-		jquery.ajax({
-			url: that.attr('href')
-			, dataType:'html'
-			, success: function(html) {
-				jquery("#ControllerMerger_msgqueue").html(html);
-			}
-		}) ;
-		return false;
-	});
+	<p>在蜂巢系统中，每个网页都是一个独立的控制器，控制器可以包含其它控制器。控制器融合可以将多个独立的控制器包含到指定的目标控制器中。
+	</p>
+	<p>同时，目标控制器也可以融合到其它控制器中，系统对融合层次没有限制。</p>
+	<p>
+		完成控制器的融合设置后，可以通过<a href="?c=org.opencomb.mvcmerger.merger.ViewLayerout">视图布局</a>对融合后的网页视图进行布局调整。
+	</p>
 	
-	$('#source_controller_ad').click(function(){
-		ad(this.checked);
-	});
-	
-	$('#source_controller_class').change(function(){
-		$('#source_controller_class_text').html($(this).val());
-	});
-	
-	//高级模式?
-	function ad(bAd){
-		var sDisplay = 'none';
-		if(bAd){
-			sDisplay = 'block';
+	<br />
+	<script>
+		function browserController(sClassType, sSelectType) {
+			window.showModalDialog(
+					"?c=org.opencomb.mvcmerger.struct.StructBrowser", {
+						parent : self,
+						allowSelectClass : sClassType,
+						selectType : sSelectType
+					}, "dialogWidth=820px;dialogHeight=450px;status=0");
 		}
-		
-		$('#target_controller_class').parent('div').css('display' , sDisplay);
-		$('#target_controller_params').parent('div').css('display' , sDisplay);
-		
-		$('#source_controller_class').css('display' , sDisplay);
-		$('#source_controller_class_text').css('display' , bAd?'none':'block');
-		$('#source_controller_name').parent('div').css('display' , sDisplay);
-		$('#source_controller_params').parent('div').css('display' , sDisplay);
-		$('#source_controller_comment').parent('div').css('display' , sDisplay);
-		
-		$('#source_controller_saveType').parent('div').css('display' , sDisplay);
-	}
 	
-	ad(false);
-});
-
-</script>
-
-<div id="ControllerMerger_msgqueue"></div>
-
-<form id="controllerMergeForm" method="post" action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
-	<div>
-		<h3>目标控制器类 :</h3>
-		控制器类名称 : <input type="text" style="width:350px" name="target_controller_class" id="target_controller_class" value="{=$sRequestC}" />
-	</div>
-	<div>
-		参数：<input type="text" style="width:400px" id='target_controller_params' name="target_controller_params"  value="{=$sRequestParams}"/>
-	</div>
-	<div>
-		<h3>被并入的控制器类 :</h3>
-		<input type="button" id="source_controller_select" style="width:100px;float:left;" value="选择并入的页面 ..." onclick="browserController('c','handle')" />
-		<span id='source_controller_class_text' > 没有选择控制器 </span>
-		<input type="text" style="width:300px;float:left;" name="source_controller_class" id="source_controller_class" />
-	</div>
-	<div style="clear:both">
-		名称：<input type="text" style="width:400px" id='source_controller_name' name="source_controller_name" />
-	</div>
-	<div>
-		参数：<input type="text" style="width:400px" name="source_controller_params" id="source_controller_params" />
-	</div>
-	<div>
-		注释：<input type="text" style="width:400px" name="source_controller_comment" id="source_controller_comment" />
-	</div>
+		jquery(function() {
+			var $ = jquery;
+			jquery('#controllerMergeForm')
+					.submit(
+							function() {
+								jquery
+										.ajax({
+											url : '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue',
+											data : jquery('#controllerMergeForm')
+													.serialize(),
+											dataType : 'html',
+											success : function(html) {
+												jquery("#ControllerMerger_msgqueue").html(html);
+												getList();
+											}
+										});
+								return false;
+							});
 	
-	<div style="clear:both">
-		<select id="source_controller_saveType" name='source_controller_saveType'>
-			<option value="type">对同类网页生效</option>
-			<option value="current">仅当前网页生效</option>
-		</select>
-	</div>
+			$('a.ajaxUrl').live('click',function() {
+				var that = $(this);
+				jquery.ajax({
+					url : that.attr('href'),
+					dataType : 'html',
+					success : function(html) {
+						jquery("#ControllerMerger_msgqueue").html(html);
+						getList();
+					}
+				});
+				return false;
+			});
 	
-	<div style="clear:both">
-		<input type="submit" value="融合" />
-	</div>
+			$('#source_controller_ad').click(function() {
+				ad(this.checked);
+			});
 	
-</form>
+			$('#source_controller_class').change(function() {
+				$('#source_controller_class_text').html($(this).val());
+			});
+	
+			//高级模式?
+			function ad(bAd) {
+				var sDisplay = 'none';
+				if (bAd) {
+					sDisplay = 'block';
+				}
+	
+				$('#target_controller_class').parent('div')
+						.css('display', sDisplay);
+				$('#target_controller_params').parent('div').css('display',
+						sDisplay);
+	
+				$('#source_controller_class').css('display', sDisplay);
+				$('#source_controller_class_text').css('display',
+						bAd ? 'none' : 'block');
+				$('#source_controller_name').parent('div').css('display', sDisplay);
+				$('#source_controller_params').parent('div').css('display',
+						sDisplay);
+				$('#source_controller_comment').parent('div').css('display',
+						sDisplay);
+	
+				$('#source_controller_saveType').parent('div').css('display',
+						sDisplay);
+			}
+	
+			ad(false);
+			
+			function getList (){
+				jquery.ajax({
+					url : '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe&a[]=/merger.ControllerMerger::doList',
+					dataType : 'html',
+					success : function(html) {
+						jquery("#mergeList").replaceWith(jquery(html).find('#mergeList'));
+					}
+				});
+			}
+		});
+	</script>
+	
+	<div id="ControllerMerger_msgqueue"></div>
+	
+	<form id="controllerMergeForm" method="post"
+		action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
+		<div>
+			<h3>目标控制器类 :</h3>
+			控制器类名称 : <input type="text" style="width: 350px"
+				name="target_controller_class" id="target_controller_class"
+				value="{=$sRequestC}" />
+		</div>
+		<div>
+			参数：<input type="text" style="width: 400px"
+				id='target_controller_params' name="target_controller_params"
+				value="{=$sRequestParams}" />
+		</div>
+		<div>
+			<h3>被并入的控制器类 :</h3>
+			<input type="button" id="source_controller_select"
+				style="width: 100px; float: left;" value="选择并入的页面 ..."
+				onclick="browserController('c','handle')" /> <span
+				id='source_controller_class_text'> 没有选择控制器 </span> <input
+				type="text" style="width: 300px; float: left;"
+				name="source_controller_class" id="source_controller_class" />
+		</div>
+		<div style="clear: both">
+			名称：<input type="text" style="width: 400px" id='source_controller_name'
+				name="source_controller_name" />
+		</div>
+		<div>
+			参数：<input type="text" style="width: 400px"
+				name="source_controller_params" id="source_controller_params" />
+		</div>
+		<div>
+			注释：<input type="text" style="width: 400px"
+				name="source_controller_comment" id="source_controller_comment" />
+		</div>
+	
+		<div style="clear: both">
+			<select id="source_controller_saveType"
+				name='source_controller_saveType'>
+				<option value="type">对同类网页生效</option>
+				<option value="current">仅当前网页生效</option>
+			</select>
+		</div>
+	
+		<div style="clear: both">
+			<input type="submit" value="融合" />
+		</div>
+	
+	</form>
+	
+	<label style="position: absolute; top: 115px; right: 40px;"><input
+		type="checkbox" id="source_controller_ad" />高级</label>
+	
+	<hr />
+	<h2>已经完成融合的控制器</h2>
+</if>
 
-<label style="position:absolute;top:115px;right:40px;"><input type="checkbox" id="source_controller_ad"/>高级</label>
 
-<hr />
-<h2>已经完成融合的控制器</h2>
-
-<ul>
-<foreach for="$arrMergedControllers" key="sTargetControllerClass" item="arrControllers">
+<ul id="mergeList">
+	<foreach for="$arrMergedControllers" key="sTargetControllerClass"
+		item="arrControllers">
 	<li>
 		<div>
-			控制器类：
-			<a href="?c={=str_replace('\\','.',$sTargetControllerClass)}" target='_blank'>{=$sTargetControllerClass}</a>
-			<a class='ajaxUrl' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx=-1">取消</a>
+			控制器类： <a href="?c={=str_replace('\\','.',$sTargetControllerClass)}"
+				target='_blank'>{=$sTargetControllerClass}</a> <a class='ajaxUrl'
+				href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx=-1">取消</a>
 		</div>
-		
+
 		<div>
 			融入的控制器：
-			<ul style="text-indent:2em;">
-			<foreach for="$arrControllers" item="arrMergeType" key="sIdx">
+			<ul style="text-indent: 2em;">
+				<foreach for="$arrControllers" item="arrMergeType" key="sIdx">
 				<foreach for="$arrMergeType" item="arrMerged" key="nIdx">
-				<li style="margin:5px 0;">
+				<li style="margin: 5px 0;">
 					<div>
-						<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
-						<a class='ajaxUrl' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
-					</div>
-					<if "$arrMerged['name']">
-						<div>名称：{=$arrMerged['name']}</div>
-					</if>
-					<if "$arrMerged['params']">
-						<div>参数：{=$arrMerged['params']}</div>
+						<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}"
+							target='_blank'>{=$arrMerged['controller']}</a> <a
+							class='ajaxUrl'
+							href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
+					</div> <if"$arrMerged['name']">
+					<div>名称：{=$arrMerged['name']}</div>
+					</if> <if"$arrMerged['params']">
+					<div>参数：{=$arrMerged['params']}</div>
 					</if>
 					<div>{=$sIdx=='type'?"针对此类网页":"只针对这个网页"}</div>
 					<div>{=$arrMerged['comment']}</div>
 				</li>
-				</foreach>
-			</foreach>
+				</foreach> </foreach>
 			</ul>
 		</div>
 	</li>
-</foreach>
+	</foreach>
 </ul>
