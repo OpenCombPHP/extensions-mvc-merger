@@ -84,7 +84,6 @@ MergerPannel.Layout.prototype._initUi = function() {
 	// 绑定界面元素事件
 	// frame 类型单选按钮组
 	$('.mergepannel-props-frame-type').change(function() {
-		console.log(this.id+':'+(this.checked?'checked':'unchecked')) ;
 		if (this.checked) {
 			realThis.setFrameLayout(realThis.eleSelectedItem, $(this).val());
 		}
@@ -1268,9 +1267,9 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	var $ = jquery;
 	var sEleId = 'cusFrame-' + (this.nAssignedFrameId++);
 
-	this.aZtree.addNodes(itemData, {
+	var newNode = this.aZtree.addNodes(itemData, {
 		// ztree的属性
-		name : '布局框架',
+		name : '布局框架:竖',
 		icon : sMvcMergerPublicFolderUrl + '/frame.png',
 		children : []
 		// 非ztree的属性
@@ -1283,16 +1282,15 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	});
 	// ztree node 的样式
 	this._initZtreeNodesStylte();
+	this.aZtree.moveNode(itemData['children'][0],newNode[0],'prev');
 	
 	// 创建html元素
 	var aNewFrame = $("<div id=\""
 							+ sEleId
 							+ "\" class=\"jc-layout jc-frame cusframe\"><div class=\"jc-layout-item-end\"></div></div>");
-	$(itemEle).append( aNewFrame );
+	$(itemEle).prepend( aNewFrame );
 	
 	aNewFrame.attr('xpath', aNewFrame.parents('.jc-frame:first').attr('xpath') + '/' + sEleId );
-	// 移动
-	this.moveIn( aNewFrame[0] , itemEle);
 }
 MergerPannel.Layout.prototype.log = function(msg)
 {
