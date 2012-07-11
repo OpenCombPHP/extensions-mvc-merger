@@ -90,14 +90,14 @@
 	function getHighLightBlock( width , height , color , top , right , bottom , left ,zIndex){
 		var highLightBlock = $(
 			  "<div class='fselecter_highlight_block' style='position:absolute;'>"
-			+		"<div class='fselecter_highlight_lt fselecter_highlight' style='position:absolute; '></div>"
-			+		"<div class='fselecter_highlight_t fselecter_highlight' style='position:absolute; '></div>"
-			+		"<div class='fselecter_highlight_rt fselecter_highlight' style='position:absolute; '></div>"
-			+		"<div class='fselecter_highlight_l fselecter_highlight' style='position:absolute; '></div>"
-			+		"<div class='fselecter_highlight_r fselecter_highlight' style='position:absolute; '></div>"
-			+		"<div class='fselecter_highlight_lb fselecter_highlight' style='position:absolute; '></div>"
-			+		"<div class='fselecter_highlight_b fselecter_highlight' style='position:absolute; '></div>"
-			+		"<div class='fselecter_highlight_rb fselecter_highlight' style='position:absolute; '></div>"
+			+		"<div class='fselecter_highlight_lt fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
+			+		"<div class='fselecter_highlight_t fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
+			+		"<div class='fselecter_highlight_rt fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
+			+		"<div class='fselecter_highlight_l fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
+			+		"<div class='fselecter_highlight_r fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
+			+		"<div class='fselecter_highlight_lb fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
+			+		"<div class='fselecter_highlight_b fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
+			+		"<div class='fselecter_highlight_rb fselecter_highlight' style='position:absolute;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; '></div>"
 			+ "</div>"
 			);
 		
@@ -135,7 +135,8 @@
 		highLightBlock.find("."+sPrefix+'b').css({backgroundColor:color,top:top+height,left:left,width:width,height:bottom});
 		highLightBlock.find("."+sPrefix+'rb').css({backgroundColor:color,top:top+height,left:left+width,width:right,height:bottom});
 		
-		highLightBlock.css({filter:'alpha(opacity=60)','-moz-opacity':60,opacity:'0.6'});
+//		highLightBlock.css({'filter':'alpha(opacity=60)'});//,'-moz-opacity':60, 'opacity':'0.6' , '-ms-filter':"'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)'"});
+												  
 		
 		highLightBlock.css({'z-index' : zIndex});
 		
