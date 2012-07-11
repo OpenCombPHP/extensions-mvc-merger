@@ -13,14 +13,17 @@
 	</description>
 	
 	<class>org.opencomb.mvcmerger.MvcMerger</class>
-	<package folder="/class" namespace="org.opencomb.mvcmerger" />
+	<package folder="/class" namespace="org.opencomb.mvcmerger"/>
 
-	<template folder="/template" />
+	<template folder="/template"/>
 	
-	<beanFolder folder="/bean" />
+	<beanFolder folder="/bean"/>
 	
-	<publicFolder folder="/public" />
+	<publicFolder folder="/public"/>
 	
 	<require type="extension" item="coresystem"><![CDATA[ >=0.2 ]]></require>
 	
-</Extension>
+<data>
+		<version>
+			0.2
+		</version><installer>org\opencomb\mvcmerger\setup\DataInstaller</installer></data></Extension>
