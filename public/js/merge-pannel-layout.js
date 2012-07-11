@@ -84,6 +84,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 	// 绑定界面元素事件
 	// frame 类型单选按钮组
 	$('.mergepannel-props-frame-type').change(function() {
+		console.log(this.id+':'+(this.checked?'checked':'unchecked')) ;
 		if (this.checked) {
 			realThis.setFrameLayout(realThis.eleSelectedItem, $(this).val());
 		}
@@ -719,12 +720,17 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 	aNode.layout = sType;
 
 	this.layoutFrame(frame, aNode);
+	
+	//因为改变了元素的class,这里重新获取表单,以保持class表单内容的同步
+	$('#'+aNode.tId+ " >a").click();
+
 	this.updateLayout(function(){
 		realthis.setFrameLayout(frame,oldLayout);
 		this.updateLayout();
 	});
-	//因为改变了元素的class,这里重新获取表单,以保持class表单内容的同步
-	$('#'+aNode.tId+ " >a").click();
+	
+	// 这里有一个 bug ，在 ie下，一定要执行两遍 updateLayout() ， 否则计算错误导致成员的宽度超出 横向frame的宽度，出现挤换行
+	this.updateLayout() ;
 };
 MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 	var $ = jquery;
@@ -759,7 +765,7 @@ MergerPannel.Layout.prototype.layoutFrame = function(frame, node) {
 		}
 	}else{
 		if(endDiv.length == 0){
-			$(frame).append('<div class="jc-layout-item-end"></div>');
+			$(frame).append('<div class="jc-layout-item-end" style="height:0px;"></div>');
 		}
 	}
 };
@@ -1298,7 +1304,7 @@ MergerPannel.Layout.prototype.log = function(msg)
 	{
 		console.log(msg);
 	}
-	jquery('#mergepannel-log-output'). val( jquery('#mergepannel-log-output').val() + msg + "\r\n" ) ;
+	jquery('#mergepannel-log-output').append(msg+"<br />\r\n") ;
 };
 
 
@@ -1413,11 +1419,11 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 
 	if( item.hasClass('jc-frame-horizontal') )
 	{
-		realthis.log("横向frame：累加成员宽，取最大成员高") ;
+		this.log("横向frame：累加成员宽，取最大成员高") ;
 	}
 	else
 	{
-		realthis.log("纵向frame：取最大成员宽，累加成员高 / "+flag) ;
+		this.log("纵向frame：取最大成员宽，累加成员高 / "+flag) ;
 	}
 	
 	// 容器规则：最大值不可以小于 所有成员的最大值总和 (for frame)
@@ -1471,11 +1477,11 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		{
 			item.data('min-width' , childrenMinWidth );
 		}
-		//realthis.log("最小高："+item.data('min-height')) ;
-		//realthis.log("成员最小高之和："+childrenMinHeight) ;
+		this.log("最小高："+item.data('min-height')) ;
+		this.log("成员最小高之和："+childrenMinHeight) ;
 		if( flag&MergerPannel.Layout.flag_height && childrenMinHeight>0 && item.data('min-height') < childrenMinHeight )
 		{
-			//realthis.log("最小高小于成员最小高之和："+childrenMinHeight) ;
+			this.log("最小高小于成员最小高之和："+childrenMinHeight) ;
 			item.data('min-height' , childrenMinHeight );
 		}
 	}
@@ -1620,6 +1626,8 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag,bSpaceAut
 			$(item).height('') ;
 			
 			assigned = $(item).outerHeight(true) ;
+
+			this.log("item "+$(item).attr('id')+"最后生效的内部高度："+assigned);
 		}
 		else
 		{
@@ -1635,9 +1643,10 @@ MergerPannel.Layout.prototype.applySpace = function(item,assigned,flag,bSpaceAut
 			this.log("item "+$(item).attr('id')+" 实际分配高度："+assigned+", 外部高度："+outer+", 内部高度："+height);
 
 			$(item).height(height) ;
+			
+			this.log("item "+$(item).attr('id')+"最后生效的内部高度："+$(item).height());
 		}
 		
-		this.log("item "+$(item).attr('id')+"最后生效的内部高度："+$(item).height());
 	}
 
 	// 递归分配item的下级

@@ -1,13 +1,17 @@
-<lib name="jquery.ui.menu" />
-<script type="text/javascript" src="mvc-merger:js/merge-pannel-icon-menu.js"></script>
+<if "$aId=jc\auth\IdManager::singleton()->currentId() and \org\opencomb\coresystem\auth\PurviewQuery::singleton()->hasPurview($aId,\org\opencomb\coresystem\auth\Id::PLATFORM_ADMIN,'coresystem')">
+	
+	<lib name="jquery.ui.menu" />
+	<script type="text/javascript" src="mvc-merger:js/merge-pannel-icon-menu.js"></script>
+	
+	<a id="mvc-merger-frontframe-icon" title="高级网页维护" href="#mvc-merger-frontframe-menu" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" >(@)</a>
+	<div id="mvc-merger-frontframe-menu" style="display:none" class="hidden">
+		<ul>
+			<li><a href="{=$theRequest->url(null,'mvcmerger')}">视图布局</a></li>
+			<!-- 
+			<li><a href="{=$theRequest->url(null,'mvcmerger_ui_browser')}">模板编织</a></li>
+			<li><a href="{/*.url}">网页融合</a></li>
+			 -->
+		</ul>
+	</div>
 
-<a id="mvc-merger-frontframe-icon" title="高级网页维护" href="#mvc-merger-frontframe-menu" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" >(@)</a>
-<div id="mvc-merger-frontframe-menu" style="display:none" class="hidden">
-	<ul>
-		<li><a href="{=$theRequest->url(null,'mvcmerger')}">视图布局</a></li>
-		<!-- 
-		<li><a href="{=$theRequest->url(null,'mvcmerger_ui_browser')}">模板编织</a></li>
-		<li><a href="{/*.url}">网页融合</a></li>
-		 -->
-	</ul>
-</div>
+</if>
