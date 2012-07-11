@@ -24,7 +24,12 @@ MergerPannel.prototype.init = function()
 		, beforeClose: function(event, ui) {
 			//退出编辑模式
 			if(confirm('是否退出编辑模式?')){
-				location.href = location.href.split('mvcmerger=1').join('');
+			    var href = location.href.split('mvcmerger=1');
+			    if(href[0].substr(-1) == '?'
+			      || href[0].substr(-1) == "&"){
+				href[0] = href[0].substr(0,href[0].length-1);
+			    }
+			    location.href = href.join("");
 			}
 			return false;
 		}
