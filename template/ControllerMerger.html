@@ -1,17 +1,6 @@
 <lib name='jquery' />
-<css name="ControllerMerger.css" />
 
 <if "!$onlyList">
-	<h2>控制器融合</h2>
-	
-	<p>在蜂巢系统中，每个网页都是一个独立的控制器，控制器可以包含其它控制器。控制器融合可以将多个独立的控制器包含到指定的目标控制器中。
-	</p>
-	<p>同时，目标控制器也可以融合到其它控制器中，系统对融合层次没有限制。</p>
-	<p>
-		完成控制器的融合设置后，可以通过<a href="?c=org.opencomb.mvcmerger.merger.ViewLayerout">视图布局</a>对融合后的网页视图进行布局调整。
-	</p>
-	
-	<br />
 	<script>
 		function browserController(sClassType, sSelectType) {
 			window.showModalDialog(
@@ -55,24 +44,14 @@
 			});
 	
 			$('#source_controller_ad').click(function() {
-				ad(this.checked);
-			});
-	
-			$('#source_controller_class').change(function() {
-				$('#source_controller_class_text').html($(this).val());
-			});
-	
-			//高级模式?
-			function ad(bAd) {
 				var sDisplay = 'none';
-				if (bAd) {
+				var bAd = $('#target_controller_class:visible').length == 0;
+				if ( bAd ) {
 					sDisplay = 'block';
 				}
 	
-				$('#target_controller_class').parent('div')
-						.css('display', sDisplay);
-				$('#target_controller_params').parent('div').css('display',
-						sDisplay);
+				$('#target_controller_class').parent('div').css('display', sDisplay);
+				$('#target_controller_params').parent('div').css('display',sDisplay);
 	
 				$('#source_controller_class').css('display', sDisplay);
 				$('#source_controller_class_text').css('display',
@@ -85,9 +64,12 @@
 	
 				$('#source_controller_saveType').parent('div').css('display',
 						sDisplay);
-			}
+			});
 	
-			ad(false);
+			$('#source_controller_class').change(function() {
+				$('#source_controller_class_text').html($(this).val());
+			});
+	
 			
 			function getList (){
 				jquery.ajax({
@@ -101,17 +83,21 @@
 		});
 	</script>
 	
+	<a id="addViewHelp" href="#" title="在蜂巢系统中，每个网页都是一个独立的控制器，控制器可以包含其它控制器。
+	控制器融合可以将多个独立的控制器包含到指定的目标控制器中。同时，目标控制器也可以融合到其它控制器中，系统对融合层次没有限制。
+		完成控制器的融合设置后，可以通过视图布局对融合后的网页视图进行布局调整。"> </a>
+	
 	<div id="ControllerMerger_msgqueue"></div>
 	
 	<form id="controllerMergeForm" method="post"
 		action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
-		<div>
+		<div style="display:none;">
 			<h3>目标控制器类 :</h3>
 			控制器类名称 : <input type="text" style="width: 350px"
 				name="target_controller_class" id="target_controller_class"
 				value="{=$sRequestC}" />
 		</div>
-		<div>
+		<div style="display:none;">
 			参数：<input type="text" style="width: 400px"
 				id='target_controller_params' name="target_controller_params"
 				value="{=$sRequestParams}" />
@@ -121,24 +107,25 @@
 			<input type="button" id="source_controller_select"
 				style="width: 100px; float: left;" value="选择并入的页面 ..."
 				onclick="browserController('c','handle')" /> <span
-				id='source_controller_class_text'> 没有选择控制器 </span> <input
-				type="text" style="width: 300px; float: left;"
+				id='source_controller_class_text'> 没有选择控制器 </span>
+			<input
+				type="text" style="width: 300px; float: left;display:none;"
 				name="source_controller_class" id="source_controller_class" />
 		</div>
-		<div style="clear: both">
+		<div style="clear: both;display:none;">
 			名称：<input type="text" style="width: 400px" id='source_controller_name'
 				name="source_controller_name" />
 		</div>
-		<div>
-			参数：<input type="text" style="width: 400px"
+		<div style="clear: both;display:none;">
+			参数：<input type="text" style="width: 400px;"
 				name="source_controller_params" id="source_controller_params" />
 		</div>
-		<div>
+		<div style="clear: both;display:none;">
 			注释：<input type="text" style="width: 400px"
 				name="source_controller_comment" id="source_controller_comment" />
 		</div>
 	
-		<div style="clear: both">
+		<div style="clear: both;display:none;">
 			<select id="source_controller_saveType"
 				name='source_controller_saveType'>
 				<option value="type">对同类网页生效</option>
@@ -152,13 +139,11 @@
 	
 	</form>
 	
-	<label style="position: absolute; top: 115px; right: 40px;"><input
-		type="checkbox" id="source_controller_ad" />高级</label>
+	<a href='#' style="position: absolute; top: 13px; right: 40px;" id="source_controller_ad">高级</a>
 	
 	<hr />
 	<h2>已经完成融合的控制器</h2>
 </if>
-
 
 <ul id="mergeList">
 	<foreach for="$arrMergedControllers" key="sTargetControllerClass"

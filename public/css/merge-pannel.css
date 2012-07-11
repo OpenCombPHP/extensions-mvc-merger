@@ -194,6 +194,16 @@ color: #EB8F00;
 	background:url(../image/arrow_down.png) center center no-repeat;
 }
 
+#addViewHelp{
+	display:block;
+	position:absolute;
+	top:13px;
+	right:13px;
+	width:16px;
+	height:16px;
+	background:url(../image/addViewHelp.gif) center center no-repeat;
+}
+
 #mergepannel-showmore{
 	display:block;
 	width:20px;
