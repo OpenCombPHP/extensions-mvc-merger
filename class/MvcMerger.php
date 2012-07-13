@@ -197,6 +197,7 @@ class MvcMerger extends Extension
 		$sJsCode = "{\r\n" ;
 		$sJsCode.= "{$sIndent}	name:\"{$sViewNameEsc}\"\r\n" ;
 		$sJsCode.= "{$sIndent}	, template:\"{$sTemplateEsc}\"\r\n" ;
+		$sJsCode.= "{$sIndent}, id:\"{$aView->id()}\"\r\n" ;
 		
 		if($aView->viewNames())
 		{
