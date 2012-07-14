@@ -60,7 +60,6 @@ structBrowser.setMvcStruct = function(struct)
 };
 structBrowser.loadMvcStruct= function(struct)
 {
-	console.log( this.allowSelectClass );
 	switch( this.allowSelectClass ){
 	case 'c':
 		var browser_controller = jQuery('#browser-controller') ;
@@ -161,14 +160,24 @@ structBrowser.highlightInFrameById = function(id,color){
 	var obj = fcd.getElementById(id);
 	
 	var flashing = jQuery('<div class="mergepannel-layout-flashing" style="position:absolute;z-index:300;background:'+color+';border:1px solid #666;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; "></div>');
+	
 	var position = jQuery(obj).offset();
 	if( position != null ){
-		iframe.contentWindow.scrollTo(position.left,position.top);
 		var width = jQuery(obj).outerWidth(true);
 		var height = jQuery(obj).outerHeight(true);
 		flashing.css({'top' : position.top,'left' : position.left,'width' : width,'height' : height});
 		jQuery(fcd).find('body').append(flashing);
 		flashing.show();
+	}
+}
+structBrowser.scrollFrameById = function(id){
+	var iframe = document.getElementById('iframe-browser');
+	var fcd = iframe.contentWindow.document;
+	var obj = fcd.getElementById(id);
+	
+	var position = jQuery(obj).offset();
+	if( position != null ){
+		iframe.contentWindow.scrollTo(position.left,position.top);
 	}
 }
 jQuery(function(){
@@ -228,6 +237,7 @@ jQuery(function(){
 		if(moeo.itemType() == 'view' ){
 			var id = moeo.id() ;
 			structBrowser.highlightInFrameById(id,'blue');
+			structBrowser.scrollFrameById(id);
 			var j;
 			jobj.closest('ul').children('li').children('a').each(function(){
 				var jbobj = jQuery(this);
