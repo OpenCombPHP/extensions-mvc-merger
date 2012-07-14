@@ -1,182 +1,172 @@
-<lib name='jquery' />
-
-<if "!$onlyList">
-	<script>
-		function browserController(sClassType, sSelectType) {
-			window.showModalDialog(
-					"?c=org.opencomb.mvcmerger.struct.StructBrowser", {
-						parent : self,
-						allowSelectClass : sClassType,
-						selectType : sSelectType
-					}, "dialogWidth=820px;dialogHeight=450px;status=0");
+<lib name="jquery.ui" />
+<script  >
+jquery(function($){
+	$("#mergeCtl_tabs").tabs({ selected: 0});
+	
+	$('#mergeCtl_modify_target_btn').click(function(){
+		$('.mergeCtl_modify_target_form').toggle();
+	});
+	
+	$("#mergeCtl_modify_target_saveType").change(function(){
+		if($(this).val() == 'special'){
+			$("#mergeCtl_modify_target_save_params").show();
+		}else{
+			$("#mergeCtl_modify_target_save_params").hide();
 		}
+	});
 	
-		jquery(function() {
-			var $ = jquery;
-			jquery('#controllerMergeForm')
-					.submit(
-							function() {
-								jquery
-										.ajax({
-											url : '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue',
-											data : jquery('#controllerMergeForm')
-													.serialize(),
-											dataType : 'html',
-											success : function(html) {
-												jquery("#ControllerMerger_msgqueue").html(html);
-												getList();
-											}
-										});
-								return false;
-							});
-	
-			$('a.ajaxUrl').live('click',function() {
-				var that = $(this);
-				jquery.ajax({
-					url : that.attr('href'),
-					dataType : 'html',
-					success : function(html) {
-						jquery("#ControllerMerger_msgqueue").html(html);
-						getList();
-					}
-				});
-				return false;
-			});
-	
-			$('#source_controller_ad').click(function() {
-				var sDisplay = 'none';
-				var bAd = $('#target_controller_class:visible').length == 0;
-				if ( bAd ) {
-					sDisplay = 'block';
-				}
-	
-				$('#target_controller_class').parent('div').css('display', sDisplay);
-				$('#target_controller_params').parent('div').css('display',sDisplay);
-	
-				$('#source_controller_class').css('display', sDisplay);
-				$('#source_controller_class_text').css('display',
-						bAd ? 'none' : 'block');
-				$('#source_controller_name').parent('div').css('display', sDisplay);
-				$('#source_controller_params').parent('div').css('display',
-						sDisplay);
-				$('#source_controller_comment').parent('div').css('display',
-						sDisplay);
-	
-				$('#source_controller_saveType').parent('div').css('display',
-						sDisplay);
-			});
-	
-			$('#source_controller_class').change(function() {
-				$('#source_controller_class_text').html($(this).val());
-			});
-	
+	$('.mergeCtl_textToView_save_btn').click(function(){
+		var ajaxData = {};
+		if( $("#mergeCtl_tabs").tabs('option','selected') == 0 ){
+			ajaxData = {
+					target:$('#mergeCtl_modify_target_name').val()
+					,mergeType:'text'
+					,saveType:$("#mergeCtl_modify_target_saveType").val()
+					,targetParams:$("#mergeCtl_modify_target_save_params").val()
+					,sourceTitle:$("#mergeCtl_textToView_title").val()
+					,sourceContent:$("#mergeCtl_textToView_textarea").val()
+					,sourceRemark:$("#mergeCtl_remark").val()
+				};
+		}else if( $("#mergeCtl_tabs").tabs('option','selected') == 1 ){
 			
-			function getList (){
-				jquery.ajax({
-					url : '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe&a[]=/merger.ControllerMerger::doList',
-					dataType : 'html',
-					success : function(html) {
-						jquery("#mergeList").replaceWith(jquery(html).find('#mergeList'));
-					}
-				});
+		}else if( $("#mergeCtl_tabs").tabs('option','selected') == 2 ){
+			ajaxData =  {
+					target:$('#mergeCtl_modify_target_name').val()
+					,mergeType:'template'
+					,saveType:$("#mergeCtl_modify_target_saveType").val()
+					,targetParams:$("#mergeCtl_modify_target_save_params").val()
+					,sourceTemplate:$("#mergeCtl_tempToView_template").val()
+					,sourceParams:$("#mergeCtl_tempToView_params").val()
+					,sourceRemark:$("#mergeCtl_remark").val()
+				};
+		}
+		
+		$.ajax({
+			url : '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::form',
+			type: "POST",
+			data : ajaxData,
+			dataType : 'html',
+			success : function(html) {
+				jquery("#mergeCtl_msgqueue").html(html);
 			}
 		});
-	</script>
+	});
 	
-	<a id="addViewHelp" href="#" title="在蜂巢系统中，每个网页都是一个独立的控制器，控制器可以包含其它控制器。
-	控制器融合可以将多个独立的控制器包含到指定的目标控制器中。同时，目标控制器也可以融合到其它控制器中，系统对融合层次没有限制。
-		完成控制器的融合设置后，可以通过视图布局对融合后的网页视图进行布局调整。"> </a>
+	$.fn.zTree.init(
+			$('#mergeCtl_templateTree'),
+			{
+				view : {
+					showLine : true,
+					selectedMulti : false,
+					dblClickExpand : true,
+					nameIsHTML : true,
+					expandSpeed : 0
+				}
+				, callback : {
+					onClick : function(event, treeId, treeNode) {
+						if(!treeNode.isParent){
+							var arrParents = [];
+							var parentNode = treeNode;//.getParentNode();
+							do{
+								parentNode = parentNode.getParentNode();
+								if( parentNode === null){
+									break;
+								}
+								arrParents.unshift(parentNode.name);
+							}while(true)
+							
+							var templateName = '';
+							for(var nameKey in arrParents){
+								if(nameKey == 0){
+									templateName += arrParents[nameKey] + ':';
+								}else{
+									templateName += arrParents[nameKey] + '/';
+								}
+							}
+							$('#mergeCtl_tempToView_template').val(templateName + treeNode.name);
+						}
+					}
+				}
+			}
+			, {=$arrTemplateTreeData}
+	);
 	
-	<div id="ControllerMerger_msgqueue"></div>
-	
-	<form id="controllerMergeForm" method="post"
-		action="?c=org.opencomb.mvcmerger.merger.ControllerMerger">
-		<div style="display:none;">
-			<h3>目标控制器类 :</h3>
-			控制器类名称 : <input type="text" style="width: 350px"
-				name="target_controller_class" id="target_controller_class"
-				value="{=$sRequestC}" />
-		</div>
-		<div style="display:none;">
-			参数：<input type="text" style="width: 400px"
-				id='target_controller_params' name="target_controller_params"
-				value="{=$sRequestParams}" />
-		</div>
-		<div>
-			<h3>被并入的控制器类 :</h3>
-			<input type="button" id="source_controller_select"
-				style="width: 100px; float: left;" value="选择并入的页面 ..."
-				onclick="browserController('c','handle')" /> <span
-				id='source_controller_class_text'> 没有选择控制器 </span>
-			<input
-				type="text" style="width: 300px; float: left;display:none;"
-				name="source_controller_class" id="source_controller_class" />
-		</div>
-		<div style="clear: both;display:none;">
-			名称：<input type="text" style="width: 400px" id='source_controller_name'
-				name="source_controller_name" />
-		</div>
-		<div style="clear: both;display:none;">
-			参数：<input type="text" style="width: 400px;"
-				name="source_controller_params" id="source_controller_params" />
-		</div>
-		<div style="clear: both;display:none;">
-			注释：<input type="text" style="width: 400px"
-				name="source_controller_comment" id="source_controller_comment" />
-		</div>
-	
-		<div style="clear: both;display:none;">
-			<select id="source_controller_saveType"
-				name='source_controller_saveType'>
-				<option value="type">对同类网页生效</option>
-				<option value="current">仅当前网页生效</option>
-			</select>
-		</div>
-	
-		<div style="clear: both">
-			<input type="submit" value="融合" />
-		</div>
-	
-	</form>
-	
-	<a href='#' style="position: absolute; top: 13px; right: 40px;" id="source_controller_ad">高级</a>
-	
-	<hr />
-	<h2>已经完成融合的控制器</h2>
-</if>
+});
 
-<ul id="mergeList">
-	<foreach for="$arrMergedControllers" key="sTargetControllerClass"
-		item="arrControllers">
-	<li>
-		<div>
-			控制器类： <a href="?c={=str_replace('\\','.',$sTargetControllerClass)}"
-				target='_blank'>{=$sTargetControllerClass}</a> <a class='ajaxUrl'
-				href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx=-1">取消</a>
-		</div>
+</script>
 
+<div id="mergeCtl_panel">
+
+<div class='mergeCtl_target'>
+	<button id="mergeCtl_modify_target_btn">更改目标网页...</button>
+	<div class="mergeCtl_modify_target_form">
+		<div><label>控制器类 : 
+			<input id="mergeCtl_modify_target_name" type="text" style="width:450px;" value="{=$sRequestC}"/>
+		</label></div>
+		<div><select id="mergeCtl_modify_target_saveType">
+			<option value="current">仅当前网页生效</option>
+			<option value="type">对同类网页生效</option>
+			<option value="special">指定条件(高级)</option>
+		</select>
+		<input id="mergeCtl_modify_target_save_params" value="{=$sRequestParams}" style="width:402px;"/></div>
+	</div>
+</div>
+
+<div id="mergeCtl_tabs">
+	<ul>
+		<li><a href="#mergeCtl_tab_1">富文本</a></li>
+		<li><a href="#mergeCtl_tab_2">网页</a></li>
+		<li><a href="#mergeCtl_tab_3">模板</a></li>
+	</ul>
+	
+	<div id="mergeCtl_tab_1">
+		<h3>通过富文本编辑器,创建并添加一个视图</h3>
+		<div><label>标题 : <input id="mergeCtl_textToView_title" style="width:431px;"/></label></div>
+		<div><textarea id="mergeCtl_textToView_textarea" style="width:470px;"></textarea></div>
+	</div>
+	
+	<div id="mergeCtl_tab_2">
+		<h3>从已有的网页中,选择一个视图,添加到当前网页</h3>
 		<div>
-			融入的控制器：
-			<ul style="text-indent: 2em;">
-				<foreach for="$arrControllers" item="arrMergeType" key="sIdx">
-				<foreach for="$arrMergeType" item="arrMerged" key="nIdx">
-				<li style="margin: 5px 0;">
-					<div>
-						<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}"
-							target='_blank'>{=$arrMerged['controller']}</a> <a
-							class='ajaxUrl'
-							href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=msgqueue&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">取消</a>
-					</div> <if"$arrMerged['name']">
-					<div>名称：{=$arrMerged['name']}</div>
-					</if> <if"$arrMerged['params']">
-					<div>参数：{=$arrMerged['params']}</div>
-					</if>
-					<div>{=$sIdx=='type'?"针对此类网页":"只针对这个网页"}</div>
-					<div>{=$arrMerged['comment']}</div>
-				</li>
-				</foreach> </foreach>
-			</ul>
+			<label>
+				控制器类 : <span id="mergeCtl_tempToView_page_span"></span>
+				<input id="mergeCtl_tempToView_page" type="text"/>
+			</label>
+			<button id="mergeCtl_tempToView_findPage_btn">查找网页</button>
 		</div>
-	</li>
-	</foreach>
-</ul>
+	</div>
+	
+	<div id="mergeCtl_tab_3">
+		<h3>使用模板文件创建并添加视图</h3>
+		<div style="float:left;width:300px">
+			<h4 style="font-weight:normal;">请选择系统中的模板文件</h4>
+			
+			<div id="mergeCtl_templateTree" class='ztree'>
+			
+			</div>
+			
+		</div>
+		<div style="width:215px;float:left;">
+			<div>
+				<label>模板 :<input type="text" id="mergeCtl_tempToView_template" value="还没有选定模板..." style="width:180px"/></label>
+			</div>
+			<div>
+				<label>视图参数 : <input type="text" id="mergeCtl_tempToView_params" style="width:150px;"/></label>
+			</div>
+		</div>
+		
+		<div style="clear:both"></div>
+	</div>
+</div>
+
+	<div><label>备注 : <input id="mergeCtl_remark" style="width:431px;"/></label></div>
+	<div>
+		<button class="mergeCtl_textToView_save_btn" style="float:left;">添加视图</button>
+		<div id="mergeCtl_msgqueue" style="float:left;"></div>
+	</div>
+	
+</div>
+<div id='mergeCtl_change_panel'><a href="#" >编辑</a></div>
+<div id="mergeCtl_result">
+
+</div>

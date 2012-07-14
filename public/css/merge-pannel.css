@@ -38,21 +38,7 @@
 
 */
 
-#mergepannel-dialog .ztree li a{
-	cursor: move;
-}
 
-#mergepannel-dialog .ui-state-default a 
-, #mergepannel-dialog .ui-state-default a:link
-, #mergepannel-dialog .ui-state-default a:visited{
-background:#FFCC4D;
-color: white;
-}
-
-#mergepannel-dialog .ui-state-active.ui-tabs-selected a{
-background:white;
-color: #EB8F00;
-}
 
 /*对话框内部*/
 #mergepannel-layout-flashing{
@@ -361,16 +347,33 @@ color: #EB8F00;
 	color:red;
 	font-weight:bold;
 }
-#tabs .ui-tabs-nav{
+#mergepannel-dialog .ztree li a{
+	cursor: move;
+}
+
+/* tabs */
+#mergepannel-dialog .ui-state-default a 
+, #mergepannel-dialog .ui-state-default a:link
+, #mergepannel-dialog .ui-state-default a:visited{
+background:#FFCC4D;
+color: white;
+}
+
+#mergepannel-dialog .ui-state-active.ui-tabs-selected a{
+background:white;
+color: #EB8F00;
+}
+#mergepannel-dialog .ui-tabs-nav{
 	height:22px;
 }
-#tabs .ui-tabs-nav li{
+#mergepannel-dialog .ui-tabs-nav li{
 	height:20px;
 	line-height:20px;
 }
-#tabs .ui-tabs-nav li a{
+#mergepannel-dialog .ui-tabs-nav li a{
 	padding:0 4px;
 }
+/* end tabs */
 
 #ub_toolbox{
 	width:100%;
@@ -429,4 +432,16 @@ color: #EB8F00;
 	display:none;
 }
 
+/* 添加视图 */
+#mergeCtl_change_panel{width:40px;height:20px;position:absolute;top:10px;right:10px;}
 
+#mergeCtl_panel{padding:5px;}
+#mergeCtl_panel input{height:20px;font-size:12px;line-height:16px;margin:2px 0;border:1px #999 solid}
+#mergeCtl_panel select{height:20px;font-size:12px;line-height:16px;margin:2px 0;border:1px #999 solid}
+#mergeCtl_panel textarea{border:1px #999 solid}
+
+#mergeCtl_modify_target_save_params{display:none}
+.mergeCtl_modify_target_form{ display:none; }
+
+#mergeCtl_templateTree{overflow:auto;width:300px;}
+/* end 添加视图 */

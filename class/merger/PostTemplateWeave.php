@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\opencomb\coresystem\auth\Id;
+use org\opencomb\coresystem\auth\PurviewQuery;
 use org\opencomb\platform\service\ServiceSerializer;
 use org\opencomb\platform\ext\Extension;
 use org\opencomb\platform\service\Service;
@@ -12,6 +14,8 @@ class PostTemplateWeave extends ControlPanel
 {
 	
 	public function process(){
+		//权限
+		$this->requirePurview(Id::PLATFORM_ADMIN,'coresystem',PurviewQuery::ignore,'您没有权限执行正在请求的操作。');
 		$this->doActions();
 	}
 	
