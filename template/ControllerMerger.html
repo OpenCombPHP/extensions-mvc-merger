@@ -21,29 +21,28 @@ jquery(function($){
 	});
 	
 	$("#mergeCtl_tempToView_findPage_btn").click(function(){
-		var select_dialog = $('<div id="mergeCtl_select_dialog"></div>')
-		
 		$.ajax({
 			url : '?c=org.opencomb.mvcmerger.struct.StructBrowser&rspn=noframe',
 			type: "POST",
 			data : {'allowSelectClass':'v'},
 			dataType : 'html',
 			success : function(html) {
+				var select_dialog=$('<div id="mergeCtl_select_dialog"></div>');
+				
+				select_dialog.appendTo('body').dialog({
+					width: 700
+					, height: 500
+					, title: '选择网页'
+					//, resize: function(){ thisMergerPannel.resizeDialog() }
+					, zIndex:710
+					, maximize:false
+					//, beforeClose: function(event, ui) {
+					//}
+				}) ;
+				
 				select_dialog.append(html);
 			}
 		});
-		
-		select_dialog.dialog({
-			width: 700
-			, height: 500
-			, title: '选择网页'
-			//, resize: function(){ thisMergerPannel.resizeDialog() }
-			, zIndex:710
-			, maximize:false
-			, beforeClose: function(event, ui) {
-			}
-		}) ;
-		select_dialog.appendTo('body');
 	});
 	
 	$('.mergeCtl_textToView_save_btn').click(function(){
