@@ -8,7 +8,7 @@
 	display:none;
 }
 .selectClass{
-	color:blue;
+	color:#FF8900;
 	font-weight:bold;
 }
 .structBrowser_right{
@@ -25,10 +25,10 @@ ul{
 	padding-left:10px;
 }
 .mouseover-brothers{
-	background-color:red;
+	background-color:#FFCD2A;
 }
 .mouseover{
-	background-color:blue;
+	background-color:#FF8900;
 }
 </style>
 
@@ -236,7 +236,7 @@ jQuery(function(){
 		
 		if(moeo.itemType() == 'view' ){
 			var id = moeo.id() ;
-			structBrowser.highlightInFrameById(id,'blue');
+			structBrowser.highlightInFrameById(id,'#FF8900');
 			structBrowser.scrollFrameById(id);
 			var j;
 			jobj.closest('ul').children('li').children('a').each(function(){
@@ -244,7 +244,7 @@ jQuery(function(){
 				jbobj.addClass('mouseover-brothers');
 				var bdata = jbobj.data("data");
 				if( bdata.id != id ){
-					structBrowser.highlightInFrameById(bdata.id,'#000003');
+					structBrowser.highlightInFrameById(bdata.id,'#FFCD2A');
 				}
 			});
 			jobj.addClass('mouseover');
