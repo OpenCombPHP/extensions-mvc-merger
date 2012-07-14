@@ -73,8 +73,11 @@ structBrowser.loadMvcStruct= function(struct)
 	
 	this.resizeFrame() ;
 }
-structBrowser.resizeFrame = function(){
-	var windowWidth = jQuery(document).innerWidth();
+structBrowser.resizeFrame = function(windowWidth){
+	console.log(windowWidth);
+	if( windowWidth == undefined ){
+		windowWidth = jQuery(document).innerWidth();
+	}
 	var rightWidth = jQuery('#div_right').outerWidth();
 	jQuery('#iframe-browser').width(windowWidth - rightWidth -50 );
 }
