@@ -67,7 +67,7 @@ structBrowser.loadMvcStruct= function(struct)
 	struct.itemType = 'controller';
 	controller.find('.controller:first').data("data",struct);
 	browser_controller.append(controller) ;
-	var i;
+	var i,j;
 	for( i in struct.controllers ){
 		this.loadMvcStruct( struct.controllers[i] );
 	}
@@ -77,6 +77,13 @@ structBrowser.loadMvcStruct= function(struct)
 		var aView = struct.views[i];
 		var view = jQuery("<li><span class='folder view'>[V] "+aView.name+"</span></li>") ;
 		aView.itemType = 'view' ;
+		aView.brothers = new Array();
+		for( j in struct.views ){
+			var bid = struct.views[j].id ;
+			if( bid != aView.id ){
+				aView.brothers.push(bid);
+			}
+		}
 		view.find('.view:first').data("data",aView);
 		browser_view.append(view) ;
 	}
@@ -194,6 +201,11 @@ jQuery(function(){
 		if(moeo.itemType() == 'view' ){
 			var id = moeo.id() ;
 			structBrowser.highlightInFrameById(id,'blue');
+			var j;
+			for( j in moeo.data.brothers ){
+				var vid = moeo.data.brothers[j];
+				structBrowser.highlightInFrameById(vid,'aqua');
+			}
 		}else{
 			var i;
 			for( i in moeo.data.views ){
