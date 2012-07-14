@@ -15,7 +15,6 @@
 	float:right;
 }
 .structBrowser_left{
-	width:700px;
 	height:500px;
 }
 li{
@@ -71,6 +70,13 @@ structBrowser.loadMvcStruct= function(struct)
 		document.getElementById('selectArea-view').style.display = 'block';
 		this.loadView(struct.view,browser_view);
 	}
+	
+	this.resizeFrame() ;
+}
+structBrowser.resizeFrame = function(){
+	var windowWidth = jQuery(document).innerWidth();
+	var rightWidth = jQuery('#div_right').outerWidth();
+	jQuery('#iframe-browser').width(windowWidth - rightWidth -50 );
 }
 structBrowser.loadController = function(struct,parent){
 	var i,j;
@@ -79,7 +85,7 @@ structBrowser.loadController = function(struct,parent){
 	if( text.length > this.maxTextLength ){
 		text = text.substr(0,this.maxTextLength) + '...';
 	}else if( text.length <= 0 ){
-		text = '&lt;empty&gt;';
+		text = '...';
 	}
 	
 	var controller = jQuery('<li id="li_'+struct.view.id+'"><a href="#" class="folder controller">'+text+'</a></li>') ;
@@ -109,7 +115,7 @@ structBrowser.loadView = function(aView,parent){
 	if( text.length > this.maxTextLength ){
 		text = text.substr(0,this.maxTextLength) + '...';
 	}else if( text.length <= 0 ){
-		text = '&lt;empty&gt;';
+		text = '...';
 	}
 	var view = jQuery("<li id='li_"+aView.id+"'><a href='#' class='folder view'>"+text+"</a></li>") ;
 	aView.itemType = 'view' ;
@@ -277,10 +283,14 @@ jQuery(function(){
 			iframe.contentWindow.location.href = sUrl;
 		}
 	};
+	
+	window.onresize = function(){
+		structBrowser.resizeFrame() ;
+	}
 });
 </script>
 
-<div class="structBrowser_right">
+<div id="div_right" class="structBrowser_right">
 	<div id='selectArea-controller' class='selectArea'>
 		请选择控制器:
 		<ul id="browser-controller" class="browser" >
@@ -299,5 +309,12 @@ jQuery(function(){
 		<input type="button" value="打开网页" onclick="structBrowser.location();" />
 	</div>
 	
-	<iframe id="iframe-browser" name="iframe-browser" src="?mvcmerger_browser=1" width="100%" height="100%"/>
+	<iframe id="iframe-browser" 
+		name="iframe-browser"
+		src="?mvcmerger_browser=1"
+		width="100%"
+		height="100%"
+		scrolling="auto"
+		frameborder="0"
+	/>
 </div>
