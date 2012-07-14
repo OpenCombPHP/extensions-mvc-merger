@@ -155,7 +155,10 @@ class MvcMerger extends Extension
 			return ;
 		}
 		$sJsCode = "\r\n<script>\r\n" ;
-		$sJsCode.= "var _mvcstruct = " . self::generateControllerStructJcCode($aController) . "; \r\n" ;
+		$sJsCode.= "var _mvcstruct = { \r\n";
+		$sJsCode.= "	'controller':" . self::generateControllerStructJcCode($aController) . ", \r\n" ;
+		$sJsCode.= "	'view':" . self::generateViewStructJcCode($aController->view()) . " \r\n" ;
+		$sJsCode.= "};\r\n";
 		$sJsCode.= "if( parent && typeof(parent.structBrowser)!='undefined' ){\r\n" ;
 		$sJsCode.= "	parent.structBrowser.setMvcStruct(_mvcstruct) ;\r\n" ;
 		$sJsCode.= "}\r\n" ;
@@ -187,7 +190,7 @@ class MvcMerger extends Extension
 		return $sJsCode ;
 	}
 	
-	static public function generateViewStructJcCode(IView $aView,$sName,$nIndent=0)
+	static public function generateViewStructJcCode(IView $aView,$sName='',$nIndent=0)
 	{
 		$sIndent = str_repeat("\t",$nIndent) ;
 		
@@ -243,32 +246,13 @@ class MvcMerger extends Extension
 		$sJsCode.= $sIndent."	, title: \"{$sTitleEsc}\"\r\n" ;
 		$sJsCode.= $sIndent."	, params: \"".http_build_query($arrParams)."\"\r\n" ;
 		
-		// models
-// 		$sJsCode.= $sIndent."	, models: [ " ;
-// 		foreach($aController->modelNameIterator() as $idx=>$sModelName)
-// 		{
-// 			if($idx)
-// 			{
-// 				$sJsCode.= "\r\n{$sIndent}	, " ;
-// 			}
-// 			$sJsCode.= self::generateModelStructJcCode($aController->modelByName($sModelName),$sModelName,$sIndent+1) ;
-// 		}
-// 		$sJsCode.= $sIndent." ]\r\n" ;
-		
 		// views
-		if($aController->view()->viewNames()){
-			$sJsCode.= $sIndent."	, views: [ " ;
-			foreach($aController->view()->viewNames() as $idx=>$sViewName)
-			{
-				if($idx)
-				{
-					$sJsCode.= "\r\n{$sIndent}	, " ;
-				}
-				$sJsCode.= self::generateViewStructJcCode($aController->view()->viewByName($sViewName),$sViewName,$sIndent+1) ;
-			}
-			$sJsCode.= $sIndent." ]\r\n" ;
+		if($aView = $aController->view()){
+			$sJsCode.= $sIndent."	, view: " ;
+			
+			$sJsCode.= self::generateViewStructJcCode($aView,$aView->id(),$sIndent+1) ;
+			$sJsCode.= $sIndent." \r\n" ;
 		}
-		
 		
 		// controllers
 		$sJsCode.= $sIndent."	, controllers: [ " ;

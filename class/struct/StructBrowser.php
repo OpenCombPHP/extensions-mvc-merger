@@ -24,11 +24,13 @@ class StructBrowser extends ControlPanel
 	public function process()
 	{
 		$sUrl = $this->params['url'];
-		$sSelectType = $this->params['selectType'];// 'handle'
-		$sAllowSelectClass = $this->params['allowSelectClass'];// 'c'
+		$sAllowSelectClass = $this->params['allowSelectClass'];// 'cvw'
+		
+		if(empty($sAllowSelectClass)){
+			$sAllowSelectClass = 'v';
+		}
 		
 		$this->view()->variables()->set('sUrl',$sUrl);
-		$this->view()->variables()->set('sSelectType',$sSelectType);
 		$this->view()->variables()->set('sAllowSelectClass',$sAllowSelectClass);
 	}
     protected function defaultFrameConfig()
