@@ -15,6 +15,37 @@ jquery(function($){
 		}
 	});
 	
+	$("#mergeCtl_tempToView_findPage_ad").click(function(){
+		$("#mergeCtl_tempToView_page_span").toggle();
+		$("#mergeCtl_tempToView_page").toggle();
+	});
+	
+	$("#mergeCtl_tempToView_findPage_btn").click(function(){
+		var select_dialog = $('<div id="mergeCtl_select_dialog"></div>')
+		
+		$.ajax({
+			url : '?c=org.opencomb.mvcmerger.struct.StructBrowser&rspn=noframe',
+			type: "POST",
+			data : {'allowSelectClass':'v'},
+			dataType : 'html',
+			success : function(html) {
+				select_dialog.append(html);
+			}
+		});
+		
+		select_dialog.dialog({
+			width: 700
+			, height: 500
+			, title: '选择网页'
+			//, resize: function(){ thisMergerPannel.resizeDialog() }
+			, zIndex:710
+			, maximize:false
+			, beforeClose: function(event, ui) {
+			}
+		}) ;
+		select_dialog.appendTo('body');
+	});
+	
 	$('.mergeCtl_textToView_save_btn').click(function(){
 		var ajaxData = {};
 		if( $("#mergeCtl_tabs").tabs('option','selected') == 0 ){
@@ -127,12 +158,14 @@ jquery(function($){
 	
 	<div id="mergeCtl_tab_2">
 		<h3>从已有的网页中,选择一个视图,添加到当前网页</h3>
-		<div>
+		<div style="height:24px;line-height:24px;">
 			<label>
-				控制器类 : <span id="mergeCtl_tempToView_page_span"></span>
-				<input id="mergeCtl_tempToView_page" type="text"/>
+				控制器类 : <span id="mergeCtl_tempToView_page_span" >点击"查找网页"选择一个需要添加到此的视图...</span>
+				<input id="mergeCtl_tempToView_page" type="text" style="display:none;width:300px;"/>
 			</label>
-			<button id="mergeCtl_tempToView_findPage_btn">查找网页</button>
+			
+			<a href="#" id="mergeCtl_tempToView_findPage_ad" style="float:right">高级</a>
+			<button id="mergeCtl_tempToView_findPage_btn" style="float:right;margin-top:-3px;">查找网页</button>
 		</div>
 	</div>
 	

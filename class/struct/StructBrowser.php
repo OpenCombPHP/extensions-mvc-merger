@@ -24,7 +24,7 @@ class StructBrowser extends ControlPanel
 	public function process()
 	{
 		$sUrl = $this->params['url'];
-		$sAllowSelectClass = $this->params['allowSelectClass'];// 'cvw'
+		$sAllowSelectClass = $this->params['allowSelectClass'];// 'c,v,w'
 		
 		if(empty($sAllowSelectClass)){
 			$sAllowSelectClass = 'v';
