@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\mvcmerger\merger ;
 
+use org\jecat\framework\ui\SourceFileManager;
+
 use org\jecat\framework\system\AccessRouter;
 use org\jecat\framework\mvc\controller\Request;
 use org\opencomb\coresystem\auth\Id;
@@ -52,8 +54,75 @@ class ControllerMerger extends ControlPanel
 				}
 			}
 		}
+		
+		//模板列表
+		$arrTemplates = array();
+		foreach(SourceFileManager::singleton()->folderNamespacesIterator() as $sNameSpace){
+			$sExpresionName = $sNameSpace;
+			if($sNameSpace == 'org.jecat.framework'){
+				$sExpresionName = 'framework';
+			}else if($sNameSpace == 'org.opencomb.platform'){
+				$sExpresionName = 'platform';
+			}
+			$arrParent = array(
+					'name'=>$sExpresionName
+					, 'children'=>array()
+			);
+			$arrUnique = array();//防止重复扫描路径
+			foreach(SourceFileManager::singleton()->folderIterator($sNameSpace) as $aForlder){
+				//后面的覆盖出现过的,比如:template文件夹下有个index.html,在template_coresystem中也有个index.html,那么前面的应该剔除
+				//这里通过key唯一的方式来做到上面提到的覆盖效果
+				$sPath = $aForlder->path();
+				//防止重复扫描路径
+				if(in_array($sPath , $arrUnique)){
+					continue;
+				}
+				$arrUnique[] = $sPath;
+				
+				$this->scanTemplates($sPath ,$arrParent['children']);
+
+// 				$arrTemplates[$sNameSpace][$sFileName] = $sPath;
+			}
+			$arrTemplates[] = $arrParent;
+		}
+		foreach($arrTemplates as $key => $value){
+			$value['children'][0]['name'] = $value['name'];
+			$arrTemplates[$key] = $value['children'][0];
+		}
+		
+		$this->view->variables()->set('arrTemplateTreeData' , json_encode( $arrTemplates )) ;
 		$this->view->variables()->set('sRequestC',AccessRouter::singleton()->transControllerClass($sRequestC)) ;
 		$this->view->variables()->set('sRequestParams',implode('&', $arrRequest)) ;
+	}
+	
+	public function scanTemplates($sDir ,&$arrData){
+		if (is_dir($sDir)) 
+		{ 
+			$arrParent = array(
+					'name'=>$sDir
+					, 'children' => array()
+			);
+			$arrChildren = end($arrData);
+			$children = scandir($sDir); 
+			foreach ($children as $child) { 
+				if ($child !== '.' && $child !== '..'){ 
+					$this->scanTemplates($sDir.'/'.$child ,$arrParent['children']); 
+				} 
+			}
+			$arrName = explode( DIRECTORY_SEPARATOR , $arrParent['name'] );
+			$arrParent['name'] = array_pop($arrName);
+			$arrData[] = $arrParent;
+		}else{
+			$extend = pathinfo($sDir);
+			$extend = strtolower($extend["extension"]);
+			if($extend != 'html' && $extend != 'htm'){
+				return;
+			}
+			$arrName = explode( DIRECTORY_SEPARATOR , $sDir );
+			$arrData[] = array(
+					'name'=>array_pop($arrName)
+					);
+		}
 	}
 	
 	protected function form()
@@ -62,30 +131,28 @@ class ControllerMerger extends ControlPanel
 		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
 		$nNum = $aSetting->item('/merge/controller','num',0) ; //命名计数
 		
-		foreach(array('目标控制器类'=>'target_controller_class','融入控制器类'=>'source_controller_class') as $sName=>$sDataName)
+		//目标信息防御
+		if( empty($this->params['target']) )
 		{
-			if( empty($this->params[$sDataName]) )
-			{
-				$this->view->createMessage(Message::error,"%s 不能为空",$sName) ;
-				return ;
-			}
-			if( !class_exists($this->params[$sDataName]) )
-			{
-				$this->view->createMessage(Message::error,"输入的%s控制器类不存在：%s",array($sName,$this->params[$sDataName])) ;
-				return ;
-			}
-			if( $this->params[$sDataName] instanceof \org\jecat\framework\mvc\controller\Controller )
-			{
-				$this->view->createMessage(Message::error,"输入的%s不是有效的控制器类：%s",array($sName,$this->params[$sDataName])) ;
-				return ;
-			}
-	
+			$this->view->createMessage(Message::error,"%s 不能为空",'控制器类') ;
+			return ;
 		}
+		if( !class_exists($this->params['target']) )
+		{
+			$this->view->createMessage(Message::error,"输入的%s控制器类不存在：%s",array('控制器类',$this->params['target'])) ;
+			return ;
+		}
+// 		if( $this->params['target'] instanceof \org\jecat\framework\mvc\controller\Controller )
+// 		{
+// 			$this->view->createMessage(Message::error,"输入的%s不是有效的控制器类：%s",array('控制器类',$this->params['target'])) ;
+// 			return ;
+// 		}
 		
+		//保存类型
 		$sSaveType = '';
 		//如果针对指定页面
-		if($this->params['source_controller_saveType'] == 'current'){
-			$sSaveType = $this->params->string('target_controller_params');
+		if($this->params['saveType'] == 'current' || $this->params['saveType'] == 'special'){
+			$sSaveType = $this->params->string('targetParams');
 		}else{
 			//针对一类网页
 			$sSaveType = 'type';
@@ -94,15 +161,65 @@ class ControllerMerger extends ControlPanel
 			$sSaveType = 'type';
 		}
 		
-		$arrMergedControllers[ $this->params['target_controller_class'] ][$sSaveType][$nNum+1] = array(
-					'controller' => $this->params['source_controller_class'] ,
-					'params' => $this->params->string('source_controller_params') ,
-					'name' => $this->params->string('source_controller_name') ,
-					'comment' => $this->params->string('source_controller_comment') ,
-		) ;
+		//插入view信息防御及针对处理
+		$sMergeType = $this->params['mergeType'];
 		
-		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
-		$aSetting->setItem('/merge/controller','num',$nNum+1) ;
+ 		if($sMergeType == 'text'){
+ 			if( empty($this->params['sourceContent']) )
+ 			{
+ 				$this->view->createMessage(Message::error,"%s 不能为空",'视图内容') ;
+ 				return ;
+ 			}
+ 			if( empty($this->params['target']) )
+ 			{
+ 				$this->view->createMessage(Message::error,"%s 不能为空",'控制器类') ;
+ 				return ;
+ 			}
+ 			
+ 			$arrMergedControllers[ $this->params['target'] ][$sSaveType][$nNum+1] = array(
+ 					'mergeType' => $sMergeType 
+ 					, 'params' => $this->params->string('targetParams') 
+ 					, 'name' => $this->params->string('sourceTitle') 
+ 					, 'content' => $this->params->string('sourceContent') 
+ 					, 'comment' => $this->params->string('sourceRemark') 
+ 			) ;
+ 			
+ 		}else if($sMergeType == 'page'){
+ 			
+ 			$arrMergedControllers[ $this->params['target'] ][$sSaveType][$nNum+1] = array(
+ 					'mergeType' => $sMergeType 
+ 					, 'controller' => $this->params['source'] 
+ 					, 'params' => $this->params->string('sourceParams') 
+ 					, 'name' => $this->params->string('sourceName') 
+ 					, 'comment' => $this->params->string('sourceComment')
+ 			) ;
+ 			
+ 		}else if($sMergeType == 'template'){
+ 			if( empty($this->params['sourceTemplate']) 
+ 					|| (substr($this->params['sourceTemplate'], -5) !=='.html' 
+ 					&& substr($this->params['sourceTemplate'],-4) !== '.htm' ))
+ 			{
+ 				$this->view->createMessage(Message::error,"%s 不能为空",'模板') ;
+ 				return ;
+ 			}
+ 			if( empty($this->params['target']) )
+ 			{
+ 				$this->view->createMessage(Message::error,"%s 不能为空",'控制器类') ;
+ 				return ;
+ 			}
+ 			
+ 			$arrMergedControllers[ $this->params['target'] ][$sSaveType][$nNum+1] = array(
+ 					'mergeType' => $sMergeType
+ 					, 'params' => $this->params->string('sourceParams')
+ 					, 'template' => $this->params->string('sourceTemplate')
+ 					, 'comment' => $this->params->string('sourceRemark')
+ 			) ;
+ 		}else{
+ 			//其他可能?
+ 		}
+ 		
+ 		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
+ 		$aSetting->setItem('/merge/controller','num',$nNum+1) ;
 		
 		// 清理类编译缓存
 		MvcMerger::clearClassCompiled($this->params['target_controller_class']) ;
