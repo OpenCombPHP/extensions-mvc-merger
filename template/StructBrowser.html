@@ -8,7 +8,7 @@
 	display:none;
 }
 .selectClass{
-	color:#FF8900;
+	color:#FF9A00;
 	font-weight:bold;
 }
 .structBrowser_right{
@@ -24,10 +24,10 @@ ul{
 	padding-left:10px;
 }
 .mouseover-brothers{
-	background-color:#FFCD2A;
+	background-color:#FFEF88;
 }
 .mouseover{
-	background-color:#FF8900;
+	background-color:#FF9A00;
 }
 </style>
 
@@ -73,13 +73,17 @@ structBrowser.loadMvcStruct= function(struct)
 	
 	this.resizeFrame() ;
 }
-structBrowser.resizeFrame = function(windowWidth){
-	console.log(windowWidth);
+structBrowser.resizeFrame = function(windowWidth , leftWidth){
 	if( windowWidth == undefined ){
-		windowWidth = jQuery(document).innerWidth();
+		return;
+		//windowWidth = jQuery(document).innerWidth();
 	}
 	var rightWidth = jQuery('#div_right').outerWidth();
-	jQuery('#iframe-browser').width(windowWidth - rightWidth -50 );
+	if(leftWidth != undefined ){
+		jQuery('#iframe-browser').width( leftWidth );
+	}else{
+		jQuery('#iframe-browser').width(windowWidth - rightWidth -50 );
+	}
 }
 structBrowser.loadController = function(struct,parent){
 	var i,j;
@@ -168,7 +172,7 @@ structBrowser.highlightInFrameById = function(id,color){
 	var fcd = iframe.contentWindow.document;
 	var obj = fcd.getElementById(id);
 	
-	var flashing = jQuery('<div class="mergepannel-layout-flashing" style="position:absolute;z-index:300;background:'+color+';border:1px solid #666;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5; "></div>');
+	var flashing = jQuery('<div class="mergepannel-layout-flashing" style="position:absolute;z-index:300;background:'+color+';border:1px solid #666;filter:alpha(opacity=20);-moz-opacity:0.2;opacity: 0.2; "></div>');
 	
 	var position = jQuery(obj).offset();
 	if( position != null ){
@@ -245,7 +249,7 @@ jQuery(function(){
 		
 		if(moeo.itemType() == 'view' ){
 			var id = moeo.id() ;
-			structBrowser.highlightInFrameById(id,'#FF8900');
+			structBrowser.highlightInFrameById(id,'#FF9A00');
 			structBrowser.scrollFrameById(id);
 			var j;
 			jobj.closest('ul').children('li').children('a').each(function(){
@@ -253,7 +257,7 @@ jQuery(function(){
 				jbobj.addClass('mouseover-brothers');
 				var bdata = jbobj.data("data");
 				if( bdata.id != id ){
-					structBrowser.highlightInFrameById(bdata.id,'#FFCD2A');
+					structBrowser.highlightInFrameById(bdata.id,'#FFEF88');
 				}
 			});
 			jobj.addClass('mouseover');
@@ -287,9 +291,9 @@ jQuery(function(){
 		}
 	};
 	
-	window.onresize = function(){
-		structBrowser.resizeFrame() ;
-	}
+	//window.onresize = function(){
+	//	structBrowser.resizeFrame() ;
+	//}
 });
 </script>
 

@@ -185,13 +185,22 @@ class ControllerMerger extends ControlPanel
  			) ;
  			
  		}else if($sMergeType == 'page'){
- 			
+ 			if( empty($this->params['source']) )
+ 			{
+ 				$this->view->createMessage(Message::error,"%s 不能为空",'视图内容') ;
+ 				return ;
+ 			}
+ 			if( empty($this->params['target']) )
+ 			{
+ 				$this->view->createMessage(Message::error,"%s 不能为空",'控制器类') ;
+ 				return ;
+ 			}
  			$arrMergedControllers[ $this->params['target'] ][$sSaveType][$nNum+1] = array(
  					'mergeType' => $sMergeType 
  					, 'controller' => $this->params['source'] 
  					, 'params' => $this->params->string('sourceParams') 
- 					, 'name' => $this->params->string('sourceName') 
- 					, 'comment' => $this->params->string('sourceComment')
+ 					, 'name' => 'mergeController'+($nNum+1)
+ 					, 'comment' => $this->params->string('sourceRemark')
  			) ;
  			
  		}else if($sMergeType == 'template'){

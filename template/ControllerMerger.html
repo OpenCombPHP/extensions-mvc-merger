@@ -15,32 +15,47 @@ jquery(function($){
 		}
 	});
 	
-	$("#mergeCtl_tempToView_findPage_ad").click(function(){
-		$("#mergeCtl_tempToView_page_span").toggle();
-		$("#mergeCtl_tempToView_page").toggle();
+	$("#mergeCtl_pageToView_findPage_ad").click(function(){
+		$("#mergeCtl_pageToView_page_span").toggle();
+		$("#mergeCtl_pageToView_page").toggle();
+		$('#mergeCtl_pageToView_params').parents('div:first').toggle();
 	});
 	
-	$("#mergeCtl_tempToView_findPage_btn").click(function(){
+	$('#mergeCtl_change_panel').find('a').click(function(){
+		$("#mergeCtl_panel").toggle();
+		$("#mergeCtl_result").toggle();
+	});
+	
+	$("#mergeCtl_pageToView_findPage_btn").click(function(){
 		$.ajax({
 			url : '?c=org.opencomb.mvcmerger.struct.StructBrowser&rspn=noframe',
 			type: "POST",
-			data : {'allowSelectClass':'v'},
+			data : {'allowSelectClass':'c'},
 			dataType : 'html',
 			success : function(html) {
-				var select_dialog=$('<div id="mergeCtl_select_dialog"></div>');
+				$('body').append('<div id="mergeCtl_select_dialog" style="width:700px;height:500px;"></div>');
 				
-				select_dialog.appendTo('body').dialog({
+				$("#mergeCtl_select_dialog").append(html);
+				
+				var dialog = $("#mergeCtl_select_dialog").dialog({
 					width: 700
 					, height: 500
 					, title: '选择网页'
-					//, resize: function(){ thisMergerPannel.resizeDialog() }
 					, zIndex:710
 					, maximize:false
-					//, beforeClose: function(event, ui) {
-					//}
+					, minimize:false
+					,resize: function(event, ui) {
+						structBrowser.resizeFrame(ui.size.width);
+					}
 				}) ;
+				structBrowser.resizeFrame(700 , 510);
 				
-				select_dialog.append(html);
+				structBrowser.onSelectChange = function(data){
+					dialog.dialog('close');
+					$("#mergeCtl_pageToView_page_span").html(data['class']);
+					$("#mergeCtl_pageToView_page").val(data['class']);
+					$('#mergeCtl_pageToView_params').val(data['params']);
+				};
 			}
 		});
 	});
@@ -58,7 +73,15 @@ jquery(function($){
 					,sourceRemark:$("#mergeCtl_remark").val()
 				};
 		}else if( $("#mergeCtl_tabs").tabs('option','selected') == 1 ){
-			
+			ajaxData =  {
+					target:$('#mergeCtl_modify_target_name').val()
+					,mergeType:'page'
+					,saveType:$("#mergeCtl_modify_target_saveType").val()
+					,targetParams:$("#mergeCtl_modify_target_save_params").val()
+					,source:$("#mergeCtl_pageToView_page").val()
+					,sourceParams:$("#mergeCtl_pageToView_params").val()
+					,sourceRemark:$("#mergeCtl_remark").val()
+				};
 		}else if( $("#mergeCtl_tabs").tabs('option','selected') == 2 ){
 			ajaxData =  {
 					target:$('#mergeCtl_modify_target_name').val()
@@ -152,19 +175,27 @@ jquery(function($){
 	<div id="mergeCtl_tab_1">
 		<h3>通过富文本编辑器,创建并添加一个视图</h3>
 		<div><label>标题 : <input id="mergeCtl_textToView_title" style="width:431px;"/></label></div>
-		<div><textarea id="mergeCtl_textToView_textarea" style="width:470px;"></textarea></div>
+		<div><textarea id="mergeCtl_textToView_textarea" style="width:470px;height:160px;"></textarea></div>
 	</div>
 	
 	<div id="mergeCtl_tab_2">
 		<h3>从已有的网页中,选择一个视图,添加到当前网页</h3>
-		<div style="height:24px;line-height:24px;">
-			<label>
-				控制器类 : <span id="mergeCtl_tempToView_page_span" >点击"查找网页"选择一个需要添加到此的视图...</span>
-				<input id="mergeCtl_tempToView_page" type="text" style="display:none;width:300px;"/>
-			</label>
+		<div>
+			<div style="height:24px;line-height:24px;">
+				<label >
+					控制器类 : <span id="mergeCtl_pageToView_page_span" >点击"查找网页"选择一个需要添加到此的视图...</span>
+					<input id="mergeCtl_pageToView_page" type="text" style="display:none;width:300px;"/>
+				</label>
+				<a href="#" id="mergeCtl_pageToView_findPage_ad" style="float:right">高级</a>
+				<button id="mergeCtl_pageToView_findPage_btn" style="float:right;margin-top:-3px;">查找网页</button>
+			</div>
 			
-			<a href="#" id="mergeCtl_tempToView_findPage_ad" style="float:right">高级</a>
-			<button id="mergeCtl_tempToView_findPage_btn" style="float:right;margin-top:-3px;">查找网页</button>
+			<div style="display:none;">
+				<label>
+					参数 : <input id="mergeCtl_pageToView_params" type="text" style="width:400px;"/>
+				</label>
+			</div>
+			
 		</div>
 	</div>
 	
@@ -198,7 +229,14 @@ jquery(function($){
 	</div>
 	
 </div>
-<div id='mergeCtl_change_panel'><a href="#" >编辑</a></div>
-<div id="mergeCtl_result">
 
+
+<div id='mergeCtl_change_panel'><a href="#" >编辑</a></div>
+
+
+<div id="mergeCtl_result" style="display:none">
+	
+	
+	
+	
 </div>
