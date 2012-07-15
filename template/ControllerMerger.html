@@ -24,6 +24,52 @@ jquery(function($){
 	$('#mergeCtl_change_panel').find('a').click(function(){
 		$("#mergeCtl_panel").toggle();
 		$("#mergeCtl_result").toggle();
+			
+		if($(this).text() == '编辑'){
+			$(this).text('添加视图');
+		}else{
+			$(this).text('编辑');
+		}
+	});
+	
+	$('.mergeCtl_result_ajax').find('a').live('click',function(){
+		var href = $(this).attr('href');
+		
+		$.ajax({
+			url : href+ "&rspn=msgqueue" ,
+			type: "POST",
+			dataType : 'html',
+			success : function(msg) {
+				freshResult(msg);
+			}
+		});
+		
+		return false;
+	});
+	
+	function freshResult(msg){
+		$.ajax({
+			url : "?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe" ,
+			type: "POST",
+			dataType : 'html',
+			success : function(html) {
+				$('#mergeCtl_result').html( $(html).find('#mergeCtl_result').contents() );
+				if(msg !== undefined){
+					$("#mergeCtl_result_msgqueue").html(msg);
+				}
+			}
+		});
+	}
+	
+	$('#mergeCtl_result_onlythis').live('change',function(){
+		
+		var classname = "{=str_replace('\\','.',$sRequestC)}";
+		
+		if(this.checked){
+			$('#mergeCtl_result .mergeCtl_result_controllers[classname!="'+classname+'"]').hide();
+		}else{
+			$('#mergeCtl_result .mergeCtl_result_controllers').show();
+		}
 	});
 	
 	$("#mergeCtl_pageToView_findPage_btn").click(function(){
@@ -101,6 +147,7 @@ jquery(function($){
 			dataType : 'html',
 			success : function(html) {
 				jquery("#mergeCtl_msgqueue").html(html);
+				freshResult();
 			}
 		});
 	});
@@ -234,9 +281,71 @@ jquery(function($){
 <div id='mergeCtl_change_panel'><a href="#" >编辑</a></div>
 
 
-<div id="mergeCtl_result" style="display:none">
+<div id="mergeCtl_result" style="display:none;padding:10px;">
+
+	<div style="float:right;margin-top:10px;"><label><input id="mergeCtl_result_onlythis" type="checkbox" value=""/>只显示当前网页</label></div>
 	
-	
-	
-	
+	<div id="mergeCtl_result_msgqueue" style="margin-top:30px;"></div>
+	<ul>
+	<foreach for="$arrMergedControllers" key="sTargetControllerClass" item="arrControllers">
+	<li class="mergeCtl_result_controllers" classname="{=str_replace('\\','.',$sTargetControllerClass)}">
+		<div>
+			控制器类：
+			<a href="?c={=str_replace('\\','.',$sTargetControllerClass)}" target='_blank'>{=$sTargetControllerClass}</a>
+			<!-- <a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx=-1"></a> -->
+		</div>
+		
+		<div>
+			<ul>
+			<foreach for="$arrControllers" item="arrMergedPatchs" key="sMergeType">
+				<foreach for="$arrMergedPatchs" item="arrMerged" key="nIdx">
+					<if '$arrMerged["mergeType"] == "text"'>
+						<li style="text-indent:2em;margin:5px 0">
+							<div class="mergeCtl_result_ajax">
+								[富文本] <span title="{=htmlentities($arrMerged['content'])}">{=htmlentities($arrMerged['content'])}</span>
+								<a class='' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
+							</div>
+							<if "$arrMerged['mergeType']">
+								<div>生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
+							</if>
+							<div>{=$arrMerged['comment']}</div>
+						</li>
+					</if>
+					<if '$arrMerged["mergeType"] == "template"'>
+						<li style="text-indent:2em;margin:5px 0">
+							<div class="mergeCtl_result_ajax">
+								[模板] <span>{=$arrMerged['template']}</span>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
+							</div>
+							<if "$arrMerged['mergeType']">
+								<div>生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
+							</if>
+							<div>{=$arrMerged['comment']}</div>
+						</li>
+					</if>
+					<if '$arrMerged["mergeType"] == "page"'>
+						<li style="text-indent:2em;margin:5px 0">
+							<div class="mergeCtl_result_ajax">
+								[网页]<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
+							</div>
+							<if "$arrMerged['params']">
+								<div>参数：{=$arrMerged['params']}</div>
+							</if>
+							<if "$arrMerged['mergeType']">
+								<div>生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
+							</if>
+							<div>{=$arrMerged['comment']}</div>
+						</li>
+					</if>
+				</foreach>
+			</foreach>
+			</ul>
+		</div>
+	</li>
+</foreach>
+</ul>
 </div>

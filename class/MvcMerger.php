@@ -102,6 +102,11 @@ class MvcMerger extends Extension
 				}
 				
 				foreach($arrMergeArray as $arrMerge){
+					
+					if(!$arrMerge['enable']){
+						continue;
+					}
+					
 					if($arrMerge['mergeType'] == 'text'){
 						$arrViewBean = array();
 						

@@ -2,7 +2,6 @@
 namespace org\opencomb\mvcmerger\merger ;
 
 use org\jecat\framework\ui\SourceFileManager;
-
 use org\jecat\framework\system\AccessRouter;
 use org\jecat\framework\mvc\controller\Request;
 use org\opencomb\coresystem\auth\Id;
@@ -80,8 +79,6 @@ class ControllerMerger extends ControlPanel
 				$arrUnique[] = $sPath;
 				
 				$this->scanTemplates($sPath ,$arrParent['children']);
-
-// 				$arrTemplates[$sNameSpace][$sFileName] = $sPath;
 			}
 			$arrTemplates[] = $arrParent;
 		}
@@ -181,7 +178,8 @@ class ControllerMerger extends ControlPanel
  					, 'params' => $this->params->string('targetParams') 
  					, 'name' => $this->params->string('sourceTitle') 
  					, 'content' => $this->params->string('sourceContent') 
- 					, 'comment' => $this->params->string('sourceRemark') 
+ 					, 'comment' => $this->params->string('sourceRemark')
+ 					, 'enable' => true
  			) ;
  			
  		}else if($sMergeType == 'page'){
@@ -201,6 +199,7 @@ class ControllerMerger extends ControlPanel
  					, 'params' => $this->params->string('sourceParams') 
  					, 'name' => 'mergeController'+($nNum+1)
  					, 'comment' => $this->params->string('sourceRemark')
+ 					, 'enable' => true
  			) ;
  			
  		}else if($sMergeType == 'template'){
@@ -222,6 +221,7 @@ class ControllerMerger extends ControlPanel
  					, 'params' => $this->params->string('sourceParams')
  					, 'template' => $this->params->string('sourceTemplate')
  					, 'comment' => $this->params->string('sourceRemark')
+ 					, 'enable' => true
  			) ;
  		}else{
  			//其他可能?
@@ -302,7 +302,45 @@ class ControllerMerger extends ControlPanel
 		
 		// 清理平台缓存
 		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton());
-// 		PlatformFactory::singleton()->clearRestoreCache(Service::singleton()) ;
+	}
+	
+	
+	protected function disMerge()
+	{
+		if( empty($this->params['target']) )
+		{
+			$this->view->createMessage(Message::error,"缺少target参数") ;
+			return ;
+		}
+		
+		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
+		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		if( $arrMergedControllers[$this->params['target']] === null)
+		{
+			$this->view->createMessage(Message::error,"target参数无效") ;
+			return ;
+		}
+		
+		$nIdx = $this->params->int('idx') ;
+		
+		foreach($arrMergedControllers[$this->params['target']] as $sSaveType => $arrSaveType){
+			foreach($arrSaveType as $key => $arrPatchs){
+				if($key != $nIdx){
+					continue;
+				}
+				$arrMergedControllers[$this->params['target']][$sSaveType][$nIdx]['enable'] = ! $arrMergedControllers[$this->params['target']][$sSaveType][$nIdx]['enable'];
+			}
+		}
+		
+		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
+		
+		$this->view->createMessage(Message::success,"修改控制器 %s 的指定融合设置",array($this->params['target'])) ;
+			
+		// 清理 class 编译缓存
+		MvcMerger::clearClassCompiled($this->params['target']) ;
+		
+		// 清理平台缓存
+		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton());
 	}
 	
 	protected function doList(){
