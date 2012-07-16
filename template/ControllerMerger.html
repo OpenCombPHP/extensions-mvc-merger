@@ -1,7 +1,22 @@
 <lib name="jquery.ui" />
 <script  >
 jquery(function($){
-	$("#mergeCtl_tabs").tabs({ selected: 0});
+	$("#mergeCtl_tabs_ul li a").live('click',function(){
+		$('.mergeCtl_tabs').hide();
+		
+		$( $(this).attr('href') ).show();
+		
+		$(".mergeCtl_tabs_select").removeClass('mergeCtl_tabs_select');
+		$(this).addClass('mergeCtl_tabs_select');
+		
+		return false;
+	});
+	
+	$('#mergeCtl_remark_a').click(function(){
+		$(this).hide();
+		$('#mergeCtl_remark').parent().show();
+		return false;
+	});
 	
 	$('#mergeCtl_modify_target_btn').click(function(){
 		$('.mergeCtl_modify_target_form').toggle();
@@ -25,7 +40,7 @@ jquery(function($){
 		$("#mergeCtl_panel").toggle();
 		$("#mergeCtl_result").toggle();
 			
-		if($(this).text() == '编辑'){
+		if( $("#mergeCtl_panel:visible").length == 0 ){
 			$(this).text('添加视图');
 		}else{
 			$(this).text('编辑');
@@ -108,7 +123,10 @@ jquery(function($){
 	
 	$('.mergeCtl_textToView_save_btn').click(function(){
 		var ajaxData = {};
-		if( $("#mergeCtl_tabs").tabs('option','selected') == 0 ){
+		
+		var nIndex = $("#mergeCtl_tabs_ul li").index($('#mergeCtl_tabs_ul li').has('.mergeCtl_tabs_select'));
+		
+		if( nIndex == 0 ){
 			ajaxData = {
 					target:$('#mergeCtl_modify_target_name').val()
 					,mergeType:'text'
@@ -118,7 +136,7 @@ jquery(function($){
 					,sourceContent:$("#mergeCtl_textToView_textarea").val()
 					,sourceRemark:$("#mergeCtl_remark").val()
 				};
-		}else if( $("#mergeCtl_tabs").tabs('option','selected') == 1 ){
+		}else if( nIndex == 1 ){
 			ajaxData =  {
 					target:$('#mergeCtl_modify_target_name').val()
 					,mergeType:'page'
@@ -128,8 +146,8 @@ jquery(function($){
 					,sourceParams:$("#mergeCtl_pageToView_params").val()
 					,sourceRemark:$("#mergeCtl_remark").val()
 				};
-		}else if( $("#mergeCtl_tabs").tabs('option','selected') == 2 ){
-			ajaxData =  {
+		}else if( nIndex == 2 ){
+			ajaxData = {
 					target:$('#mergeCtl_modify_target_name').val()
 					,mergeType:'template'
 					,saveType:$("#mergeCtl_modify_target_saveType").val()
@@ -213,19 +231,19 @@ jquery(function($){
 </div>
 
 <div id="mergeCtl_tabs">
-	<ul>
-		<li><a href="#mergeCtl_tab_1">富文本</a></li>
+	<ul id="mergeCtl_tabs_ul">
+		<li><a href="#mergeCtl_tab_1" class='mergeCtl_tabs_select'>富文本</a></li>
 		<li><a href="#mergeCtl_tab_2">网页</a></li>
 		<li><a href="#mergeCtl_tab_3">模板</a></li>
 	</ul>
 	
-	<div id="mergeCtl_tab_1">
+	<div id="mergeCtl_tab_1" class="mergeCtl_tabs">
 		<h3>通过富文本编辑器,创建并添加一个视图</h3>
 		<div><label>标题 : <input id="mergeCtl_textToView_title" style="width:431px;"/></label></div>
 		<div><textarea id="mergeCtl_textToView_textarea" style="width:470px;height:160px;"></textarea></div>
 	</div>
 	
-	<div id="mergeCtl_tab_2">
+	<div id="mergeCtl_tab_2" class="mergeCtl_tabs" style="display:none;">
 		<h3>从已有的网页中,选择一个视图,添加到当前网页</h3>
 		<div>
 			<div style="height:24px;line-height:24px;">
@@ -246,19 +264,19 @@ jquery(function($){
 		</div>
 	</div>
 	
-	<div id="mergeCtl_tab_3">
+	<div id="mergeCtl_tab_3" class="mergeCtl_tabs"  style="display:none;">
 		<h3>使用模板文件创建并添加视图</h3>
-		<div style="float:left;width:300px">
+		<div style="float:left;width:270px;margin-right:30px;">
 			<h4 style="font-weight:normal;">请选择系统中的模板文件</h4>
 			
-			<div id="mergeCtl_templateTree" class='ztree'>
+			<div id="mergeCtl_templateTree" class='ztree' style="width:270px;height:190px;overflow:auto">
 			
 			</div>
 			
 		</div>
 		<div style="width:215px;float:left;">
 			<div>
-				<label>模板 :<input type="text" id="mergeCtl_tempToView_template" value="还没有选定模板..." style="width:180px"/></label>
+				<label>模板 :<input type="text" id="mergeCtl_tempToView_template" value="还没有选定模板..." style="width:180px;border:0px;"/></label>
 			</div>
 			<div>
 				<label>视图参数 : <input type="text" id="mergeCtl_tempToView_params" style="width:150px;"/></label>
@@ -269,7 +287,10 @@ jquery(function($){
 	</div>
 </div>
 
-	<div><label>备注 : <input id="mergeCtl_remark" style="width:431px;"/></label></div>
+	<div>
+		<a id="mergeCtl_remark_a" href="#" style="color:blue;">点击填写备注</a>
+		<label style="display:none">备注 : <input id="mergeCtl_remark" style="width:431px;"/></label>
+	</div>
 	<div>
 		<button class="mergeCtl_textToView_save_btn" style="float:left;">添加视图</button>
 		<div id="mergeCtl_msgqueue" style="float:left;"></div>
@@ -278,7 +299,7 @@ jquery(function($){
 </div>
 
 
-<div id='mergeCtl_change_panel'><a href="#" >编辑</a></div>
+<div id='mergeCtl_change_panel'><a href="#"  style="color:blue;">编辑</a></div>
 
 
 <div id="mergeCtl_result" style="display:none;padding:10px;">

@@ -63,6 +63,12 @@ MergerPannel.prototype.init = function()
 			showPage.show();
 			$('.selected_mvcmerger').removeClass("selected_mvcmerger");
 			$(this).addClass("selected_mvcmerger");
+			
+			if($(this).attr('tab') == 'mergepannel-controllermerger' 
+				&& $("#mergepannel-dialog #mergeCtl_result:visible").length == 1
+			){
+				$('#mergeCtl_change_panel').find('a').click();
+			}
 		}
 		return false;
 	});
