@@ -12,9 +12,10 @@
 	font-weight:bold;
 }
 .structBrowser_right{
-	float:right;
+	float:left;
 }
 .structBrowser_left{
+	float:left;
 	height:500px;
 }
 .mergeCtl_select_dialog.li{
@@ -29,6 +30,10 @@
 .mouseover{
 	background-color:#FF9A00;
 }
+/*
+#browser-controller li{
+	border:1px solid black;
+}*/
 </style>
 
 <script type="text/javascript">
@@ -71,7 +76,7 @@ structBrowser.loadMvcStruct= function(struct)
 		this.loadView(struct.view,browser_view);
 	}
 	
-	this.resizeFrame() ;
+	//this.resizeFrame() ;
 }
 structBrowser.resizeFrame = function(windowWidth , leftWidth){
 	if( windowWidth == undefined ){
@@ -297,18 +302,6 @@ jQuery(function(){
 });
 </script>
 
-<div id="div_right" class="structBrowser_right">
-	<div id='selectArea-controller' class='selectArea'>
-		请选择控制器:
-		<ul id="browser-controller" class="browser" >
-		</ul>
-	</div>
-	<div id='selectArea-view' class='selectArea'>
-		请选择视图：
-		<ul id="browser-view" class="browser" >
-		</ul>
-	</div>
-</div>
 
 <div class="structBrowser_left">
 	<div>
@@ -325,3 +318,17 @@ jQuery(function(){
 		frameborder="0"
 	/>
 </div>
+
+<div id="div_right" class="structBrowser_right">
+	<div id='selectArea-controller' class='selectArea'>
+		请选择控制器:
+		<ul id="browser-controller" class="browser" >
+		</ul>
+	</div>
+	<div id='selectArea-view' class='selectArea'>
+		请选择视图：
+		<ul id="browser-view" class="browser" >
+		</ul>
+	</div>
+</div>
+

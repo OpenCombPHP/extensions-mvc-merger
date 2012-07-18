@@ -76,7 +76,6 @@ jquery(function($){
 	}
 	
 	$('#mergeCtl_result_onlythis').live('change',function(){
-		
 		var classname = "{=str_replace('\\','.',$sRequestC)}";
 		
 		if(this.checked){
@@ -97,25 +96,42 @@ jquery(function($){
 				
 				$("#mergeCtl_select_dialog").append(html);
 				
-				var dialog = $("#mergeCtl_select_dialog").dialog({
+				var dialog = $("#mergeCtl_select_dialog").wijdialog({
 					width: 700
 					, height: 500
 					, title: '选择网页'
 					, zIndex:710
-					, maximize:false
-					, minimize:false
-					,resize: function(event, ui) {
-						structBrowser.resizeFrame(ui.size.width);
+					, resize: function(event, ui) {
+						resizeFrame();
+					}
+					, captionButtons: {
+			            pin: { visible: false },
+			            refresh: { visible: false },
+					}
+					, stateChanged : function(event,data){
+						resizeFrame();
 					}
 				}) ;
-				structBrowser.resizeFrame(700 , 510);
 				
+				resizeFrame();
+
 				structBrowser.onSelectChange = function(data){
 					dialog.dialog('close');
 					$("#mergeCtl_pageToView_page_span").html(data['class']);
 					$("#mergeCtl_pageToView_page").val(data['class']);
 					$('#mergeCtl_pageToView_params').val(data['params']);
 				};
+				
+				function resizeFrame(){
+					
+					var ui = $('#mergeCtl_select_dialog').parents('.ui-dialog:first');
+					
+					var rightWidth = 100;
+					
+					$('#iframe-browser').width( ui.width() - rightWidth -50 );
+					
+					$('#iframe-browser').height( ui.height() - 70 );
+				}
 			}
 		});
 	});

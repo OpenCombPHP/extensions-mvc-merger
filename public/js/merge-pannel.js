@@ -13,13 +13,12 @@ MergerPannel.prototype.init = function()
 		sTitle+= "	<a href='javascript:;' tab='mergepannel-log'>log</a>" ;
 	}
 	
-	var ui_dialog = $('#mergepannel-dialog').dialog({
+	var ui_dialog = $('#mergepannel-dialog').wijdialog({
 		width: 600
 		, height: 450
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
-		, maximize:false
 		, beforeClose: function(event, ui) {
 			//退出编辑模式
 			if(confirm('是否退出编辑模式?')){
@@ -31,6 +30,10 @@ MergerPannel.prototype.init = function()
 			    location.href = href.join("");
 			}
 			return false;
+		},
+		captionButtons: {
+            pin: { visible: false },
+            refresh: { visible: false },
 		}
 	}) ;
 	

@@ -452,4 +452,6 @@ color: #EB8F00;
 #mergeCtl_tabs_ul a.mergeCtl_tabs_select{height:20px;border-width:1px 1px 0px 1px ; border-style:solid;border-color:#999;}
 
 .mergeCtl_tabs{border-top-width:1px; border-top-style:solid;border-top-color:#999;padding:5px;}
+
+#mergeCtl_select_dialog{background:rgb(255,255,255)}
 /* end 添加视图 */
