@@ -176,7 +176,7 @@ class ControllerMerger extends ControlPanel
  			$arrMergedControllers[ $this->params['target'] ][$sSaveType][$nNum+1] = array(
  					'mergeType' => $sMergeType 
  					, 'params' => $this->params->string('targetParams') 
- 					, 'name' => $this->params->string('sourceTitle') 
+ 					, 'name' => $this->params->string('sourceTitle') == '' ? 'mergeTextViewBySystem'.($nNum+1) : $this->params->string('sourceTitle')
  					, 'content' => $this->params->string('sourceContent') 
  					, 'comment' => $this->params->string('sourceRemark')
  					, 'enable' => true
@@ -218,6 +218,7 @@ class ControllerMerger extends ControlPanel
  			
  			$arrMergedControllers[ $this->params['target'] ][$sSaveType][$nNum+1] = array(
  					'mergeType' => $sMergeType
+ 					, 'name' => 'mergeTemplateBySystem'.($nNum+1)
  					, 'params' => $this->params->string('sourceParams')
  					, 'template' => $this->params->string('sourceTemplate')
  					, 'comment' => $this->params->string('sourceRemark')

@@ -3,9 +3,7 @@ namespace org\opencomb\mvcmerger ;
 
 
 use org\jecat\framework\auth\IdManager;
-
 use org\jecat\framework\mvc\view\IAssemblable;
-
 use org\jecat\framework\mvc\view\View;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\model\IModel;
@@ -152,7 +150,7 @@ class MvcMerger extends Extension
 						$arrControllersBean['class'] = $arrMerge['controller'];
 						$arrControllersBeanName = empty($arrMerge['name'])? 'mergeControllerBySystem'.$nNum : $arrMerge['name'];
 							
-						$arrBean['controllers'][$arrControllersBeanName] = $arrControllersBean;
+						$arrBean['controller:'.$arrControllersBeanName] = $arrControllersBean;
 						$nNum++;
 					}
 				}

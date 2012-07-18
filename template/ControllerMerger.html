@@ -4,8 +4,7 @@ jquery(function($){
 	$("#mergeCtl_tabs_ul li a").live('click',function(){
 		$('.mergeCtl_tabs').hide();
 		
-		$( $(this).attr('href') ).show();
-		
+		$( $(this).attr('tabid') ).show();
 		$(".mergeCtl_tabs_select").removeClass('mergeCtl_tabs_select');
 		$(this).addClass('mergeCtl_tabs_select');
 		
@@ -232,9 +231,9 @@ jquery(function($){
 
 <div id="mergeCtl_tabs">
 	<ul id="mergeCtl_tabs_ul">
-		<li><a href="#mergeCtl_tab_1" class='mergeCtl_tabs_select'>富文本</a></li>
-		<li><a href="#mergeCtl_tab_2">网页</a></li>
-		<li><a href="#mergeCtl_tab_3">模板</a></li>
+		<li><a tabid='#mergeCtl_tab_1' href="#mergeCtl_tab_1" class='mergeCtl_tabs_select'>富文本</a></li>
+		<li><a tabid='#mergeCtl_tab_2' href="#mergeCtl_tab_2">网页</a></li>
+		<li><a tabid='#mergeCtl_tab_3' href="#mergeCtl_tab_3">模板</a></li>
 	</ul>
 	
 	<div id="mergeCtl_tab_1" class="mergeCtl_tabs">
