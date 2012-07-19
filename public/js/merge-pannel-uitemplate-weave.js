@@ -132,6 +132,7 @@ ub = {
 		if(!treeNode.getParentNode()){
 			jquery('#tabs').hide();
 			jquery('#ub_warning').show();
+			treeNode.cancelSelectedNode();
 			return;
 		}
 		jquery('#tabs').show();

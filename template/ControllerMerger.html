@@ -203,7 +203,12 @@ jquery(function($){
 					expandSpeed : 0
 				}
 				, callback : {
-					onClick : function(event, treeId, treeNode) {
+					beforeClick : function(treeId, treeNode){
+						if(!treeNode.getParentNode() || treeNode['isDir'] === true ){
+							return false;
+						}
+					}
+					, onClick : function(event, treeId, treeNode) {
 						if(!treeNode.isParent){
 							var arrParents = [];
 							var parentNode = treeNode;//.getParentNode();
