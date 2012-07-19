@@ -96,7 +96,14 @@ ub = {
 				expandSpeed : 0
 			},
 			callback: {
-				onClick: ub.selectTag
+				beforeClick : function(treeId,treeNode){
+					if(!treeNode.getParentNode()){
+						jquery('#mergepannel-dialog #tabs').hide();
+						jquery('#mergepannel-dialog #ub_warning').show();
+						return false;
+					}
+				}
+				, onClick: ub.selectTag
 			}
 		}, arrZtreeData);
 		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("ub_template_list");
@@ -129,12 +136,6 @@ ub = {
 	
 	//**************选择tag列表中的元素**************
 	selectTag:function(event, treeId, treeNode){
-		if(!treeNode.getParentNode()){
-			jquery('#tabs').hide();
-			jquery('#ub_warning').show();
-			treeNode.cancelSelectedNode();
-			return;
-		}
 		jquery('#tabs').show();
 		jquery('#ub_warning').hide();
 		ub.setTagPatchsInfoToEditForm(treeNode);
