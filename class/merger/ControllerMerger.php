@@ -237,7 +237,7 @@ class ControllerMerger extends ControlPanel
 		// 清理平台缓存
 		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton());
 	
-		$this->view->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
+		$this->view->createMessage(Message::success,"已经将控制器 %s 融合到控制器 %s 中,刷新页面可查看改动",array($this->params['source_controller_class'],$this->params['target_controller_class'])) ;
 	}
 	
 	protected function removeMerge()
@@ -264,7 +264,7 @@ class ControllerMerger extends ControlPanel
 			unset($arrMergedControllers[$this->params['target']]) ;
 			
 			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
-			$this->view->createMessage(Message::success,"清除了控制器 %s 的所有融合设置",array($this->params['target'])) ;
+			$this->view->createMessage(Message::success,"清除了控制器 %s 的所有融合设置,刷新页面可查看改动",array($this->params['target'])) ;
 		}
 		// 删除指定的融合
 // 		else if( empty($arrMergedControllers[$this->params['target']][$nIdx]) )
@@ -295,7 +295,7 @@ class ControllerMerger extends ControlPanel
 			
 			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
 			
-			$this->view->createMessage(Message::success,"删除了控制器 %s 的指定融合设置",array($this->params['target'])) ;
+			$this->view->createMessage(Message::success,"删除了控制器 %s 的指定融合设置,刷新页面可查看改动",array($this->params['target'])) ;
 		}
 			
 		// 清理 class 编译缓存
@@ -335,7 +335,7 @@ class ControllerMerger extends ControlPanel
 		
 		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
 		
-		$this->view->createMessage(Message::success,"修改控制器 %s 的指定融合设置",array($this->params['target'])) ;
+		$this->view->createMessage(Message::success,"修改控制器 %s 的指定融合设置,刷新页面可查看改动",array($this->params['target'])) ;
 			
 		// 清理 class 编译缓存
 		MvcMerger::clearClassCompiled($this->params['target']) ;

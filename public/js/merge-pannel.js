@@ -37,6 +37,12 @@ MergerPannel.prototype.init = function()
 		}
 	}) ;
 	
+	var dialogOuter = ui_dialog.parents('.ui-dialog:first');
+	dialogOuter.find('.ui-icon-carat-1-n').attr('title','折叠');
+	dialogOuter.find('.ui-icon-minus').attr('title','最小化');
+	dialogOuter.find('.ui-icon-extlink').attr('title','最大化');
+	dialogOuter.find('.ui-icon-close').attr('title','关闭');
+	
 	this.layout.init() ;
 	
 	this.resizeDialog() ;

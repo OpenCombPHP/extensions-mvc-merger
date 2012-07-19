@@ -1,4 +1,4 @@
-<lib name="jquery.ui" />
+
 <script  >
 jquery(function($){
 	$("#mergeCtl_tabs_ul li a").live('click',function(){
@@ -19,6 +19,7 @@ jquery(function($){
 	
 	$('#mergeCtl_modify_target_btn').click(function(){
 		$('.mergeCtl_modify_target_form').toggle();
+		return false;
 	});
 	
 	$("#mergeCtl_modify_target_saveType").change(function(){
@@ -113,6 +114,13 @@ jquery(function($){
 					}
 				}) ;
 				
+				
+				var dialogOuter = dialog.parents('.ui-dialog:first');
+				dialogOuter.find('.ui-icon-carat-1-n').attr('title','折叠');
+				dialogOuter.find('.ui-icon-minus').attr('title','最小化');
+				dialogOuter.find('.ui-icon-extlink').attr('title','最大化');
+				dialogOuter.find('.ui-icon-close').attr('title','关闭');
+				
 				resizeFrame();
 
 				structBrowser.onSelectChange = function(data){
@@ -148,11 +156,11 @@ jquery(function($){
 					,saveType:$("#mergeCtl_modify_target_saveType").val()
 					,targetParams:$("#mergeCtl_modify_target_save_params").val()
 					,sourceTitle:$("#mergeCtl_textToView_title").val()
-					,sourceContent:$("#mergeCtl_textToView_textarea").val()
+					,sourceContent:CKEDITOR.instances.mergeCtl_textToView_textarea.getData()
 					,sourceRemark:$("#mergeCtl_remark").val()
 				};
 		}else if( nIndex == 1 ){
-			ajaxData =  {
+			ajaxData = {
 					target:$('#mergeCtl_modify_target_name').val()
 					,mergeType:'page'
 					,saveType:$("#mergeCtl_modify_target_saveType").val()
@@ -224,6 +232,11 @@ jquery(function($){
 			, {=$arrTemplateTreeData}
 	);
 	
+	CKEDITOR.replace( 'mergeCtl_textToView_textarea',{
+		toolbar:'Basic'
+		, height:160
+	});
+	
 });
 
 </script>
@@ -231,7 +244,7 @@ jquery(function($){
 <div id="mergeCtl_panel">
 
 <div class='mergeCtl_target'>
-	<button id="mergeCtl_modify_target_btn">更改目标网页...</button>
+	<a id="mergeCtl_modify_target_btn" href='#' style="color:blue">更改目标网页...</a>
 	<div class="mergeCtl_modify_target_form">
 		<div><label>控制器类 : 
 			<input id="mergeCtl_modify_target_name" type="text" style="width:450px;" value="{=$sRequestC}"/>
@@ -255,7 +268,7 @@ jquery(function($){
 	<div id="mergeCtl_tab_1" class="mergeCtl_tabs">
 		<h3>通过富文本编辑器,创建并添加一个视图</h3>
 		<div><label>标题 : <input id="mergeCtl_textToView_title" style="width:431px;"/></label></div>
-		<div><textarea id="mergeCtl_textToView_textarea" style="width:470px;height:160px;"></textarea></div>
+		<div><textarea id="mergeCtl_textToView_textarea" ></textarea></div>
 	</div>
 	
 	<div id="mergeCtl_tab_2" class="mergeCtl_tabs" style="display:none;">
