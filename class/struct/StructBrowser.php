@@ -23,7 +23,15 @@ class StructBrowser extends ControlPanel
 
 	public function process()
 	{
-		$this->checkPermissions('您没有使用这个功能的权限,无法继续浏览',array()) ;
+		$sUrl = $this->params['url'];
+		$sAllowSelectClass = $this->params['allowSelectClass'];// 'c,v,w'
+		
+		if(empty($sAllowSelectClass)){
+			$sAllowSelectClass = 'v';
+		}
+		
+		$this->view()->variables()->set('sUrl',$sUrl);
+		$this->view()->variables()->set('sAllowSelectClass',$sAllowSelectClass);
 	}
     protected function defaultFrameConfig()
     {

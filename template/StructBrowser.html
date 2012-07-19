@@ -1,36 +1,52 @@
-<lib name='jquery.treeview' />
+<lib name='jquery' />
 
 <style type="text/css">
-#browser {
+.browser {
 	font-family: Verdana, helvetica, arial, sans-serif;
-	font-size: 68.75%;
+}
+.selectArea{
+	display:none;
 }
 .selectClass{
-	color:blue;
+	color:#FF9A00;
 	font-weight:bold;
 }
 .structBrowser_right{
-	width:200px;
-	height:520px;
-	float:right;
-}
-#browser{
-	height:500px;
-	overflow:auto;
+	float:left;
 }
 .structBrowser_left{
-	height:490px;
-	margin-right:210px;
+	float:left;
+	height:500px;
 }
+.mergeCtl_select_dialog.li{
+	list-style-type:none;
+}
+.mergeCtl_select_dialog.ul{
+	padding-left:10px;
+}
+.mouseover-brothers{
+	background-color:#FFEF88;
+}
+.mouseover{
+	background-color:#FF9A00;
+}
+/*
+#browser-controller li{
+	border:1px solid black;
+}*/
 </style>
 
 <script type="text/javascript">
-var structBrowser = {
-	_mvcstruct:null,
-	parentObject:null,
-	allowSelectClass:[],
-	selectType:""
-} ;
+function s_b_init (){
+	this._mvcstruct = null;
+	this.parentObject = null;
+	this.asc = {};
+	this.selectType = "";
+	this.maxTextLength = 20;
+	
+	this.allowSelectClass = '{=$sAllowSelectClass}';
+}
+var structBrowser = new s_b_init();
 
 structBrowser.log = function(text)
 {
@@ -41,88 +57,91 @@ structBrowser.log = function(text)
 };
 structBrowser.setMvcStruct = function(struct)
 {
-	structBrowser._mvcstruct = struct ;
-	jQuery("#browser").empty().append(structBrowser._loadController(structBrowser._mvcstruct)).treeview();
+	this._mvcstruct = struct ;
+	jQuery('#browser-controller').empty() ;
+	jQuery('#browser-view').empty() ;
+	this.loadMvcStruct(this._mvcstruct);
 };
-structBrowser._loadModel = function(aModel)
+structBrowser.loadMvcStruct= function(struct)
 {
-	var span = jQuery("<span class='folder model'>[M] "+aModel.name+"</span>");
-	var li = jQuery("<li></li>") ;
-	li.append(span);
-	li.append(structBrowser._loadModelList(aModel.models)) ;
-	return li ;
-};
-structBrowser._loadModelList = function(arrModels)
-{
-	if(arrModels.length)
-	{
-		var source = jQuery('<ul></ul>') ;
-		for(var i=0;i<arrModels.length;i++)
-		{
-			source.append(structBrowser._loadModel(arrModels[i])) ;
-		}
-		return source ;
+	switch( this.allowSelectClass ){
+	case 'c':
+		var browser_controller = jQuery('#browser-controller') ;
+		document.getElementById('selectArea-controller').style.display = 'block';
+		this.loadController(struct.controller,browser_controller);
+		break;
+	case 'v':
+		var browser_view = jQuery('#browser-view') ;
+		document.getElementById('selectArea-view').style.display = 'block';
+		this.loadView(struct.view,browser_view);
 	}
-	else
-	{
-		return '' ;
-	}
-};
-structBrowser._loadView = function(aView)
-{
-	var source = jQuery("<li><span class='folder view'>[V] "+aView.name+"</span></li>") ;
-	source.append(structBrowser._loadViewList(aView.views)) ;
 	
-	return source ;
-};
-structBrowser._loadViewList = function(arrViews)
-{
-	if(arrViews && arrViews.length)
-	{
-		var source = jQuery('<ul></ul>') ;
-		for(var i = 0;i < arrViews.length;i++)
-		{
-			source.append(structBrowser._loadView(arrViews[i])) ;
-		}
-		return source ;
-	}
-	else
-	{
-		return '' ;
-	}
-};
-structBrowser._loadController = function(aController)
-{
-	if(!aController){
+	//this.resizeFrame() ;
+}
+structBrowser.resizeFrame = function(windowWidth , leftWidth){
+	if( windowWidth == undefined ){
 		return;
+		//windowWidth = jQuery(document).innerWidth();
 	}
-	var source = jQuery('<li><span class="folder controller">[C] '+aController.name+'</span></li>') ;
-	source
-			//.append(structBrowser._loadModelList(aController.models))
-			.append(structBrowser._loadViewList(aController['views']))
-			.append(structBrowser._loadControllerList(aController.controllers));
-	source.find('.controller:first').data("class",aController['class'])
-								.data("params",aController.params)
-								.data("title",aController.title);
-	return source ;
-};
-structBrowser._loadControllerList = function(arrControllers)
-{
-	if(arrControllers.length)
-	{
-		var source = jQuery('<ul></ul>') ;
-		for(var i=0;i<arrControllers.length;i++)
-		{
-			source.append(structBrowser._loadController(arrControllers[i])) ;
+	var rightWidth = jQuery('#div_right').outerWidth();
+	if(leftWidth != undefined ){
+		jQuery('#iframe-browser').width( leftWidth );
+	}else{
+		jQuery('#iframe-browser').width(windowWidth - rightWidth -50 );
+	}
+}
+structBrowser.loadController = function(struct,parent){
+	var i,j;
+	
+	var text = this.getFrameTextById( struct.view.id );
+	if( text.length > this.maxTextLength ){
+		text = text.substr(0,this.maxTextLength) + '...';
+	}else if( text.length <= 0 ){
+		text = '...';
+	}
+	
+	var controller = jQuery('<li id="li_'+struct.view.id+'"><a href="#" class="folder controller">'+text+'</a></li>') ;
+	struct.itemType = 'controller';
+	controller.find('.controller:first').data("data",struct);
+	
+	if( struct.controllers ){
+		var controller_ul = jQuery('<ul></ul>');
+		for( i in struct.controllers ){
+			this.loadController(struct.controllers[i],controller_ul);
 		}
-		
-		return source ;
+		controller.append( controller_ul );
 	}
-	else
-	{
-		return '' ;
+	
+	parent.append(controller) ;
+}
+structBrowser.getFrameTextById = function(id){
+	var iframe = document.getElementById('iframe-browser');
+	var fcd = iframe.contentWindow.document;
+	var obj = fcd.getElementById(id);
+	var text = jQuery(obj).text();
+	return text;
+}
+structBrowser.loadView = function(aView,parent){
+	var i,j;
+	var text = this.getFrameTextById(aView.id);
+	if( text.length > this.maxTextLength ){
+		text = text.substr(0,this.maxTextLength) + '...';
+	}else if( text.length <= 0 ){
+		text = '...';
 	}
-};
+	var view = jQuery("<li id='li_"+aView.id+"'><a href='#' class='folder view'>"+text+"</a></li>") ;
+	aView.itemType = 'view' ;
+	view.find('.view:first').data("data",aView);
+	
+	if(aView.views){
+		var view_ul = jQuery('<ul></ul>');
+		for( i in aView.views ){
+			this.loadView( aView.views[i],view_ul );
+		}
+		view.append( view_ul );
+	}
+	parent.append(view) ;
+}
 structBrowser.setCurrentUrl = function(sUrl)
 {
 	jQuery('#current_url').val(sUrl) ;
@@ -150,120 +169,166 @@ structBrowser.closeArgsAndTitleInputByNeed = function(){
 		jQuery('#title').get(0).disabled = true;
 	}
 };
-structBrowser.getArgumentFromParent = function(){
-	var sAllowSelectClass = window.dialogArguments['allowSelectClass'];
-	for(var i =0 ; i< sAllowSelectClass.length ; i++){
-		switch(sAllowSelectClass.substr(i,1))
-		{
-			case "c":
-				this.allowSelectClass.push("controller");
-				break
-			case "v":
-				this.allowSelectClass.push("view");
-				break
-			case "m":
-				this.allowSelectClass.push("model");
-				break
-			case "w":
-				this.allowSelectClass.push("widget");
-				break
-		}
+structBrowser.onSelectChange = function(o){
+	this.log(o);
+}
+structBrowser.highlightInFrameById = function(id,color){
+	var iframe = document.getElementById('iframe-browser');
+	var fcd = iframe.contentWindow.document;
+	var obj = fcd.getElementById(id);
+	
+	var flashing = jQuery('<div class="mergepannel-layout-flashing" style="position:absolute;z-index:300;background:'+color+';border:1px solid #666;filter:alpha(opacity=20);-moz-opacity:0.2;opacity: 0.2; "></div>');
+	
+	var position = jQuery(obj).offset();
+	if( position != null ){
+		var width = jQuery(obj).outerWidth(true);
+		var height = jQuery(obj).outerHeight(true);
+		flashing.css({'top' : position.top,'left' : position.left,'width' : width,'height' : height});
+		jQuery(fcd).find('body').append(flashing);
+		flashing.show();
 	}
-	this.parentObject = window.dialogArguments['parent'];
-	this.selectType = window.dialogArguments['selectType'];
-};
-
-structBrowser.search = function(name){
+}
+structBrowser.scrollFrameById = function(id){
+	var iframe = document.getElementById('iframe-browser');
+	var fcd = iframe.contentWindow.document;
+	var obj = fcd.getElementById(id);
 	
-};
-
+	var position = jQuery(obj).offset();
+	if( position != null ){
+		iframe.contentWindow.scrollTo(position.left,position.top);
+	}
+}
 jQuery(function(){
-	structBrowser.getArgumentFromParent();
-	//structBrowser.closeArgsAndTitleInputByNeed();
+	var iframe = document.getElementById('iframe-browser');
 	
-	function submitClassInfo(){
-		if(jQuery('.selectClass').length == 0){
-			alert("请至少选定一个对象");
-			return;
+	<if "isset({=$sUrl})">
+	iframe.contentWindow.location.href = '{=$sUrl}';
+	</if>
+	
+	function SelectItem(jobj){
+		var i;
+		this.data = jobj.data('data');
+		
+		// params
+		function removeDataNameIsUserCall( originStr ){
+			var arr = originStr.split('&');
+			var arrRtn = [] ;
+			for( var key in arr){
+				if( arr[key].indexOf(".data-name-is-user-call=") == 0){
+					continue;
+				}else{
+					arrRtn.push( arr[key] );
+				}
+			}
+			return arrRtn.join("&");
 		}
-		if(structBrowser.selectType == "handle"){
-			jQuery(structBrowser.parentObject.document).find("#source_controller_class").val(jQuery("#classname").val());
-			jQuery(structBrowser.parentObject.document).find("#source_controller_class_text").html(jQuery("#classname").val());
-			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_name']").val(jQuery("#name").val());
-			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_params']").val(jQuery("#args").val());
-			jQuery(structBrowser.parentObject.document).find("input[name='source_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");
-		}else{
-			jQuery(structBrowser.parentObject.document).find("input[name='target_controller_params']").val(jQuery("#args").val());
-			jQuery(structBrowser.parentObject.document).find("input[name='target_controller_comment']").val("网页:\""+jQuery("#title").val()+"\"");
+		
+		if( 'string' == typeof ( this.data.params ) ){
+			this.data.params = removeDataNameIsUserCall(this.data.params);
 		}
-		window.close();
+		
+		this.itemType = function(){
+			return this.data.itemType ;
+		}
+		this.id = function(){
+			return this.data.id;
+		}
+		this.emit = function(){
+			structBrowser.onSelectChange( this.data );
+		}
 	}
 	
 	jQuery(".folder").live("click",function(e){
-		var that = jQuery(this);
-		var bIsSelectClass = false; 
-		for(var c in structBrowser.allowSelectClass){
-			bIsSelectClass = that.hasClass(structBrowser.allowSelectClass[c]) || bIsSelectClass;
-		}
-		if(!bIsSelectClass){
-			return;
-		}
+		var jobj = jQuery(this) ;
+		var ceo = new SelectItem( jobj );
+		
 		jQuery(".folder").removeClass("selectClass");
-		that.addClass("selectClass");
-		jQuery("#classname").val(that.data("class"));
-		jQuery("#name").val(that.data("name"));
+		jobj.addClass("selectClass");
 		
-		//屏蔽系统自动添加的.data-name-is-user-call参数
-		var arrParams = that.data("params").split('&');
-		var arrParams2 = [];
-		for(var key in arrParams){
-			if(arrParams[key].indexOf(".data-name-is-user-call=") == 0){
-				continue;
-			}
-			arrParams2.push(arrParams[key]);
-		}
-		var args = arrParams2.join("&");
-		jQuery("#args").val(args);
-		jQuery("#title").val(that.data("title"));
-		
-		submitClassInfo();
+		ceo.emit();
 	});
 	
-	//页面大小
-	window.resizeTo(850,600);
+	jQuery('.folder').live("mouseover",function(e){
+		var jobj = jQuery(this);
+		var moeo = new SelectItem(jobj);// mouse over event object
+		
+		if(moeo.itemType() == 'view' ){
+			var id = moeo.id() ;
+			structBrowser.highlightInFrameById(id,'#FF9A00');
+			structBrowser.scrollFrameById(id);
+			var j;
+			jobj.closest('ul').children('li').children('a').each(function(){
+				var jbobj = jQuery(this);
+				jbobj.addClass('mouseover-brothers');
+				var bdata = jbobj.data("data");
+				if( bdata.id != id ){
+					structBrowser.highlightInFrameById(bdata.id,'#FFEF88');
+				}
+			});
+			jobj.addClass('mouseover');
+		}else{
+			var id = moeo.data.view.id;
+			structBrowser.highlightInFrameById(id,'pink');
+			jobj.closest('ul').children('li').children('a').each(function(){
+				var jbobj = jQuery(this);
+				jbobj.addClass('mouseover-brothers');
+			});
+			jobj.addClass('mouseover');
+		}
+	});
 	
+	jQuery('.folder').live("mouseout",function(){
+		var fcd = iframe.contentWindow.document;
+		// 取消 item 对应的 frame/view 闪烁样式
+		jQuery(fcd).find('.mergepannel-layout-flashing').remove();
+		jQuery('.mouseover-brothers').removeClass('mouseover-brothers');
+		jQuery('.mouseover').removeClass('mouseover');
+	});
 	
 	//frame加载监听以及自动刷新数据
-	document.getElementById("iframe-browser").onload = function(){
-		jquery('#current_url').val(document.getElementById("iframe-browser").contentWindow.location.href);
-		var sUrl = document.getElementById("iframe-browser").contentWindow.location.href;
+	iframe.onload = function(){
+		jquery('#current_url').val(iframe.contentWindow.location.href);
+		var sUrl = iframe.contentWindow.location.href;
 		if( sUrl.search("mvcmerger_browser") < 0 )
 		{
 			sUrl += "&mvcmerger_browser=1" ;
-			document.getElementById("iframe-browser").contentWindow.location.href = sUrl;
+			iframe.contentWindow.location.href = sUrl;
 		}
 	};
+	
+	//window.onresize = function(){
+	//	structBrowser.resizeFrame() ;
+	//}
 });
 </script>
 
-<div class="structBrowser_right">
-	请选择控制器:
-	<ul id="browser" class="filetree" ></ul>
-</div>
 
 <div class="structBrowser_left">
-	<div style="display:none;">
-	<div><label for="classname">类名<input type="text" id="classname" value="" style="width:400px" disabled/></label></div>
-	<div><label for="name">名称<input type="text" id="name" value="" style="width:400px" disabled/></label></div>
-	<div><label for="args">参数<input type="text" id="args" value="" style="width:400px" disabled/></label></div>
-	<div><input type="hidden" id="title"/></div>
-	<div><input type="button" id="submitClassInfo" value="提交" /></div>
-	</div>
-	
 	<div>
 		<label>页面地址<input type="text" id="current_url" value="" style="width:400px" /></label> 
 		<input type="button" value="打开网页" onclick="structBrowser.location();" />
 	</div>
 	
-	<iframe id="iframe-browser" name="iframe-browser" src="{/*.url.path}?mvcmerger_browser=1" width="100%" height="100%"/>
+	<iframe id="iframe-browser" 
+		name="iframe-browser"
+		src="?mvcmerger_browser=1"
+		width="100%"
+		height="100%"
+		scrolling="auto"
+		frameborder="0"
+	/>
 </div>
+
+<div id="div_right" class="structBrowser_right">
+	<div id='selectArea-controller' class='selectArea'>
+		请选择控制器:
+		<ul id="browser-controller" class="browser" >
+		</ul>
+	</div>
+	<div id='selectArea-view' class='selectArea'>
+		请选择视图：
+		<ul id="browser-view" class="browser" >
+		</ul>
+	</div>
+</div>
+

@@ -3,9 +3,7 @@ namespace org\opencomb\mvcmerger ;
 
 
 use org\jecat\framework\auth\IdManager;
-
 use org\jecat\framework\mvc\view\IAssemblable;
-
 use org\jecat\framework\mvc\view\View;
 use org\jecat\framework\mvc\view\IView;
 use org\jecat\framework\mvc\model\IModel;
@@ -97,8 +95,45 @@ class MvcMerger extends Extension
 			$nNum = 0; //命名计数
 			foreach($arrControllers[$sClassName] as $sKey => $arrMergeArray)
 			{
-				if($sKey == 'type'){
-					foreach($arrMergeArray as $arrMerge){
+				if($sKey != 'type' && array_intersect(  explode('&', $sKey) , $arrTargetParms ) != explode('&', $sKey)){
+					continue;
+				}
+				
+				foreach($arrMergeArray as $arrMerge){
+					
+					if(!$arrMerge['enable']){
+						continue;
+					}
+					
+					if($arrMerge['mergeType'] == 'text'){
+						$arrViewBean = array();
+						
+						$arrViewBean['template'] = "mvc-merger:ControllerMergeView.html";
+						$arrViewBean['vars']['content'] = $arrMerge['content'];
+						
+						$arrBean['view:mergeViewBySystem'.$nNum] = $arrViewBean;
+						$nNum++;
+					}else if($arrMerge['mergeType'] == 'template'){
+						$arrViewBean = array();
+						
+						if( empty($arrMerge['params']) )
+						{
+							$aParams = null ;
+						}
+						else
+						{
+							$arrParams = explode('&', $arrMerge['params']);
+							foreach($arrParams as $arrPar){
+								$arrKeyValue = explode('=', $arrPar);
+								$arrViewBean['vars'][$arrKeyValue[0]] = $arrKeyValue[1];
+							}
+						}
+						
+						$arrViewBean['template'] = $arrMerge['template'];
+						
+						$arrBean['view:mergeViewBySystem'.$nNum] = $arrViewBean;
+						$nNum++;
+					}else if($arrMerge['mergeType'] == 'page'){
 						$arrControllersBean = array();
 						if( empty($arrMerge['params']) )
 						{
@@ -114,34 +149,9 @@ class MvcMerger extends Extension
 						}
 						$arrControllersBean['class'] = $arrMerge['controller'];
 						$arrControllersBeanName = empty($arrMerge['name'])? 'mergeControllerBySystem'.$nNum : $arrMerge['name'];
-						
-						$arrBean['controllers'][$arrControllersBeanName] = $arrControllersBean;
-						$nNum++;
-					}
-				}
-				
-				if($sKey != 'type'){
-					if( array_intersect(  explode('&', $sKey) , $arrTargetParms ) == explode('&', $sKey)){
-						foreach($arrMergeArray as $arrMerge){
-							$arrControllersBean = array();
-							if( empty($arrMerge['params']) )
-							{
-								$aParams = null ;
-							}
-							else
-							{
-								$arrParams = explode('&', $arrMerge['params']);
-								foreach($arrParams as $arrPar){
-									$arrKeyValue = explode('=', $arrPar);
-									$arrControllersBean['params'][$arrKeyValue[0]] = $arrKeyValue[1];
-								}
-							}
-							$arrControllersBean['class'] = $arrMerge['controller'];
-							$arrControllersBeanName = empty($arrMerge['name'])? 'mergeControllerBySystem'.$nNum : $arrMerge['name'];
 							
-							$arrBean['controllers'][$arrControllersBeanName] = $arrControllersBean;
-							$nNum++;
-						}
+						$arrBean['controller:'.$arrControllersBeanName] = $arrControllersBean;
+						$nNum++;
 					}
 				}
 			}
@@ -155,7 +165,10 @@ class MvcMerger extends Extension
 			return ;
 		}
 		$sJsCode = "\r\n<script>\r\n" ;
-		$sJsCode.= "var _mvcstruct = " . self::generateControllerStructJcCode($aController) . "; \r\n" ;
+		$sJsCode.= "var _mvcstruct = { \r\n";
+		$sJsCode.= "	'controller':" . self::generateControllerStructJcCode($aController) . ", \r\n" ;
+		$sJsCode.= "	'view':" . self::generateViewStructJcCode($aController->view()) . " \r\n" ;
+		$sJsCode.= "};\r\n";
 		$sJsCode.= "if( parent && typeof(parent.structBrowser)!='undefined' ){\r\n" ;
 		$sJsCode.= "	parent.structBrowser.setMvcStruct(_mvcstruct) ;\r\n" ;
 		$sJsCode.= "}\r\n" ;
@@ -187,7 +200,7 @@ class MvcMerger extends Extension
 		return $sJsCode ;
 	}
 	
-	static public function generateViewStructJcCode(IView $aView,$sName,$nIndent=0)
+	static public function generateViewStructJcCode(IView $aView,$sName='',$nIndent=0)
 	{
 		$sIndent = str_repeat("\t",$nIndent) ;
 		
@@ -197,6 +210,7 @@ class MvcMerger extends Extension
 		$sJsCode = "{\r\n" ;
 		$sJsCode.= "{$sIndent}	name:\"{$sViewNameEsc}\"\r\n" ;
 		$sJsCode.= "{$sIndent}	, template:\"{$sTemplateEsc}\"\r\n" ;
+		$sJsCode.= "{$sIndent}, id:\"{$aView->id()}\"\r\n" ;
 		
 		if($aView->viewNames())
 		{
@@ -242,32 +256,13 @@ class MvcMerger extends Extension
 		$sJsCode.= $sIndent."	, title: \"{$sTitleEsc}\"\r\n" ;
 		$sJsCode.= $sIndent."	, params: \"".http_build_query($arrParams)."\"\r\n" ;
 		
-		// models
-// 		$sJsCode.= $sIndent."	, models: [ " ;
-// 		foreach($aController->modelNameIterator() as $idx=>$sModelName)
-// 		{
-// 			if($idx)
-// 			{
-// 				$sJsCode.= "\r\n{$sIndent}	, " ;
-// 			}
-// 			$sJsCode.= self::generateModelStructJcCode($aController->modelByName($sModelName),$sModelName,$sIndent+1) ;
-// 		}
-// 		$sJsCode.= $sIndent." ]\r\n" ;
-		
 		// views
-		if($aController->view()->viewNames()){
-			$sJsCode.= $sIndent."	, views: [ " ;
-			foreach($aController->view()->viewNames() as $idx=>$sViewName)
-			{
-				if($idx)
-				{
-					$sJsCode.= "\r\n{$sIndent}	, " ;
-				}
-				$sJsCode.= self::generateViewStructJcCode($aController->view()->viewByName($sViewName),$sViewName,$sIndent+1) ;
-			}
-			$sJsCode.= $sIndent." ]\r\n" ;
+		if($aView = $aController->view()){
+			$sJsCode.= $sIndent."	, view: " ;
+			
+			$sJsCode.= self::generateViewStructJcCode($aView,$aView->id(),$sIndent+1) ;
+			$sJsCode.= $sIndent." \r\n" ;
 		}
-		
 		
 		// controllers
 		$sJsCode.= $sIndent."	, controllers: [ " ;

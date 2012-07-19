@@ -7,20 +7,18 @@ MergerPannel.prototype.init = function()
 	var $ = jquery ;
 	var thisMergerPannel = this ;
 	
-//    var sTitle = "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='ub_dialog'>模板编织</a><a href='javascript:;' tab='mergepannel-controllermerger'>网页融合</a>" ;
-    var sTitle = "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='mergepannel-controllermerger'>添加视图</a><a href='javascript:;' tab='ub_dialog'>模板编织</a>" ;
+	var sTitle = "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='mergepannel-controllermerger'>添加视图</a><a href='javascript:;' tab='ub_dialog'>模板编织</a>" ;
 	if(bMvcMergerLog)
 	{
 		sTitle+= "	<a href='javascript:;' tab='mergepannel-log'>log</a>" ;
 	}
 	
-	var ui_dialog = $('#mergepannel-dialog').dialog({
+	var ui_dialog = $('#mergepannel-dialog').wijdialog({
 		width: 600
 		, height: 450
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
-		, maximize:false
 		, beforeClose: function(event, ui) {
 			//退出编辑模式
 			if(confirm('是否退出编辑模式?')){
@@ -32,8 +30,18 @@ MergerPannel.prototype.init = function()
 			    location.href = href.join("");
 			}
 			return false;
+		},
+		captionButtons: {
+            pin: { visible: false },
+            refresh: { visible: false },
 		}
 	}) ;
+	
+	var dialogOuter = ui_dialog.parents('.ui-dialog:first');
+	dialogOuter.find('.ui-icon-carat-1-n').attr('title','折叠');
+	dialogOuter.find('.ui-icon-minus').attr('title','最小化');
+	dialogOuter.find('.ui-icon-extlink').attr('title','最大化');
+	dialogOuter.find('.ui-icon-close').attr('title','关闭');
 	
 	this.layout.init() ;
 	
@@ -64,6 +72,12 @@ MergerPannel.prototype.init = function()
 			showPage.show();
 			$('.selected_mvcmerger').removeClass("selected_mvcmerger");
 			$(this).addClass("selected_mvcmerger");
+			
+			if($(this).attr('tab') == 'mergepannel-controllermerger' 
+				&& $("#mergepannel-dialog #mergeCtl_result:visible").length == 1
+			){
+				$('#mergeCtl_change_panel').find('a').click();
+			}
 		}
 		return false;
 	});
