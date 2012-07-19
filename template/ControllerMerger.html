@@ -232,18 +232,26 @@ jquery(function($){
 	);
 	
 	CKEDITOR.replace( 'mergeCtl_textToView_textarea',{
-		toolbar:'Basic'
-		, height:160
+		toolbar:[
+		    	{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+		    	{ name: 'colors', items : [ 'TextColor','BGColor' ] },
+		    	{ name: 'tools', items : [ 'Maximize' ] },
+		    	{ name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote',
+		    	'-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
+		    	{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+		    	{ name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','SpecialChar','Iframe' ] },
+		    	{ name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] }
+		    ]
+		, height: 160
 	});
-	
 });
 
 </script>
 
 <div id="mergeCtl_panel">
 
-<div class='mergeCtl_target'>
-	<a id="mergeCtl_modify_target_btn" href='#' style="color:blue">更改目标网页...</a>
+<div class='mergeCtl_target' style="margin-bottom:14px;">
+	<a id="mergeCtl_modify_target_btn" href='#'>更改目标网页</a>
 	<div class="mergeCtl_modify_target_form">
 		<div><label>控制器类 : 
 			<input id="mergeCtl_modify_target_name" type="text" style="width:450px;" value="{=$sRequestC}"/>
@@ -296,7 +304,7 @@ jquery(function($){
 		<div style="float:left;width:270px;margin-right:30px;">
 			<h4 style="font-weight:normal;">请选择系统中的模板文件</h4>
 			
-			<div id="mergeCtl_templateTree" class='ztree' style="width:270px;height:190px;overflow:auto">
+			<div id="mergeCtl_templateTree" class='ztree' style="width:270px;height:220px;overflow:auto">
 			
 			</div>
 			
@@ -315,7 +323,7 @@ jquery(function($){
 </div>
 
 	<div>
-		<a id="mergeCtl_remark_a" href="#" style="color:blue;">点击填写备注</a>
+		<a id="mergeCtl_remark_a" href="#" style="float:right">备注</a>
 		<label style="display:none">备注 : <input id="mergeCtl_remark" style="width:431px;"/></label>
 	</div>
 	<div>
