@@ -64,7 +64,7 @@ class ControllerMerger extends ControlPanel
 				$sExpresionName = 'platform';
 			}
 			$arrParent = array(
-					'name'=>$sExpresionName
+					'name'=>"扩展:".$sExpresionName
 					, 'children'=>array()
 			);
 			$arrUnique = array();//防止重复扫描路径
