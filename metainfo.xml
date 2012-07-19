@@ -24,6 +24,7 @@
 	<require type="extension" item="coresystem"><![CDATA[ >=0.2 ]]></require>
 	
 <data>
-		<version>
-			0.2
-		</version><installer>org\opencomb\mvcmerger\setup\DataInstaller</installer></data></Extension>
+<version>0.2</version>
+<installer>org\opencomb\mvcmerger\setup\DataInstaller</installer>
+</data>
+</Extension>
