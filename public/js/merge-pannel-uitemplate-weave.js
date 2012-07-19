@@ -83,7 +83,7 @@ ub = {
 			if(arrKeys.length == 2){
 				templateName = "模板：" + arrKeys[1] + "(" + arrKeys[0] + ")" ;
 			}
-			var aTreeTop = {name: templateName, children: []};
+			var aTreeTop = {name: templateName, children: [] , icon : sMvcMergerPublicFolderUrl+"/template.png"};
 			arrZtreeData.push(aTreeTop);
 			aTreeTop['children'] = ub.initChildrenTagList(aTemplate['children']) ;
 			aTreeTop['templateNameAndNameSpace'] = sKey ;
@@ -117,7 +117,7 @@ ub = {
 		}
 		var arrChildren = [];
 		jQuery.each(aTags,function(nKey,aTag){
-			var aLi = {name: "<"+aTag['tag']+">" , children:[]};
+			var aLi = {name: "<"+aTag['tag']+">" , children:[] , icon : sMvcMergerPublicFolderUrl+"/tag.png"};
 			aLi['children'] = ub.initChildrenTagList(aTag['children']);
 			aLi['tagxpath'] = aTag['uixpath'];
 			aLi['data'] = aTag;
@@ -179,7 +179,7 @@ ub = {
 			, dataType: 'json'
 			, beforeSend: function (){
 				//loading图标
-				jQuery('#ub_merge_list').html('<img src="extensions/mvc-merger/0.1/public/image/loading.gif" width=250 height=180>');
+				jQuery('#ub_merge_list').html('<img src="'+sMvcMergerPublicFolderUrl+'/loading.gif" width=250 height=180>');
 			}
 			, complete: function(jqXHR, textStatus){
 				if(textStatus=='success')
@@ -214,7 +214,7 @@ ub = {
 		var aObj = jQuery("#" + treeNode.tId);
 		if (jQuery("#showConf_"+treeNode.tId).length>0) return;
 		var editStr = "<span class='button' id='showConf_" +treeNode.tId
-						+ "' title='点击高亮显示页面中的元素' onfocus='this.blur();' style= 'margin-right:2px; background: url(/extensions/mvc-merger/0.1/public/image/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></span>";
+						+ "' title='点击高亮显示页面中的元素' onfocus='this.blur();' style= 'margin-right:2px; background: url("+sMvcMergerPublicFolderUrl+"/point.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle' ></span>";
 		aObj.find('>a').after(editStr);
 	
 		jQuery("#showConf_"+treeNode.tId).on("click", function(){
@@ -228,7 +228,7 @@ ub = {
 		for(var b in json){
 			jQuery('#ub_merge_list').find('ul').first().append(
 						'<li><div style="position:relative;"><h4 style="margin-left:16px;">'+json[b][0]+'</h4>'
-						+'<a class="delPatch" key="'+b+'" style="display:block;position:absolute;top:0;left:0;" href="#"><img src="extensions/mvc-merger/0.1/public/image/delete.png"/></a></div>'
+						+'<a class="delPatch" key="'+b+'" style="display:block;position:absolute;top:0;left:0;" href="#"><img src="'+sMvcMergerPublicFolderUrl+'/delete.png"/></a></div>'
 						+'<div>'+ub.html_encode(json[b][1])+'</div></li>'
 					);
 		}
