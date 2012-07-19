@@ -365,6 +365,9 @@ ub = {
 		}
 		var dom = jQuery("uitemplate[file='"+TopParentNode['templateNameAndNameSpace']+"']")
 					.find("*[uixpath='"+tag.data.uixpath+"']");
+		if(dom.length === 0){
+			return;
+		}
 		dom.fselecter();
 		setTimeout(function(){jQuery('.fselecter_highlight_block').remove()} , sec*500);
 	},
