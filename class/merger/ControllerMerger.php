@@ -94,7 +94,7 @@ class ControllerMerger extends ControlPanel
 	
 	public function scanTemplates($sDir ,&$arrData){
 		if (is_dir($sDir)) 
-		{ 
+		{
 			$arrParent = array(
 					'name'=>$sDir
 					, 'children' => array()
@@ -108,7 +108,22 @@ class ControllerMerger extends ControlPanel
 			}
 			$arrName = explode( DIRECTORY_SEPARATOR , $arrParent['name'] );
 			$arrParent['name'] = array_pop($arrName);
-			$arrData[] = $arrParent;
+			$arrParent['isDir'] = true;
+			$arr = array();
+			foreach($arrData as $nBrotherKey => $brother){
+				if( $brother['isDir'] === true){
+					continue;
+				}
+				$arrSlice = array_slice($arrData,0,$nBrotherKey);
+				$arrSlice[] = $arrParent;
+				$arr = array_merge( $arrSlice , array_slice($arrData,$nBrotherKey) );
+				break;
+			}
+			if($arr === array()){
+				$arrData[] = $arrParent;
+			}else{
+				$arrData = $arr;
+			}
 		}else{
 			$extend = pathinfo($sDir);
 			$extend = strtolower($extend["extension"]);
@@ -118,6 +133,7 @@ class ControllerMerger extends ControlPanel
 			$arrName = explode( DIRECTORY_SEPARATOR , $sDir );
 			$arrData[] = array(
 					'name'=>array_pop($arrName)
+					, 'isDir' => false
 					);
 		}
 	}
