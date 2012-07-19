@@ -14,7 +14,7 @@ MergerPannel.prototype.init = function()
 	}
 	
 	var ui_dialog = $('#mergepannel-dialog').wijdialog({
-		width: 600
+		width: 680
 		, height: 450
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
@@ -94,6 +94,20 @@ MergerPannel.prototype.resizeDialog = function ()
 {
 	// layout
 	this.layout.resizeDialog();
+	
+	//富文本高度
+	if(CKEDITOR.instances.mergeCtl_textToView_textarea !== undefined){
+		var nTotalHeight = jquery('#mergepannel-dialog').height();
+		nTotalHeight = nTotalHeight - 80 - 188 ; 
+		jquery('#cke_contents_mergeCtl_textToView_textarea').height(nTotalHeight);
+	}
+	
+	//模板列表高度
+	if(jquery("#mergeCtl_templateTree").length !== 0){
+		var nTotalHeight = jquery('#mergepannel-dialog').height();
+		nTotalHeight = nTotalHeight - 188 ; 
+		jquery("#mergeCtl_templateTree").height(nTotalHeight);
+	}
 	
 	// log
 	jquery('#mergepannel-log-output').height( jquery('#mergepannel-dialog').height()-40 ) ;
