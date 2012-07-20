@@ -10,9 +10,9 @@ ub = {
 			+ '</div>'
 			+ '<div id="ub_right">'
 				+ '<div id="ub_tabs">'
-					+ '<ul>'
-						+ '<li><a href="#tabs-1">编织模板</a></li>'
-						+ '<li><a href="#tabs-2">补丁设置</a></li>'
+					+ '<ul id="ub_tabs_ul">'
+						+ '<li><a tabid="#tabs-1" class="ub_tabs_select">编织模板</a></li>'
+						+ '<li><a tabid="#tabs-2">补丁设置</a></li>'
 					+ '</ul>'
 					+ '<div id="tabs-1" class="ub_tabs">'
 						+ '<div id="ub_edit">'
@@ -31,7 +31,7 @@ ub = {
 							+ '<button id="ub_savebtn" onclick="ub.saveSetting()">织入代码</button>'
 						+ '</div>'
 					+ '</div>'
-					+ '<div id="tabs-2" class="ub_tabs">'
+					+ '<div id="tabs-2" class="ub_tabs" style="display:none;">'
 						+ '<div id="ub_merge_list">'
 						+ '</div>'
 					+ '</div>'
@@ -68,11 +68,15 @@ ub = {
 		//内容放入共用对话框
 		ub.aDialog.hide().appendTo(jquery('#mergepannel-dialog'));
 		
-		
-		//xxxxxxxxxxxxxxxxxxx
-		
-		
-//		jQuery( "#tabs" ).tabs({ selected: 0});
+		jquery("#ub_tabs_ul li a").live('click',function(){
+			jquery('.ub_tabs').hide();
+			
+			jquery( jquery(this).attr('tabid') ).show();
+			jquery(".ub_tabs_select").removeClass('ub_tabs_select');
+			jquery(this).addClass('ub_tabs_select');
+			
+			return false;
+		});
 	},
 	//************初始化tag列表************
 	initTagList:function(){
