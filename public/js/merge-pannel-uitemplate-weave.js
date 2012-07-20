@@ -9,12 +9,12 @@ ub = {
 				+ '</div>'
 			+ '</div>'
 			+ '<div id="ub_right">'
-				+ '<div id="tabs">'
+				+ '<div id="ub_tabs">'
 					+ '<ul>'
 						+ '<li><a href="#tabs-1">编织模板</a></li>'
 						+ '<li><a href="#tabs-2">补丁设置</a></li>'
 					+ '</ul>'
-					+ '<div id="tabs-1">'
+					+ '<div id="tabs-1" class="ub_tabs">'
 						+ '<div id="ub_edit">'
 							+ '<label>在右边的模板结构中选择“编织目标”</label></br>'
 							+ '<label>目标模板:<input id="ub_template" value="" disabled/></label></br>'
@@ -31,7 +31,7 @@ ub = {
 							+ '<button id="ub_savebtn" onclick="ub.saveSetting()">织入代码</button>'
 						+ '</div>'
 					+ '</div>'
-					+ '<div id="tabs-2">'
+					+ '<div id="tabs-2" class="ub_tabs">'
 						+ '<div id="ub_merge_list">'
 						+ '</div>'
 					+ '</div>'
@@ -52,7 +52,7 @@ ub = {
 		ub.bindEvent();
 		
 		//隐藏右侧
-		jquery('#tabs').hide();
+		jquery('#ub_tabs').hide();
 		jquery('#ub_right').append('<div id="ub_warning" style="width:100%;height:20px;padding:5px 0;text-align:center">请先在左侧选择一个HTML节点</div>');
 		
 	},
@@ -67,7 +67,12 @@ ub = {
 	openDialog:function(){
 		//内容放入共用对话框
 		ub.aDialog.hide().appendTo(jquery('#mergepannel-dialog'));
-		jQuery( "#tabs" ).tabs({ selected: 0});
+		
+		
+		//xxxxxxxxxxxxxxxxxxx
+		
+		
+//		jQuery( "#tabs" ).tabs({ selected: 0});
 	},
 	//************初始化tag列表************
 	initTagList:function(){
@@ -98,7 +103,7 @@ ub = {
 			callback: {
 				beforeClick : function(treeId,treeNode){
 					if(!treeNode.getParentNode()){
-						jquery('#mergepannel-dialog #tabs').hide();
+						jquery('#mergepannel-dialog #ub_tabs').hide();
 						jquery('#mergepannel-dialog #ub_warning').show();
 						return false;
 					}
@@ -136,7 +141,7 @@ ub = {
 	
 	//**************选择tag列表中的元素**************
 	selectTag:function(event, treeId, treeNode){
-		jquery('#tabs').show();
+		jquery('#ub_tabs').show();
 		jquery('#ub_warning').hide();
 		ub.setTagPatchsInfoToEditForm(treeNode);
 		ub.sentTagInfoToEditForm(treeNode);
