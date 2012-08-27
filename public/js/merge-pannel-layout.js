@@ -1311,6 +1311,8 @@ MergerPannel.Layout.prototype.addChildFrame = function(itemEle, itemData) {
 	$(itemEle).prepend( aNewFrame );
 	
 	aNewFrame.attr('xpath', aNewFrame.parents('.jc-frame:first').attr('xpath') + '/' + sEleId );
+	
+	return newNode;
 }
 MergerPannel.Layout.prototype.log = function(msg)
 {
