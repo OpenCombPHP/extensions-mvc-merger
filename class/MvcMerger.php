@@ -311,6 +311,13 @@ class MvcMerger extends Extension
 			$aView->variables()->set('sControllerClass',$sClassName) ;
 			$aView->variables()->set('log',Request::singleton()->bool('log')) ;
 			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;			$aView->removeWrapperClasses('jc-layout') ;
+			$arrSkins = array();
+			$aSkinsKey = $aSetting->key('/merge/skin',null);
+			foreach( $aSkinsKey->itemIterator() as $sSkin){
+				$arrSkins[$sSkin] = $aSkinsKey->item($sSkin);
+			}
+			$aView->variables()->set('arrSkins',json_encode($arrSkins) );
+			
 			$aView->removeWrapperClasses('jc-layout') ;
 			$aView->removeWrapperClasses('jc-frame') ;
 			$aController->view()->addView('MergePannelDialog',$aView) ;

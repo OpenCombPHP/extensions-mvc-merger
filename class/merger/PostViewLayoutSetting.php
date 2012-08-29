@@ -86,6 +86,44 @@ class PostViewLayoutSetting extends ControlPanel
 		$this->createMessage(Message::success,"视图布局配置已经保存。") ;
 	}
 	
+	protected function saveToSkin()
+	{
+		if( empty($this->params['title']) )
+		{
+			$this->createMessage(Message::error,"缺少参数 title") ;
+			return ;
+		}
+		
+		if( empty($this->params['properties']) )
+		{
+			$this->createMessage(Message::error,"缺少参数 properties") ;
+			return ;
+		}
+		
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+		
+		// 保存设定
+		$aSetting->setItem('/merge/skin', $this->params['title'] ,  $this->params['properties'] ) ;
+		
+		$this->createMessage(Message::success,"皮肤配置已经保存。") ;
+	}
+	
+	protected function deleteSkin()
+	{
+		if( empty($this->params['title']) )
+		{
+			$this->createMessage(Message::error,"缺少参数 title") ;
+			return ;
+		}
+	
+		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
+	
+		// 保存设定
+		$aSetting->deleteItem('/merge/skin', $this->params['title'] ) ;
+	
+		$this->createMessage(Message::success,"皮肤已经删除。") ;
+	}
+	
 	static public function unserializeParams($sParams){
 		$sParams = str_replace('@', '&', $sParams);
 		$sParams = str_replace('^', '=', $sParams);

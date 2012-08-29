@@ -70,15 +70,21 @@
 							<dl>
 								<dt><h3>样式:</h3></dt>
 								<dd>
-								选择样式<select id='mergepannel-props-skin' >
-											<option value="">无</option>
-											<option value="jc-view-decorater-oc">蜂巢默认样式</option>
-										</select>
-								<br/>
-								
 								<label>填写样式
 									<input style="width: 160px" id="mergepannel-props-class"/>
 								</label>
+								<br/>
+								
+								<script>
+									//皮肤内容
+									__arrSkins = {=$arrSkins}
+								</script>
+								
+								选择皮肤<select id='mergepannel-props-skin' >
+										</select>
+										
+								<a href='#' id='mergepannel-props-skin-manager'>管理皮肤</a>
+								
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
@@ -279,6 +285,16 @@
 								</dd>
 								<dd style="clear:both;"></dd>
 							</dl>
+							
+							<dl>
+								<dd>
+									<button id="mergepannel-layout-saveToSkinBtn" title="将当前样式保存成皮肤" style="float:left;">
+										保存皮肤
+									</button>
+									<div id="mergepannel-skin-msgqueue" style="float:left;"></div>
+								</dd>
+								<dd style="clear:both;"></dd>
+							</dl>
 						</div>
 				</div>
 				</div>
@@ -310,7 +326,7 @@
 				<button id="mergepannel-layout-savebtn">
 					保存
 				</button>
-				<button id="mergepannel-layout-cleanbtn">
+				<button id="mergepannel-layout-cleanbtn" title="清理本页面所有样式">
 					清理
 				</button>
 			</div>
