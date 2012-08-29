@@ -1035,8 +1035,8 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 				if(i==2){
 					color[i] = color[i].split(')')[0];
 				}
-	　　　　　　var hex=Number(color[i]).toString(16);
-	　　　　　　if(hex.length==1){
+				var hex=Number(color[i]).toString(16);
+				if(hex.length==1){
 					hex="0"+hex;
 				}
 	　　　　　　colorHex+=hex;
@@ -1046,8 +1046,24 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	　　　　return color;
 	　　}
 	}
-	
 
+	//保留class的保存,防止用户指定class时勿删
+	var arrClasses = $(this.eleSelectedItem).attr('class').split(' ');
+	var arrToFormInput = [];
+	var arrToFormInputParams = [];
+	for ( var nClass in arrClasses) {
+		//是用户指定的class? 如果是放入表单,不是就放入表单备用值中
+		if( $.inArray( arrClasses[nClass] , realThis.keepClassNames) === -1 ){
+			arrToFormInput.push( arrClasses[nClass] );
+		}else{
+			arrToFormInputParams.push( arrClasses[nClass] );
+		}
+	}
+	$.unique(arrToFormInput);
+	$.unique(arrToFormInputParams);
+	$('#mergepannel-props-class').val(arrToFormInput.join(' '));
+	$('#mergepannel-props-class').attr('otherClass',arrToFormInputParams.join(' '));
+	
 	//还原skin列表的值
 	//TODO
 }
@@ -1114,34 +1130,6 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		$(realthis.eleSelectedItem).attr( 'class', oldClass);
 		$('#mergepannel-props-class').change();
 	});
-	/*
-	//套用样式 处理
-	if ($('#mergepannel-props-skin').val() != '') {
-		$(realthis.eleSelectedItem).addClass( $('#mergepannel-props-skin').val() );
-		realthis.updateLayout(function(){
-			$(realthis.eleSelectedItem).removeClass( $('#mergepannel-props-skin').val() );
-			$('#mergepannel-props-skin').val( realthis.getMapMVCMergerItemProperties(sId, 'skin') ).change();
-		});
-	} else {
-		var className = '';
-		$('#mergepannel-props-skin').find('option').each(function(v, b) {
-			if ($(b).val() != '' && $(realthis.eleSelectedItem).hasClass($(b).val()) ) {
-				$(realthis.eleSelectedItem).removeClass($(b).val());
-				className = $(b).val();
-				return;
-			}
-		});
-		
-		realthis.updateLayout(function(){
-			$(realthis.eleSelectedItem).addClass(className);
-			$('#mergepannel-props-skin').val(className).change();
-		});
-	}*/
-	
-	if(event.currentTarget.id == 'mergepannel-props-skin'){
-		realthis.cleanProperties();
-	}
-	
 	
 	switch( event.currentTarget.id ){
 		//width height 的特殊处理,这里避免框架上出现auto宽度和高度,并计算jc-layout的最小宽高最大宽高
@@ -1175,6 +1163,14 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 				});
 				
 				realthis.changedSpaceTreeNode($(realthis.eleSelectedItem));
+			}
+			break;
+			
+		//换皮肤,应用皮肤所有的属性到表单中
+		case 'mergepannel-props-skin' :
+			var properties = __arrSkins[$(event.currentTarget).val()];
+			for(var property in properties){
+				$('#'+realThis.mapPropertyNames[property]).val(properties[property]).change();
 			}
 			break;
 			
@@ -1341,6 +1337,21 @@ MergerPannel.Layout.prototype.saveProperties = function(sId) {
 	for( var propertyName in this.mapPropertyNames){
 		mapMVCMergerItemProperties[sId][propertyName] = $('#'+this.mapPropertyNames[propertyName]).val();
 	}
+}
+
+/**
+ * 导出skin
+ * return base64
+ */
+MergerPannel.Layout.prototype.exportSkin = function(sSkinName) {
+	return jquery.base64Encode( jquery.toJSON(__arrSkins[sSkinName]) );
+}
+
+/**
+ * 导入skin
+ */
+MergerPannel.Layout.prototype.importSkin = function(sBase64) {
+	jquery.evalJSON( jquery.base64Decode( sBase64 ) );
 }
 
 /**
