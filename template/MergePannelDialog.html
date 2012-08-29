@@ -10,6 +10,7 @@
 <script src="mvc-merger:js/jquery.base64.js" />
 <script src="mvc-merger:js/merge-pannel.js" />
 <script src="mvc-merger:js/merge-pannel-layout.js" />
+<script src="mvc-merger:js/setPageLayout.js" />
 
 <css src="mvc-merger:css/merge-pannel.css" />
 <css src="mvc-merger:css/jquery.wijmo-open.2.1.4.css" />
@@ -17,6 +18,18 @@
 <div id='mergepannel-dialog'>
 	<div id='mergepannel-layout' class="mvcmerger_pages">
 		<div id='mergepannel-layout-views'>
+			<!-- 版型设置 -->
+			<div id="setPageLayout" class="mergepannel-layout-view">
+				<div>
+					<h1 id="setPageLayout-text" class="mergepannel-layout-view-header">版型设置</h1>
+					<hr />
+				</div>
+				<div id="setPageLayout-main">
+					<ul id="pageLayoutList">
+						<li>测试</li>
+					</ul>
+				</div>
+			</div>
 			<!-- frame/view 属性面板 -->
 			<div id="mergepannel-properties" style="display: none">
 				<div>

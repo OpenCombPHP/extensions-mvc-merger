@@ -158,12 +158,33 @@ class MvcMerger extends Extension
 		}
 	}
 	
-	public function reflectMvc($aController)
+	static public function reflectMvc($aController)
 	{
-		if(!$aController->params()->bool('mvcmerger_browser'))
+		if($aController->params()->bool('mvcmerger'))
 		{
-			return ;
+			self::printFrameCode($aController);
 		}
+		
+		if($aController->params()->bool('mvcmerger_browser'))
+		{
+			$this->printBrowserCode($aController);
+		}
+	}
+	
+	static private function printFrameCode($aController){
+		$sViewContainerId = $aController->frame()->viewContainer()->id();
+		$sAssembledParentId = $aController->view()->assembledParent()->id();
+		echo <<<CODE
+
+<script>
+var __viewContainerId = '{$sViewContainerId}';
+var __assembledParentId = '{$sAssembledParentId}';
+</script>
+
+CODE;
+	}
+	
+	private function printBrowserCode($aController){
 		$sJsCode = "\r\n<script>\r\n" ;
 		$sJsCode.= "var _mvcstruct = { \r\n";
 		$sJsCode.= "	'controller':" . self::generateControllerStructJcCode($aController) . ", \r\n" ;
