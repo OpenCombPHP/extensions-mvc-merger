@@ -43,8 +43,11 @@ function getViewNodeList(){
 	return viewNodeList ;
 }
 
-function recAddFrameByData(ele,node,data){
+function recAddFrameByData(ele,node,data,parentData){
 	if( typeof(data) != 'object' ) return [];
+	if( typeof(parentData) == 'undefined' ){
+		parentData = {} ;
+	}
 	
 	var newframe = realThis.addChildFrame( ele , node )[0];
 	
@@ -56,7 +59,8 @@ function recAddFrameByData(ele,node,data){
 			var rtn = recAddFrameByData(
 				document.getElementById(newframe.id),
 				newframe,
-				data['subframes'][i]
+				data['subframes'][i],
+				data
 			);
 			emptyFrameList = emptyFrameList.concat( rtn );
 		}
@@ -77,7 +81,15 @@ function recAddFrameByData(ele,node,data){
 		}
 	}
 	
-	realThis.setItemLayout( newframe , data );
+	var aLayout = {};
+	var i;
+	for( i in parentData.layout ){
+		aLayout[i] = parentData.layout[i] ;
+	}
+	for( i in data.layout ){
+		aLayout[i] = data.layout[i] ;
+	}
+	realThis.setItemLayout( newframe , aLayout );
 	
 	return emptyFrameList ;
 }
@@ -152,14 +164,19 @@ function getPageLayoutData(plid){
 				{
 					'nmax':1,
 					'dire':'vertical',
-					'width':200,
+					'layout':{
+						'width':200,
+					}
 				},
 				{
 					'dire':'vertical',
-					'width':250,
 				},
 				{
 					'dire':'vertical',
+					'nmax':2,
+					'layout':{
+						'width':100,
+					},
 				},
 			],
 		},
