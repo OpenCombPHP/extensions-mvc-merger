@@ -53,7 +53,14 @@ ub = {
 		
 		//隐藏右侧
 		jquery('#ub_tabs').hide();
-		jquery('#ub_right').append('<div id="ub_warning" style="width:100%;height:20px;padding:5px 0;text-align:center">请先在左侧选择一个HTML节点</div>');
+		jquery('#ub_right').append(
+				  '<div id="ub_warning" style="width:100%;height:20px;padding:5px 0;">'
+					+ '<div>所属扩展:</div>'
+					+ '<div>命名空间:</div>'
+					+ '<div>文件名:</div>'
+					+ '<div>路径:</div>'
+				+ '</div>'
+				);
 		
 	},
 	//获得模板结构信息
