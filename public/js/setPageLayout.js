@@ -1,8 +1,23 @@
 jQuery(function(){
-	jQuery('#pageLayoutList').find('li').bind('click',changePageLayout);
+	jQuery('#pageLayoutList').find('li').bind('click',function(){
+		var plid = jQuery(this).attr("plid");
+		changePageLayout(plid);
+	});
 });
 
-function changePageLayout(){
+function getCustomFrameNodeList(){
+	var customFrameNodeList =
+	realThis.aZtree.getNodesByFilter(function(node){
+		if( jQuery('#'+node.id).hasClass('cusframe') ){
+			return true;
+		}else{
+			return false;
+		}
+	});
+	return customFrameNodeList ;
+}
+
+function getViewContainerNode(){
 	var viewContainerNode =
 	realThis.aZtree.getNodesByFilter(function(node){
 		if( __assembledParentId == node.id ){
@@ -12,9 +27,10 @@ function changePageLayout(){
 		}
 	})[0];
 	
-	var viewContainerEle = document.getElementById( __assembledParentId );
-	var newframe = realThis.addChildFrame( viewContainerEle , viewContainerNode )[0];
-	
+	return viewContainerNode ;
+}
+
+function getViewNodeList(){
 	var viewNodeList = 
 	realThis.aZtree.getNodesByFilter(function(node){
 		if( node.type=='view' && node.level > 1){
@@ -24,11 +40,130 @@ function changePageLayout(){
 		}
 	});
 	
-	var i;
-	var eleNewf = document.getElementById(newframe.id);
+	return viewNodeList ;
+}
+
+function recAddFrameByData(ele,node,data){
+	if( typeof(data) != 'object' ) return [];
+	
+	var newframe = realThis.addChildFrame( ele , node )[0];
+	
+	var emptyFrameList = [] ;
+	if( typeof( data['subframes'] ) != 'undefined' ){
+		var i;
+		// 先添加的在后面，因此需要反着循环
+		for(i=data['subframes'].length-1;i>=0;i--){
+			var rtn = recAddFrameByData(
+				document.getElementById(newframe.id),
+				newframe,
+				data['subframes'][i]
+			);
+			emptyFrameList = emptyFrameList.concat( rtn );
+		}
+	}else{
+		data.node = newframe ;
+		emptyFrameList.push( data );
+	}
+	
+	if( typeof( data['dire'] ) != 'undefined' ){
+		var eleNewf = document.getElementById( newframe.id );
+		switch(data['dire']){
+		case 'horizontal':
+			realThis.setFrameLayout( eleNewf , 'h' );
+			break;
+		case 'vertical':
+			realThis.setFrameLayout( eleNewf , 'v' );
+			break;
+		}
+	}
+	
+	realThis.setItemLayout( newframe , data );
+	
+	return emptyFrameList ;
+}
+
+function changePageLayout(plid){
+	var customFrameNodeList = getCustomFrameNodeList() ;
+	
+	var viewContainerNode = getViewContainerNode() ;
+	var viewContainerEle = document.getElementById( __assembledParentId );
+	
+	var data = getPageLayoutData(plid);
+	var newFrameList = recAddFrameByData( viewContainerEle , viewContainerNode , data );
+	
+	var viewNodeList = getViewNodeList();
+	
+	var i,j;
+	
+	var bssetMap = [];
+	for(j in newFrameList){
+		bssetMap[j] = j;
+		newFrameList[j].num = 0;
+		newFrameList[j].isFull = function(){
+			if( typeof(this.nmax) == 'undefined' ){
+				return false;
+			}
+			if( this.num < this.nmax ){
+				return false;
+			}
+			return true;
+		}
+	}
+	j = 0;
 	for(i in viewNodeList){
+		while( newFrameList[ bssetMap[j] ].isFull() ){
+			bssetMap[j] ++ ;
+			if( bssetMap[j] >= newFrameList.length ){
+				bssetMap[j] = 0;
+			}
+		}
+		
+		var newframe = newFrameList[ bssetMap[j] ].node;
+		var eleNewf = document.getElementById( newframe.id );
+		newFrameList[ bssetMap[j] ].num ++ ;
+		
 		var eleView = document.getElementById(viewNodeList[i].id) ;
 		realThis.aZtree.moveNode( newframe , viewNodeList[i] , 'inner' );
+		realThis.updateLayout();
 		realThis.moveIn( eleView , eleNewf );
+		
+		j++ ;
+		if( j >= newFrameList.length ){
+			j = 0;
+		}
 	}
+	
+	for( i in customFrameNodeList ){
+		var cfn = customFrameNodeList[i];
+		var ecf = document.getElementById(cfn.id);
+		
+		realThis.deleteFrame(ecf, cfn);
+		//重新计算布局
+		realThis.updateLayout();
+	}
+}
+
+function getPageLayoutData(plid){
+	// dire : 方向，horizontal是水平，vertical是垂直
+	var data={
+		'aaa':{
+			'dire':'horizontal',
+			'subframes':[
+				{
+					'nmax':1,
+					'dire':'vertical',
+					'width':200,
+				},
+				{
+					'dire':'vertical',
+					'width':250,
+				},
+				{
+					'dire':'vertical',
+				},
+			],
+		},
+	};
+	
+	return data[plid];
 }
