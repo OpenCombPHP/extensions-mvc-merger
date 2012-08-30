@@ -1344,14 +1344,17 @@ MergerPannel.Layout.prototype.saveProperties = function(sId) {
  * return base64
  */
 MergerPannel.Layout.prototype.exportSkin = function(sSkinName) {
-	return jquery.base64Encode( jquery.toJSON(__arrSkins[sSkinName]) );
+	var packer = new MvcmergeViewSkinPackage;
+	packer.name = sSkinName;
+	packer.css = __arrSkins[sSkinName];
+	return packer.pack();
 }
 
 /**
  * 导入skin
  */
 MergerPannel.Layout.prototype.importSkin = function(sBase64) {
-	jquery.evalJSON( jquery.base64Decode( sBase64 ) );
+	return MvcmergeViewSkinPackage.unpack(sBase64);
 }
 
 /**
@@ -1423,7 +1426,29 @@ MergerPannel.Layout.prototype.log = function(msg)
 	jquery('#mergepannel-log-output').append(msg+"<br />\r\n") ;
 };
 
+function MvcmergeViewSkinPackage(){
+	var $ = jquery;
+	
+	this.name = '' ;
+	this.css = {} ;
+	this._res = {} ;
+	
+	this.addResource = function(filename,content){
+		this._res[filename] = {
+			content: content
+			, length: strlen(content)
+		}
+	}
+	
+	this.pack = function(){
+		return $.base64Encode($.toJSON(this)) ;
+	}
+}
 
+MvcmergeViewSkinPackage.unpack = function(string){
+	var $ = jquery;
+	return $.evalJSON($.base64Decode(string)) ;
+}
 
 
 
