@@ -1,4 +1,10 @@
 jQuery(function(){
+	var i;
+	for(i in pageLayoutData){
+		jQuery('#pageLayoutList').append(
+			'<li plid="'+i+'">'+pageLayoutData[i].title+'</li>'
+		);
+	}
 	jQuery('#pageLayoutList').find('li').bind('click',function(){
 		var plid = jQuery(this).attr("plid");
 		changePageLayout(plid);
@@ -155,32 +161,36 @@ function changePageLayout(plid){
 	}
 }
 
+// dire : 方向，horizontal是水平，vertical是垂直
+var pageLayoutData={
+	'aaa':{
+		'title':'左中右三栏，左右较窄',
+		'dire':'horizontal',
+		'subframes':[
+			{
+				'nmax':1,
+				'dire':'vertical',
+				'layout':{
+					'width':200,
+				}
+			},
+			{
+				'dire':'vertical',
+			},
+			{
+				'dire':'vertical',
+				'nmax':2,
+				'layout':{
+					'width':100,
+				},
+			},
+		],
+	},
+	'bbb':{
+		'title':'测试',
+	}
+};
+
 function getPageLayoutData(plid){
-	// dire : 方向，horizontal是水平，vertical是垂直
-	var data={
-		'aaa':{
-			'dire':'horizontal',
-			'subframes':[
-				{
-					'nmax':1,
-					'dire':'vertical',
-					'layout':{
-						'width':200,
-					}
-				},
-				{
-					'dire':'vertical',
-				},
-				{
-					'dire':'vertical',
-					'nmax':2,
-					'layout':{
-						'width':100,
-					},
-				},
-			],
-		},
-	};
-	
-	return data[plid];
+	return pageLayoutData[plid];
 }
