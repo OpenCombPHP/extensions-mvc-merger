@@ -36,10 +36,21 @@ function getViewContainerNode(){
 	return viewContainerNode ;
 }
 
+function getParentNodeList(node){
+	var list = [];
+	do{
+		list.push(node);
+		node = node.getParentNode();
+	}while( node != null );
+	return list;
+}
+
 function getViewNodeList(){
+	var viewContainerNode = getViewContainerNode();
+	var vcParentNodeList = getParentNodeList(viewContainerNode);
 	var viewNodeList = 
 	realThis.aZtree.getNodesByFilter(function(node){
-		if( node.type=='view' && node.level > 1){
+		if( node.type=='view' && vcParentNodeList.indexOf(node) == -1 ){
 			return true;
 		}else{
 			return false;
