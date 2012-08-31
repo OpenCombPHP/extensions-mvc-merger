@@ -14,8 +14,8 @@ MergerPannel.prototype.init = function()
 	}
 	
 	var ui_dialog = $('#mergepannel-dialog').wijdialog({
-		width: 680
-		, height: 450
+		width: 700
+		, height: 570
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
