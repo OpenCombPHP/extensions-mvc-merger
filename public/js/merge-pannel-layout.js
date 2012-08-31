@@ -266,8 +266,39 @@ MergerPannel.Layout.prototype._initUi = function() {
 	$('#mergepannel-layout-saveToSkinBtn').click(function(){
 		realThis.saveLayoutToSkin();
 	});
-	
 	realThis.initSkinSelect(__arrSkins);
+	
+	//隐藏皮肤和版式
+	$('#box_frameskin_foot_btn').click(function(){
+		if( $('.box_frame:visible').length === 0){
+			$('.box_frame').toggle('fast');
+		}
+		
+	});
+	
+	//皮肤和版式tab
+	$('.box_bj_top_tab').find('p').click(function(){
+		$('.box_bj_top_tab').find('p').removeClass('box_tab_v');
+		$(this).addClass('box_tab_v');
+		
+		$('.box_frame').addClass('hide');
+		$('#'+$(this).attr('tab')).removeClass('hide');
+	});
+	//皮肤版式选择
+	$('.box_top_left , .box_top_right').click(function(){
+		//方向
+		var to = $(this).attr('to');
+		//皮肤还是版式? 
+		var box = $(this).parents('.box_frame:first');
+		var items = box.find('.box_frame_img');
+		if(to=="left"){
+			items.first();
+		}else{
+			
+		}
+	});
+	
+	
 };
 
 MergerPannel.Layout.prototype.openSelectDomMode = function(){
@@ -774,6 +805,10 @@ MergerPannel.Layout.prototype.cleanLayout = function() {
 MergerPannel.Layout.prototype.resizeDialog = function() {
 	var $ = jquery;
 	var nHeight = $('#mergepannel-dialog').height() - 30;// $('#mergepannel-layout-action').outerHeight(true) ;
+	var nWidth = $('#mergepannel-dialog').width();
+	
+	$('.frame_selecter_item_container').width(nWidth-70);
+	
 	$('#mergepannel-properties , #mergepannel-layout-struct , #mergepannel-layout-views').height( nHeight );
 	
 	$('#mergepannel-props-properties-overflow').height( 
@@ -1841,3 +1876,12 @@ MergerPannel.Layout.prototype.getMapMVCMergerItemProperties = function(id,proper
 	}
 	return mapMVCMergerItemProperties[id][propertyName];
 }
+
+
+/*版式和皮肤*/
+MergerPannel.Layout.prototype.fff = function(id,propertyName){
+	
+}
+/*end 版式和皮肤*/
+
+

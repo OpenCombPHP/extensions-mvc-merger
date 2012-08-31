@@ -30,6 +30,7 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 .box_top_right a{ display:block; height:66px; width:13px; background:url(../image/box_sc.png) -402px 0 no-repeat;}
 .box_frameskin_foot{ width:49px; height:11px; margin:auto; background:url(../image/box_sc.png) no-repeat}
 .box_frameskin_foot a{ padding:11px 49px 0 0;}
+.frame_selecter_item_container{float:left;overflow:hidden;height:66px;}
 
 
 .box_bj_left{ width:233px; float:left; background:#fafafa; border:#e4e4e4 1px solid; padding:2px 2px 0 0;}
