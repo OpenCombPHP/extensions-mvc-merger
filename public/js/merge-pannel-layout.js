@@ -722,7 +722,7 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 }
 
 /**
- * 单独配置
+ * 单独配置元素的样式
  */
 MergerPannel.Layout.prototype.setItemLayout = function(aNode , aLayout) {
 	var realThis = this;
