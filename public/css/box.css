@@ -8,8 +8,8 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 #ui-dialog-title-mergepannel-dialog a{ display:none;}
 #ui-dialog-title-mergepannel-dialog .selected_mvcmerger{  display:block; height:33px; background:url(../image/box_titleico.png) no-repeat 0 -6px; line-height:28px; color:#7e7e7e; display:inline; text-decoration:none; padding-left:35px}
 *****布局******/
-.box_bj_top{ height:142px; background:url(../image/box_titlebg.png) repeat-x bottom; margin-bottom:3px;}
-.box_bj_top_tab{ height:28px; padding:23px 0 0 50px;}
+.box_bj_top{ height:142px; margin-bottom:3px;}
+.box_bj_top_tab{ height:28px; padding:23px 0 0 50px; background:url(../image/box_titlebg1.png) repeat-x bottom;}
 .box_bj_top_tab p{ width:115px; float:left; height:28px; line-height:28px; color:#999; text-align:center}
 .box_bj_top_tab p a{ color:#999}
 .box_bj_top_tab .box_tab_v{ border:#e3e3e3 1px solid; border-bottom:none; color:#666; background:#fff}
@@ -19,7 +19,7 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 .box_button_left{ display:block; height:25px; line-height:25px; background:url(../image/box_sc.png) -739px -245px no-repeat; padding-left:10px;}
 .box_button_right{ display:block; height:25px; line-height:25px; padding-right:10px; background:url(../image/box_sc.png) right -188px no-repeat; float:left}
 
-.box_frame{ padding-top:14px;}
+.box_frame{ padding-top:14px;background:url(../image/box_titlebg2.png) repeat-x bottom;}
 .box_frame_img{ height:60px; padding-top:6px; width:100px; float:left;}
 .box_frame_img strong{ background:url(../image/cross-circle.png) no-repeat; width:16px; height:16px; margin-top:-66px; margin-left:70px; position:absolute}
 .box_frame_img strong a{ display:block; width:16px; height:16px;}
@@ -28,8 +28,8 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 .box_top_left,.box_top_right{float:left;}
 .box_top_left a{ display:block; height:66px; width:13px; background:url(../image/box_sc.png) -359px 0 no-repeat; margin:0 15px 0 5px;}
 .box_top_right a{ display:block; height:66px; width:13px; background:url(../image/box_sc.png) -402px 0 no-repeat;}
-.box_frameskin_foot{ width:49px; height:11px; margin:auto; background:url(../image/box_sc.png) no-repeat}
-.box_frameskin_foot a{ padding:11px 49px 0 0;}
+.box_frameskin_foot{ height:11px; text-align:center;background:url(../image/box_titlebg3.png) repeat-x bottom;}
+.box_frameskin_foot a{display:block; width:49px; height:11px; margin:auto; background:url(../image/box_sc.png) no-repeat;}
 
 
 .box_bj_left{ width:233px; float:left; background:#fafafa; border:#e4e4e4 1px solid; padding:2px 2px 0 0;}
