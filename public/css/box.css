@@ -20,7 +20,7 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 .box_button_right{ display:block; height:25px; line-height:25px; padding-right:10px; background:url(../image/box_sc.png) right -188px no-repeat; float:left}
 
 .box_frame{ padding-top:14px;}
-.box_frame_img{ height:60px; padding-top:6px; width:100px; float:left;position:static;}
+.box_frame_img{ height:60px; padding-top:6px; width:100px; float:left;}
 .box_frame_img strong{ background:url(../image/cross-circle.png) no-repeat; width:16px; height:16px; margin-top:-66px; margin-left:70px;}
 .box_frame_img strong a{ display:block; width:16px; height:16px;}
 .box_frame_img img{ width:58px; height:41px; margin:auto; display:block}

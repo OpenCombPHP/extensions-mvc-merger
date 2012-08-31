@@ -722,6 +722,19 @@ MergerPannel.Layout.prototype.saveLayout = function() {
 }
 
 /**
+ * 单独配置
+ */
+MergerPannel.Layout.prototype.setItemLayout = function(aNode , aLayout) {
+	var $ = jquery;
+	
+	var realThis = this;
+	realThis.aZtree.selectNode(aNode);
+	for(var property in aLayout){
+		$('#'+realThis.mapPropertyNames[property]).val(aLayout[property]).change();
+	}
+}
+
+/**
  * 保存布局配置
  */
 MergerPannel.Layout.prototype.cleanLayout = function() {
