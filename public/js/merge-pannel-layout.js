@@ -270,10 +270,11 @@ MergerPannel.Layout.prototype._initUi = function() {
 	
 	//隐藏皮肤和版式
 	$('#box_frameskin_foot_btn').click(function(){
-		if( $('.box_frame:visible').length === 0){
-			$('.box_frame').toggle('fast');
+		if( $('.box_frame:visible').length > 0){
+			$('#frame_container').hide();
+		}else{
+			$('#frame_container').show();
 		}
-		
 	});
 	
 	//皮肤和版式tab
@@ -283,7 +284,11 @@ MergerPannel.Layout.prototype._initUi = function() {
 		
 		$('.box_frame').addClass('hide');
 		$('#'+$(this).attr('tab')).removeClass('hide');
+		if($('.box_frame:visible').length === 0){
+			$('#box_frameskin_foot_btn').click();
+		}
 	});
+	
 	//皮肤版式选择
 	$('.box_top_left , .box_top_right').click(function(){
 		//方向
