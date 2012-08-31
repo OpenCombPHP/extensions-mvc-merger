@@ -30,7 +30,7 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 .box_top_right a{ display:block; height:66px; width:13px; background:url(../image/box_sc.png) -402px 0 no-repeat;}
 .box_frameskin_foot{ height:11px; text-align:center;background:url(../image/box_titlebg3.png) repeat-x bottom;}
 .box_frameskin_foot a{display:block; width:49px; height:11px; margin:auto; background:url(../image/box_sc.png) no-repeat;}
-
+.frame_selecter_item_container{float:left;height:66px;overflow:hidden;}
 
 .box_bj_left{ width:233px; float:left; background:#fafafa; border:#e4e4e4 1px solid; padding:2px 2px 0 0;}
 .box_bj_left_button{ padding:8px; border-bottom:#e9e9e9 1px dashed}
