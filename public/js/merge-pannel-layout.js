@@ -824,12 +824,22 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 	/*layout*/
 	$('.frame_selecter_item_container').width(nWidth-70);
 	var layoutTopHeight = $('.box_bj_top').outerHeight(true);
-	var layoutFootHeight =  $('.box_bj_footer').outerHeight(true);
+	var layoutFootHeight = $('.box_bj_footer').outerHeight(true);
+	var boxLeftHeight = nHeight
+							- layoutTopHeight
+							- layoutFootHeight
+							- ($('#box_bj_left').outerHeight(true)-$('#box_bj_left').height());
+	
 	$('#mergepannel-viewtree').height( 
-			nHeight
-			- layoutTopHeight
-			- layoutFootHeight
+			boxLeftHeight 
+			- 44 //height of box_bj_left_button
 			- ($('#mergepannel-viewtree').outerHeight(true)-$('#mergepannel-viewtree').height())
+	);
+	
+	$('.box_bj_right_footer').height( 
+			boxLeftHeight 
+			- 44 //height of box_bj_left_button
+			- ($('.box_bj_right_footer').outerHeight(true)-$('.box_bj_right_footer').height())
 	);
 }
 

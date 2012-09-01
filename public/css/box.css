@@ -18,7 +18,7 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 .body_top_menu .body_top_bz{ width:95px; height:25px; background:url(../image/top_button_hover.png) 0 -254px; display:block; float:left; margin-right:45px;}
 .body_top_menu .body_top_bz:hover{background:url(../image/top_button_hover.png) 0 -102px;}
 /*****布局******/
-.box_bj_top{ height:142px; margin-bottom:3px;}
+.box_bj_top{margin-bottom:3px;}
 .box_bj_top_tab{ height:28px; padding:23px 0 0 50px; background:url(../image/box_titlebg1.png) repeat-x bottom;}
 .box_bj_top_tab p{ width:115px; float:left; height:28px; line-height:28px; color:#999; text-align:center; cursor:hand}
 .box_bj_top_tab p a{ color:#999}
