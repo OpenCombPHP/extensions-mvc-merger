@@ -9,14 +9,22 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 #ui-dialog-title-mergepannel-dialog .selected_mvcmerger{  display:block; height:33px; background:url(../image/box_titleico.png) no-repeat 0 -6px; line-height:28px; color:#7e7e7e; display:inline; text-decoration:none; padding-left:35px}
 ********/
 /****顶部****/
-.body_top{ width:100%; background:url(../image/topbg.png) repeat-x; position:absolute; z-index:700; top:0; left:0}
+.body_top{ width:100%; height:39px; padding-top:10px; background:url(../image/topbg.png) repeat-x; position:absolute; z-index:700; top:0; left:0}
 .body_top_menu{ width:950px; margin:auto;}
-.body_top_menu .body_top_bj{ width:95px; height:25px; background:url(../image/top_button_hover.png) 0 -152px; display:block; float:left; margin-right:45px;}
+.body_top_menu a{ padding-left:35px; width:60px; line-height:25px; color:#7e7e7e; text-shadow:0 1px 0px rgba(255, 255, 255, 0.7);}
+.body_top_menu .body_top_bj{height:25px; background:url(../image/top_button_hover.png) 0 -152px; display:block; float:left; margin-right:45px;}
 .body_top_menu .body_top_bj:hover{background:url(../image/top_button_hover.png) 0 0px;}
-.body_top_menu .body_top_st{ width:95px; height:25px; background:url(../image/top_button_hover.png) 0 -203px; display:block; float:left; margin-right:45px;}
+.body_top_menu .body_top_st{ height:25px; background:url(../image/top_button_hover.png) 0 -203px; display:block; float:left; margin-right:45px;}
 .body_top_menu .body_top_st:hover{background:url(../image/top_button_hover.png) 0 -51px;}
-.body_top_menu .body_top_bz{ width:95px; height:25px; background:url(../image/top_button_hover.png) 0 -254px; display:block; float:left; margin-right:45px;}
+.body_top_menu .body_top_bz{ height:25px; background:url(../image/top_button_hover.png) 0 -254px; display:block; float:left; margin-right:45px;}
 .body_top_menu .body_top_bz:hover{background:url(../image/top_button_hover.png) 0 -102px;}
+.body_top_menu .body_top_pin{ padding-left:24px;height:25px; width:57px; background:url(../image/loc.png) 0 0px; display:block; float:right;}
+.body_top_menu .body_top_pin:hover{background:url(../image/loc.png) -130px 0; padding-right:24px; padding-left:0; text-align:right }
+.body_top_menu .body_top_pinnow{background:url(../image/loc.png) -130px 0 no-repeat;width:57px; padding-left:0; text-align:right; padding-right:24px; display:block; float:right;}
+.body_top_menu .body_top_pinnow:hover{padding-left:24px; padding-right:0;height:25px; text-align:left;  background:url(../image/loc.png) 0 0px;}
+
+.body_top_down{ height:11px;width:100%;background:url(../image/body_top_down_bg.png) repeat-x; position:absolute; z-index:710; top:46px; left:0}
+.body_top_down p{ width:33px; height:11px; background:url(../image/body_top_down.png) no-repeat; margin:auto}
 /*****布局******/
 .box_bj_top{margin-bottom:3px;}
 .box_bj_top_tab{ height:28px; padding:23px 0 0 50px; background:url(../image/box_titlebg1.png) repeat-x bottom;}
@@ -85,11 +93,25 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 .box_input10{ background:url(../image/text.png) 5px -437px no-repeat}
 .box_input11{ background:url(../image/text.png) 5px -492px no-repeat}
 .box_input12{ background:url(../image/text.png) 5px -547px no-repeat}
-.box_input13{ background:url(../image/text.png) 5px -600px no-repeat;}
+.box_input13{ background:url(../image/text.png) 5px -600px no-repeat}
 
 .box_frame_img_v{ background:url(../image/box_sc.png) -719px 4px no-repeat;}
 
 .hide{ display:none}
+
+/***********编织****************/
+#ub_select_dom{ background:url(../image/box_sc.png) -739px -245px no-repeat; width:150px; float:left}
+.box_bz_top{ height:40px;background:url(../image/bztopbg.png) repeat-x; border-bottom:0; padding:15px 0 0px 8px; margin-bottom:3px;}
+#ub_left{width:45%;}
+.box_bz_text{ line-height:25px; color:#999}
+.box_float_left{float:left}
+#ub_template_list{ background:#fbfbfb; border:#e9e9e9 1px solid}
+
+#ub_right { width:55%}
+#ub_tabs_ul{ height:23px; padding-top:32px}
+#ub_tabs{ margin:0}
+#ub_tabs_ul li{ margin-left:20px; height:27px; line-height:27px; width:auto}
+#ub_tabs_ul a.ub_tabs_select{ border:#e3e3e3 1px solid; border-bottom:0; background:#fff; padding:0 10px}
 
 /*********图标*********/
 .box_ico_import{ padding-left:20px;background:url(../image/box_sc.png) -241px -440px; }
