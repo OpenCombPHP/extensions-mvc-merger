@@ -11,8 +11,8 @@ MergerPannel.Layout = function() {
 	this.mapPropertyNames = {
 		'width' : 'mergepannel-props-width',
 		'height' : 'mergepannel-props-height',
-		'skin' : 'mergepannel-props-skin',
-		'class' : 'mergepannel-props-class',
+//		'skin' : 'mergepannel-props-skin',
+//		'class' : 'mergepannel-props-class',
 		'display' : 'mergepannel-props-display',
 		'background-image' : 'mergepannel-props-background-image',
 		'background-color' : 'mergepannel-props-background-color',
@@ -141,6 +141,28 @@ MergerPannel.Layout.prototype._initUi = function() {
 	});
 	$('#mergepannel-props-common textarea').change(function(event) {
 		realThis.applyProperties(event);
+	});
+	
+	//输入框默认值
+	$('#mergepannel-props-common input , #mergepannel-props-common textarea')
+	.focusin(function(event) {
+		if($(this).attr( 'saveClass' ) !== '' && $(this).attr( 'saveClass' ) !== undefined){
+			return ;
+		}
+		var classes = $(this).attr('class').split(' ');
+		var arrSaveClass = [];
+		for(var i in classes){
+			if(classes[i].indexOf('box_input') === 0){
+				arrSaveClass.push(classes[i]);
+			}
+		}
+		$(this).attr( 'saveClass', arrSaveClass.join(' ') ).attr('class','');
+	}).focusout(function(event) {
+		if( $(this).val() !== '' ){
+			return;
+		}
+		$(this).attr('class' , $(this).attr( 'saveClass' ) );
+		$(this).removeAttr( 'saveClass' );
 	});
 
 	// 激活提示
@@ -313,6 +335,9 @@ MergerPannel.Layout.prototype._initUi = function() {
 		$(this).find('strong').hide();
 		$(this).find('p').hide();
 	});
+	
+	
+	
 };
 
 MergerPannel.Layout.prototype.openSelectDomMode = function(){
@@ -838,7 +863,7 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 	
 	$('.box_bj_right_footer').height( 
 			boxLeftHeight 
-			- 44 //height of box_bj_left_button
+			- 44 //height of box_bj_right_top_left
 			- ($('.box_bj_right_footer').outerHeight(true)-$('.box_bj_right_footer').height())
 	);
 }
@@ -1038,6 +1063,8 @@ MergerPannel.Layout.prototype.openProperty = function(itemData, itemEle) {
 	$('#mergepannel-properties').show();
 
 	this.updateProperties();
+	
+	realThis.checkInputForTitle();
 }
 
 /**
@@ -1128,6 +1155,7 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	$.unique(arrToFormInputParams);
 	$('#mergepannel-props-class').val(arrToFormInput.join(' '));
 	$('#mergepannel-props-class').attr('otherClass',arrToFormInputParams.join(' '));
+	
 	
 	//还原skin列表的值
 	//TODO
@@ -1284,6 +1312,7 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 			$('#mergepannel-props-border-left-color').val($(event.currentTarget).val()).change();
 			$('#mergepannel-props-border-right-color').val($(event.currentTarget).val()).change();
 			$('#mergepannel-props-border-bottom-color').val($(event.currentTarget).val()).change();
+			realThis.checkInputForTitle();
 			break;
 		case 'mergepannel-props-border-top-color' :
 		case 'mergepannel-props-border-left-color' :
@@ -1294,6 +1323,8 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 			$(realthis.eleSelectedItem).css( propertyName , $(event.currentTarget).val() );
 			
 			realthis.saveProperties();
+			
+			realThis.checkInputForTitle();
 			
 			break;
 		case 'mergepannel-props-border-style' :
@@ -1491,6 +1522,33 @@ MergerPannel.Layout.prototype.log = function(msg)
 	jquery('#mergepannel-log-output').append(msg+"<br />\r\n") ;
 };
 
+//如果input中有值,就省去里面的中文提示,否则相反
+MergerPannel.Layout.prototype.checkInputForTitle = function(){
+	var $ = jquery;
+	$('#mergepannel-props-common input , #mergepannel-props-common textarea').each(function(v,b){
+		if($(b).val() !== ''){
+			if($(b).attr( 'saveClass' ) !== '' && $(b).attr( 'saveClass' ) !== undefined){
+				return ;
+			}
+			var classes = $(b).attr('class').split(' ');
+			var arrSaveClass = [];
+			for(var i in classes){
+				if(classes[i].indexOf('box_input') === 0){
+					arrSaveClass.push(classes[i]);
+				}
+			}
+			$(b).attr( 'saveClass', arrSaveClass.join(' ') ).attr('class','');
+		}else{
+			if( $(b).val() !== '' ){
+				return;
+			}
+			$(b).attr('class' , $(b).attr( 'saveClass' ) );
+			$(b).removeAttr( 'saveClass' );
+		}
+	});
+}
+
+//格式化base64 ,用于皮肤导入导出
 function MvcmergeViewSkinPackage(){
 	var $ = jquery;
 	
@@ -1896,9 +1954,7 @@ MergerPannel.Layout.prototype.getMapMVCMergerItemProperties = function(id,proper
 
 
 /*版式和皮肤*/
-MergerPannel.Layout.prototype.fff = function(id,propertyName){
-	
-}
+
 /*end 版式和皮肤*/
 
 
