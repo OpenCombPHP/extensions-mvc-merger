@@ -275,6 +275,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 		}else{
 			$('#frame_container').show();
 		}
+		realThis.resizeDialog();
 	});
 	
 	//皮肤和版式tab
@@ -295,15 +296,23 @@ MergerPannel.Layout.prototype._initUi = function() {
 		var to = $(this).attr('to');
 		//皮肤还是版式? 
 		var box = $(this).parents('.box_frame:first');
-		var items = box.find('.box_frame_img');
+		var container = box.find('.frame_selecter_item_container');
+		var items = container.find('.box_frame_img');
 		if(to=="left"){
-			items.first();
+			items.first().insertBefore(container.find('.clr'));
 		}else{
-			
+			items.last().prependTo(container);
 		}
 	});
 	
-	
+	//导出删除按钮
+	$('.box_frame_img').hover(function(){
+		$(this).find('strong').show();
+		$(this).find('p').show();
+	},function(){
+		$(this).find('strong').hide();
+		$(this).find('p').hide();
+	});
 };
 
 MergerPannel.Layout.prototype.openSelectDomMode = function(){
@@ -809,25 +818,18 @@ MergerPannel.Layout.prototype.cleanLayout = function() {
  */
 MergerPannel.Layout.prototype.resizeDialog = function() {
 	var $ = jquery;
-	var nHeight = $('#mergepannel-dialog').height() - 30;// $('#mergepannel-layout-action').outerHeight(true) ;
-	var nWidth = $('#mergepannel-dialog').width();
+	var nHeight = Math.floor( $('#mergepannel-dialog').height() );// $('#mergepannel-layout-action').outerHeight(true) ;
+	var nWidth = Math.floor( $('#mergepannel-dialog').width() );
 	
+	/*layout*/
 	$('.frame_selecter_item_container').width(nWidth-70);
-	
-	$('#mergepannel-properties , #mergepannel-layout-struct , #mergepannel-layout-views').height( nHeight );
-	
-	$('#mergepannel-props-properties-overflow').height( 
-			nHeight
-			- $('#mergepannel-props-type-text').parent('div:first').outerHeight(true)
-			- 10
-	);
-	
+	var layoutTopHeight = $('.box_bj_top').outerHeight(true);
+	var layoutFootHeight =  $('.box_bj_footer').outerHeight(true);
 	$('#mergepannel-viewtree').height( 
 			nHeight
-			- $('#mergepannel-layout-struct-title').parent('div:first').outerHeight(true) 
-			- ( $('#mergepannel-viewtree').outerHeight() - $('#mergepannel-viewtree').height() )
-			- 10
-			- 26 //选择按钮的高度
+			- layoutTopHeight
+			- layoutFootHeight
+			- ($('#mergepannel-viewtree').outerHeight(true)-$('#mergepannel-viewtree').height())
 	);
 }
 
