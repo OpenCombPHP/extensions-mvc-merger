@@ -84,34 +84,34 @@ MergerPannel.prototype.init = function()
 	});
 	
 	//body_top动态效果
-//	$('.body_top_down , .body_top').hover(function(){
-//		$(".body_top").stop(false,true).slideDown();
-//	});
-//	$(".body_top").mouseout(function(){
+	$('.body_top_down , .body_top').hover(function(){
+		$(".body_top").stop(false,true).slideDown();
+	});
+	$(".body_top").mouseout(function(){
+		if($('.body_top_pin_selected').hasClass('body_top_pin')){
+			return;
+		}
+		$(".body_top").stop(false,true).slideUp();
+	});
+	
+	$('.body_top_pin').click(function(){
+		$('.body_top_pinnow').show().addClass('body_top_pin_selected');
+		$(this).hide().removeClass('body_top_pin_selected');
+	});
+	$('.body_top_pinnow').click(function(){
+		$('.body_top_pin').show().addClass('body_top_pin_selected');
+		$(this).hide().removeClass('body_top_pin_selected');
+	});
+	
+	function showBoxTop(){
+		$(".body_top").stop(false,true).slideDown();
+	}
+	function hideBoxTop(){
 //		if($('.body_top_pin_selected').hasClass('body_top_pin')){
 //			return;
 //		}
-//		$(".body_top").stop(false,true).slideUp();
-//	});
-//	
-//	$('.body_top_pin').click(function(){
-//		$('.body_top_pinnow').show().addClass('body_top_pin_selected');
-//		$(this).hide().removeClass('body_top_pin_selected');
-//	});
-//	$('.body_top_pinnow').click(function(){
-//		$('.body_top_pin').show().addClass('body_top_pin_selected');
-//		$(this).hide().removeClass('body_top_pin_selected');
-//	});
-//	
-//	function showBoxTop(){
-//		$(".body_top").stop(false,true).slideDown();
-//	}
-//	function hideBoxTop(){
-////		if($('.body_top_pin_selected').hasClass('body_top_pin')){
-////			return;
-////		}
-//		$(".body_top").stop(false,true).slideUp();
-//	}
+		$(".body_top").stop(false,true).slideUp();
+	}
 	
 	
 	clearJCLayout();

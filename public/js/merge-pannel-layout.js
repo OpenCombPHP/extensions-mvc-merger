@@ -857,13 +857,13 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 	
 	$('#mergepannel-viewtree').height( 
 			boxLeftHeight 
-			- 44 //height of box_bj_left_button
+			- 48 //height of box_bj_left_button
 			- ($('#mergepannel-viewtree').outerHeight(true)-$('#mergepannel-viewtree').height())
 	);
 	
 	$('.box_bj_right_footer').height( 
 			boxLeftHeight 
-			- 44 //height of box_bj_right_top_left
+			- 48  //height of box_bj_right_top_left
 			- ($('.box_bj_right_footer').outerHeight(true)-$('.box_bj_right_footer').height())
 	);
 }
