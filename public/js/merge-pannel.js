@@ -84,10 +84,10 @@ MergerPannel.prototype.init = function()
 	});
 	
 	//body_top动态效果
-	$('.body_top_down , .body_top').hover(function(){
+	$('.body_top_down').hover(function(){
 		$(".body_top").stop(false,true).slideDown();
 	});
-	$(".body_top").mouseout(function(){
+	$(".body_top").mouseleave(function(){
 		if($('.body_top_pin_selected').hasClass('body_top_pin')){
 			return;
 		}
