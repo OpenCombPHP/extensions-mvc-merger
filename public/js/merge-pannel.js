@@ -51,6 +51,7 @@ MergerPannel.prototype.init = function()
 	var index = currHref.lastIndexOf("?");
 	var param = "";
 	if(index != "-1"){    param = currHref.substr(index+1);}
+	
 	//获取页面融合页面内容
 	$.ajax({
 		url: '?c=org.opencomb.mvcmerger.merger.ControllerMerger&rspn=noframe&request='+param.replace(/&/g,'@').replace(/=/g,'^')
@@ -65,13 +66,13 @@ MergerPannel.prototype.init = function()
 	}) ;
 	
 	//tab页面
-	$('.selected_mvcmerger').parent().find('a').click(function(){
+	$('div.body_top_menu').find('a[tab]').click(function(){
 		var showPage = $("#"+$(this).attr('tab'));
 		if(showPage.length > 0){
 			$('.mvcmerger_pages').hide();
 			showPage.show();
-			$('.selected_mvcmerger').removeClass("selected_mvcmerger");
-			$(this).addClass("selected_mvcmerger");
+//			$('.selected_mvcmerger').removeClass("selected_mvcmerger");
+//			$(this).addClass("selected_mvcmerger");
 			
 			if($(this).attr('tab') == 'mergepannel-controllermerger' 
 				&& $("#mergepannel-dialog #mergeCtl_result:visible").length == 1
@@ -81,6 +82,37 @@ MergerPannel.prototype.init = function()
 		}
 		return false;
 	});
+	
+	//body_top动态效果
+//	$('.body_top_down , .body_top').hover(function(){
+//		$(".body_top").stop(false,true).slideDown();
+//	});
+//	$(".body_top").mouseout(function(){
+//		if($('.body_top_pin_selected').hasClass('body_top_pin')){
+//			return;
+//		}
+//		$(".body_top").stop(false,true).slideUp();
+//	});
+//	
+//	$('.body_top_pin').click(function(){
+//		$('.body_top_pinnow').show().addClass('body_top_pin_selected');
+//		$(this).hide().removeClass('body_top_pin_selected');
+//	});
+//	$('.body_top_pinnow').click(function(){
+//		$('.body_top_pin').show().addClass('body_top_pin_selected');
+//		$(this).hide().removeClass('body_top_pin_selected');
+//	});
+//	
+//	function showBoxTop(){
+//		$(".body_top").stop(false,true).slideDown();
+//	}
+//	function hideBoxTop(){
+////		if($('.body_top_pin_selected').hasClass('body_top_pin')){
+////			return;
+////		}
+//		$(".body_top").stop(false,true).slideUp();
+//	}
+	
 	
 	clearJCLayout();
 	//清理视图布局编辑器中的layout class 防止编辑器认错
