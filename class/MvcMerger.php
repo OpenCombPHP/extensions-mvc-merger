@@ -340,7 +340,17 @@ CODE;
 					$arrSkins[$sSkin] = $aSkinsKey->item($sSkin);
 				}
 			}
-			$aView->variables()->set('arrSkins',json_encode($arrSkins) );
+			
+// 			aSkinsItemIterator = $aSkinsKey->itemIterator();
+				
+// 			while( $aSkinsItemIterator->valid() )
+// 			{
+// 				$arrSkins[$aSkinsItemIterator->current()] = $aSkinsKey->item( $aSkinsItemIterator->current() );
+// 				$aSkinsItemIterator->next();
+// 			}
+			
+			$aView->variables()->set('__arrSkins',json_encode($arrSkins) );
+			$aView->variables()->set('arrSkins',$arrSkins);
 			
 			$aView->removeWrapperClasses('jc-layout') ;
 			$aView->removeWrapperClasses('jc-frame') ;

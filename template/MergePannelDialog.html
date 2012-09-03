@@ -18,7 +18,7 @@
 
 
 <script>
-__arrSkins = {=$arrSkins};
+__arrSkins = {=$__arrSkins};
 </script>
 
 <div id='mergepannel-dialog'>
@@ -75,12 +75,20 @@ __arrSkins = {=$arrSkins};
 						<a href="#" title="上一个"></a>
 					</div>
 					<div class="frame_selecter_item_container">
-						<if "$arrSkins !== '[]'">
-						<foreach for="$arrSkins" item="arrSkin">
-							<div class="box_frame_img">
+							<div id="cusSkin" class="box_frame_img box_frame_img_v">
 								<a href="#" title="#"><img src="../extensions/mvc-merger/0.2/public/image/frame1.png" alt="#" /></a>
-								<span>{=$arrSkin['name']}</span>
-								<strong><a href="#" title="删除皮肤"></a></strong>
+								<span class="box_frame_skinName">自定义</span>
+							</div>
+						<if "$arrSkins !== array()">
+						<foreach for="$arrSkins" key="sSkinName" item="arrSkin">
+							<div class="box_frame_img">
+								<a href="#" title="#">
+									<div class="box_frame_skin_show">
+										<div class="box_frame_skin_show_div"></div>
+									</div>
+								</a>
+								<span class="box_frame_skinName">{=$sSkinName}</span>
+								<strong><a class="box_frame_deleteSkin" href="#" title="删除皮肤"></a></strong>
 								<p><a href="#" title="导出皮肤"></a></p>
 							</div>
 						</foreach>
@@ -169,6 +177,9 @@ __arrSkins = {=$arrSkins};
 							</span>
 							<div class="clr"></div>
 						</div>
+
+						<!--  高级模式  -->
+						<div class="mergepannel-props-ad">
 						<div>
 							<p>定位</p>
 							<span>
@@ -319,9 +330,9 @@ __arrSkins = {=$arrSkins};
 						<div>
 							<p>皮肤名</p>
 							<span>
-							<input type="text"/>
+							<input id="mergepannel-props-skin" type="hidden"/>
 							<button id="mergepannel-layout-saveToSkinBtn" title="将当前样式保存成皮肤">保存皮肤</button>
-							<div id="mergepannel-skin-msgqueue" style="float:left;"></div>
+							<div id="mergepannel-skin-msgqueue" ></div>
 							</span>
 							<div class="clr"></div>
 						</div>
@@ -399,7 +410,7 @@ jquery(document).ready(function(){
 	});
 	
 	jquery('#mergepannel-props-color-selecter').farbtastic(function(color){
-		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color);
+		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color).change();
 	});
 	
 	jquery('#mergepannel-props-background-color').focusin(function(){

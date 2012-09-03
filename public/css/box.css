@@ -44,6 +44,8 @@ button{ cursor:hand}
 .box_frame_img strong a{ display:block; width:16px; height:16px;}
 .box_frame_img p{  display:none;background:url(../image/information.png) no-repeat; width:16px; height:16px; margin-top:-66px; margin-left:52px; position:absolute}
 .box_frame_img p a{ display:block; width:16px; height:16px;}
+.box_frame_img .box_frame_skin_show{ width:58px; height:41px; margin:auto;background:white;overflow: hidden;}
+.box_frame_img .box_frame_skin_show_div{ width:30px; height:24px;background:white;margin:7px 13px;}
 .box_frame_img img{ width:58px; height:41px; margin:auto; display:block}
 .box_frame_img span{ display:block; color:#999; height:15px; margin:2px auto 0; width:80%; overflow:hidden; text-align:center;}
 .box_top_left,.box_top_right{float:left;}
