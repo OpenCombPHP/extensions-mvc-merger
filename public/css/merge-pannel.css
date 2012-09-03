@@ -164,12 +164,6 @@
 	overflow:scroll;
 }
 
-#mergepannel-props-borders-showmore{
-	display:inline-block;
-	width:20px;
-	height:20px;
-	float:right;
-}
 #mergepannel-props-borders{
 	display:none;
 }
@@ -195,6 +189,11 @@
 	width:20px;
 	height:20px;
 }
+
+.mergepannel-props-ad{
+	display:none;
+}
+
 .mergepannel-showmore-left{
 	background:url(../image/arrow_left.png) center center no-repeat;
 }
@@ -205,6 +204,9 @@
 #mergepannel-controllermerger{
 	display:none;
 }
+
+#mergepannel-layout-saveToSkinBtn,#mergepannel-skin-msgqueue{float:left;}
+
 .mvc_merger-layout_settable_view_mouseover{
 	border: 1px solid #A7D3DA;
 	background-color: #E4F4FF;	

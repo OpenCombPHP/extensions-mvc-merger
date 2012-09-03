@@ -103,17 +103,6 @@ MergerPannel.prototype.init = function()
 		$(this).hide().removeClass('body_top_pin_selected');
 	});
 	
-	function showBoxTop(){
-		$(".body_top").stop(false,true).slideDown();
-	}
-	function hideBoxTop(){
-//		if($('.body_top_pin_selected').hasClass('body_top_pin')){
-//			return;
-//		}
-		$(".body_top").stop(false,true).slideUp();
-	}
-	
-	
 	clearJCLayout();
 	//清理视图布局编辑器中的layout class 防止编辑器认错
 	function clearJCLayout(){

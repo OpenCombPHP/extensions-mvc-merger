@@ -18,7 +18,7 @@
 
 
 <script>
-__arrSkins = {=$arrSkins};
+__arrSkins = {=$__arrSkins};
 </script>
 
 <div id='mergepannel-dialog'>
@@ -75,12 +75,20 @@ __arrSkins = {=$arrSkins};
 						<a href="#" title="上一个"></a>
 					</div>
 					<div class="frame_selecter_item_container">
-						<if "$arrSkins !== '[]'">
-						<foreach for="$arrSkins" item="arrSkin">
-							<div class="box_frame_img">
+							<div id="cusSkin" class="box_frame_img box_frame_img_v">
 								<a href="#" title="#"><img src="../extensions/mvc-merger/0.2/public/image/frame1.png" alt="#" /></a>
-								<span>{=$arrSkin['name']}</span>
-								<strong><a href="#" title="删除皮肤"></a></strong>
+								<span class="box_frame_skinName">自定义</span>
+							</div>
+						<if "$arrSkins !== array()">
+						<foreach for="$arrSkins" key="sSkinName" item="arrSkin">
+							<div class="box_frame_img">
+								<a href="#" title="#">
+									<div class="box_frame_skin_show">
+										<div class="box_frame_skin_show_div"></div>
+									</div>
+								</a>
+								<span class="box_frame_skinName">{=$sSkinName}</span>
+								<strong><a class="box_frame_deleteSkin" href="#" title="删除皮肤"></a></strong>
 								<p><a href="#" title="导出皮肤"></a></p>
 							</div>
 						</foreach>
@@ -160,45 +168,29 @@ __arrSkins = {=$arrSkins};
 							<option value='repeat-y'>纵向重复</option>
 						</select>
 						</span>
-						<p>定位</p>
-						<span>
-							<select id="mergepannel-props-position">
-								<option value="static">正常</option>
-								<option value="relative">相对</option>
-								<option value="absolute">绝对</option>
-								<option value="fixed">窗口绝对</option>
-							</select>
-							<input style="width: 50px" class="box_input6" id="mergepannel-props-zindex" type="text"/>
-							<input style="width: 28px" class="box_input7" id="mergepannel-props-top" type="text"/>px
-							<input style="width: 28px" class="box_input8" id="mergepannel-props-left" type="text"/>px
-							<input style="width: 28px" class="box_input9" id="mergepannel-props-bottom" type="text"/>px
-							<input style="width: 28px" class="box_input10" id="mergepannel-props-right" type="text"/>px
-						</span>
-						<p>边框</p>
-						<span>
-							
-									<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-color" type="text"/>
-									<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-width" type="text"/>
-									<select id="mergepannel-props-border-style" class="mergepannel-border" style='width:80px;display:inline;'>
-										<option value="none">无</option>
-										<option value="solid">实线</option>
-										<option value="dotted">点状</option>
-										<option value="dashed">虚线</option>
-										<option value="double">双线</option>
-										<option value="groove">3D 凹槽</option>
-										<option value="ridge">3D 垄状</option>
-										<option value="inset">3D 内部</option>
-										<option value="outset">3D 外部</option>
-									</select>
-									<a id="mergepannel-props-borders-showmore" href="#" title="详细设定">分别设置</a>
-						</span>
-						<div id='mergepannel-props-borders'>
-						<p>&nbsp;</p>
-						<span>
-						<h6>上</h6>
-										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-top-color" type="text"/>
-										<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-top-width" type="text"/>
-										<select id="mergepannel-props-border-top-style" class="mergepannel-border" style='width:80px;'>
+						
+						<!--  高级模式  -->
+						<div class="mergepannel-props-ad">
+							<p>定位</p>
+							<span>
+								<select id="mergepannel-props-position">
+									<option value="static">正常</option>
+									<option value="relative">相对</option>
+									<option value="absolute">绝对</option>
+									<option value="fixed">窗口绝对</option>
+								</select>
+								<input style="width: 50px" class="box_input6" id="mergepannel-props-zindex" type="text"/>
+								<input style="width: 28px" class="box_input7" id="mergepannel-props-top" type="text"/>px
+								<input style="width: 28px" class="box_input8" id="mergepannel-props-left" type="text"/>px
+								<input style="width: 28px" class="box_input9" id="mergepannel-props-bottom" type="text"/>px
+								<input style="width: 28px" class="box_input10" id="mergepannel-props-right" type="text"/>px
+							</span>
+							<p>边框</p>
+							<span>
+								
+										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-color" type="text"/>
+										<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-width" type="text"/>
+										<select id="mergepannel-props-border-style" class="mergepannel-border" style='width:80px;display:inline;'>
 											<option value="none">无</option>
 											<option value="solid">实线</option>
 											<option value="dotted">点状</option>
@@ -209,83 +201,103 @@ __arrSkins = {=$arrSkins};
 											<option value="inset">3D 内部</option>
 											<option value="outset">3D 外部</option>
 										</select>
-						</span>
-						<p>&nbsp;</p>
-						<span>
-							<h6>右</h6>
-										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-right-color" type="text"/>
-										<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-right-width" type="text"/>
-										<select id="mergepannel-props-border-right-style" class="mergepannel-border" style='width:80px;'>
-											<option value="none">无</option>
-											<option value="solid">实线</option>
-											<option value="dotted">点状</option>
-											<option value="dashed">虚线</option>
-											<option value="double">双线</option>
-											<option value="groove">3D 凹槽</option>
-											<option value="ridge">3D 垄状</option>
-											<option value="inset">3D 内部</option>
-											<option value="outset">3D 外部</option>
-										</select>
-						</span>
-						<p>&nbsp;</p>
-						<span>
-							<h6>下</h6>
-										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-bottom-color" type="text"/>
-										<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-bottom-width" type="text"/>
-										<select id="mergepannel-props-border-bottom-style" class="mergepannel-border" style='width:80px;'>
-											<option value="none">无</option>
-											<option value="solid">实线</option>
-											<option value="dotted">点状</option>
-											<option value="dashed">虚线</option>
-											<option value="double">双线</option>
-											<option value="groove">3D 凹槽</option>
-											<option value="ridge">3D 垄状</option>
-											<option value="inset">3D 内部</option>
-											<option value="outset">3D 外部</option>
-										</select>
-						</span>
-						<p>&nbsp;</p>
-						<span>
-							<h6>左</h6>
-										<input style="width: 50px" id="mergepannel-props-border-left-color" class="mergepannel-border box_input11" type="text"/>
-										<input style="width: 50px" id="mergepannel-props-border-left-width" class="mergepannel-border box_input12" type="text"/>
-										<select id="mergepannel-props-border-left-style" style='width:80px;'  class="mergepannel-border">
-											<option value="none">无</option>
-											<option value="solid">实线</option>
-											<option value="dotted">点状</option>
-											<option value="dashed">虚线</option>
-											<option value="double">双线</option>
-											<option value="groove">3D 凹槽</option>
-											<option value="ridge">3D 垄状</option>
-											<option value="inset">3D 内部</option>
-											<option value="outset">3D 外部</option>
-										</select>
-						</span>
+										<a id="mergepannel-props-borders-showmore" href="#" title="详细设定">分别设置</a>
+							</span>
+							<div id='mergepannel-props-borders'>
+							<p>&nbsp;</p>
+							<span>
+							<h6>上</h6>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-top-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-top-width" type="text"/>
+											<select id="mergepannel-props-border-top-style" class="mergepannel-border" style='width:80px;'>
+												<option value="none">无</option>
+												<option value="solid">实线</option>
+												<option value="dotted">点状</option>
+												<option value="dashed">虚线</option>
+												<option value="double">双线</option>
+												<option value="groove">3D 凹槽</option>
+												<option value="ridge">3D 垄状</option>
+												<option value="inset">3D 内部</option>
+												<option value="outset">3D 外部</option>
+											</select>
+							</span>
+							<p>&nbsp;</p>
+							<span>
+								<h6>右</h6>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-right-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-right-width" type="text"/>
+											<select id="mergepannel-props-border-right-style" class="mergepannel-border" style='width:80px;'>
+												<option value="none">无</option>
+												<option value="solid">实线</option>
+												<option value="dotted">点状</option>
+												<option value="dashed">虚线</option>
+												<option value="double">双线</option>
+												<option value="groove">3D 凹槽</option>
+												<option value="ridge">3D 垄状</option>
+												<option value="inset">3D 内部</option>
+												<option value="outset">3D 外部</option>
+											</select>
+							</span>
+							<p>&nbsp;</p>
+							<span>
+								<h6>下</h6>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-bottom-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-bottom-width" type="text"/>
+											<select id="mergepannel-props-border-bottom-style" class="mergepannel-border" style='width:80px;'>
+												<option value="none">无</option>
+												<option value="solid">实线</option>
+												<option value="dotted">点状</option>
+												<option value="dashed">虚线</option>
+												<option value="double">双线</option>
+												<option value="groove">3D 凹槽</option>
+												<option value="ridge">3D 垄状</option>
+												<option value="inset">3D 内部</option>
+												<option value="outset">3D 外部</option>
+											</select>
+							</span>
+							<p>&nbsp;</p>
+							<span>
+								<h6>左</h6>
+											<input style="width: 50px" id="mergepannel-props-border-left-color" class="mergepannel-border box_input11" type="text"/>
+											<input style="width: 50px" id="mergepannel-props-border-left-width" class="mergepannel-border box_input12" type="text"/>
+											<select id="mergepannel-props-border-left-style" style='width:80px;'  class="mergepannel-border">
+												<option value="none">无</option>
+												<option value="solid">实线</option>
+												<option value="dotted">点状</option>
+												<option value="dashed">虚线</option>
+												<option value="double">双线</option>
+												<option value="groove">3D 凹槽</option>
+												<option value="ridge">3D 垄状</option>
+												<option value="inset">3D 内部</option>
+												<option value="outset">3D 外部</option>
+											</select>
+							</span>
+							</div>
+							<p>外边距</p>
+							<span>
+								<input style="width: 33px" id="mergepannel-props-margin-top" class="box_input7" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-margin-right" class="box_input8" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-margin-bottom" class="box_input9" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-margin-left" class="box_input10" type="text"/>
+							</span>
+							<p>内边距</p>
+							<span>
+								<input style="width: 33px" id="mergepannel-props-padding-top" class="box_input7" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-padding-right" class="box_input8" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-padding-bottom" class="box_input9" type="text"/>
+								<input style="width: 33px" id="mergepannel-props-padding-left" class="box_input10" type="text"/>
+							</span>
+							<p>自定义</p>
+							<span>
+								<textarea id="mergepannel-props-style" style="width:260px;height:100px; border:#c4c5ca 1px solid;" class="box_input13"></textarea>
+							</span>
+							<p>皮肤名</p>
+							<span>
+							<input id="mergepannel-props-skin" type="hidden"/>
+							<button id="mergepannel-layout-saveToSkinBtn" title="将当前样式保存成皮肤">保存皮肤</button>
+							<div id="mergepannel-skin-msgqueue" ></div>
+							</span>
 						</div>
-						<p>外边距</p>
-						<span>
-							<input style="width: 33px" id="mergepannel-props-margin-top" class="box_input7" type="text"/>
-							<input style="width: 33px" id="mergepannel-props-margin-right" class="box_input8" type="text"/>
-							<input style="width: 33px" id="mergepannel-props-margin-bottom" class="box_input9" type="text"/>
-							<input style="width: 33px" id="mergepannel-props-margin-left" class="box_input10" type="text"/>
-						</span>
-						<p>内边距</p>
-						<span>
-							<input style="width: 33px" id="mergepannel-props-padding-top" class="box_input7" type="text"/>
-							<input style="width: 33px" id="mergepannel-props-padding-right" class="box_input8" type="text"/>
-							<input style="width: 33px" id="mergepannel-props-padding-bottom" class="box_input9" type="text"/>
-							<input style="width: 33px" id="mergepannel-props-padding-left" class="box_input10" type="text"/>
-						</span>
-						<p>自定义</p>
-						<span>
-							<textarea id="mergepannel-props-style" style="width:260px;height:100px; border:#c4c5ca 1px solid;" class="box_input13"></textarea>
-						</span>
-						<p>皮肤名</p>
-						<span>
-						<input type="text"/>
-						<button id="mergepannel-layout-saveToSkinBtn" title="将当前样式保存成皮肤">保存皮肤</button>
-						<div id="mergepannel-skin-msgqueue" style="float:left;"></div>
-						</span>
 						<div class="clr"></div>
 					</div>
 				</div>
@@ -360,7 +372,7 @@ jquery(document).ready(function(){
 	});
 	
 	jquery('#mergepannel-props-color-selecter').farbtastic(function(color){
-		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color);
+		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color).change();
 	});
 	
 	jquery('#mergepannel-props-background-color').focusin(function(){
