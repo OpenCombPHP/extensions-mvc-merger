@@ -40,9 +40,9 @@ jquery(function($){
 		$("#mergeCtl_result").toggle();
 			
 		if( $("#mergeCtl_panel:visible").length == 0 ){
-			$(this).text('添加视图');
+			$(this).text('返回“添加视图”面板');
 		}else{
-			$(this).text('编辑');
+			$(this).text('编辑添加的视图');
 		}
 	});
 	
@@ -255,19 +255,22 @@ jquery(function($){
 
 <div id="mergeCtl_panel">
 
-<div class='mergeCtl_target' style="margin-bottom:14px;">
-	<a id="mergeCtl_modify_target_btn" href='#' style="text-decoration: underline;">更改目标网页(高级)</a>
-	<div class="mergeCtl_modify_target_form">
-		<div><label>控制器类 : 
-			<input id="mergeCtl_modify_target_name" type="text" style="width:450px;" value="{=$sRequestC}"/>
-		</label></div>
-		<div><select id="mergeCtl_modify_target_saveType">
+	<div class="box_bj_left_button">
+		<span class="box_button_left">
+			<strong class="box_ico_web"></strong>
+			<a id="mergeCtl_modify_target_btn" href='#' class="box_button_right">更改目标网页(高级)</a>
+		</span>
+		<div class="mergeCtl_modify_target_form">
+		<label>控制器类 : 
+			<input id="mergeCtl_modify_target_name" type="text" style="width:60%;" value="{=$sRequestC}"/>
+		</label><select id="mergeCtl_modify_target_saveType">
 			<option value="current">仅当前网页生效</option>
 			<option value="type">对同类网页生效</option>
 			<option value="special">指定条件(高级)</option>
 		</select>
-		<input id="mergeCtl_modify_target_save_params" value="{=$sRequestParams}" style="width:402px;"/></div>
+		<input id="mergeCtl_modify_target_save_params" value="{=$sRequestParams}" style="width:402px;"/>
 	</div>
+
 </div>
 
 <div id="mergeCtl_tabs">
@@ -276,82 +279,96 @@ jquery(function($){
 		<li><a tabid='#mergeCtl_tab_2' href="#mergeCtl_tab_2">网页</a></li>
 		<li><a tabid='#mergeCtl_tab_3' href="#mergeCtl_tab_3">模板</a></li>
 	</ul>
-	
+	<div id='mergeCtl_change_panel'>
+		<span class="box_button_left">
+			<a href="#" class="box_button_right">编辑添加的视图</a>
+		</span>
+	</div>
 	<div id="mergeCtl_tab_1" class="mergeCtl_tabs">
-		<h3>通过富文本编辑器,创建并添加一个视图</h3>
-		<div><label>标题 : <input id="mergeCtl_textToView_title" style="width:431px;"/></label></div>
-		<div><textarea id="mergeCtl_textToView_textarea" ></textarea></div>
+		<div class="box_from_title">
+			<label><input id="mergeCtl_textToView_title"/></label>
+			<h3>通过富文本编辑器,创建并添加一个视图</h3>
+			<div class="clr"></div>
+		</div>
+		<div class="box_from_body">
+			<textarea id="mergeCtl_textToView_textarea" ></textarea>
+		</div>
 	</div>
 	
 	<div id="mergeCtl_tab_2" class="mergeCtl_tabs" style="display:none;">
-		<h3>从已有的网页中,选择一个视图,添加到当前网页</h3>
-		<div>
-			<div style="height:24px;line-height:24px;">
+			<div class="box_st_web_cs">
+			<h3>从已有的网页中,选择一个视图,添加到当前网页</h3>
+			<span class="box_button_left">
+			<strong class="box_ico_ss"></strong>
+			<a id="mergeCtl_pageToView_findPage_btn" href='#' class="box_button_right">查找网页</a>
+			</span>
+			<div class="clr"></div>
+			</div>
+			<div class="box_st_web_csinput">
 				<label >
-					控制器类 : <span id="mergeCtl_pageToView_page_span" >点击"查找网页"选择一个需要添加到此的视图...</span>
+					<strong>控制器类</strong>
+					<span id="mergeCtl_pageToView_page_span" >点击"查找网页"选择一个需要添加到此的视图...</span>
 					<input id="mergeCtl_pageToView_page" type="text" style="display:none;width:300px;"/>
+					<a href="#" id="mergeCtl_pageToView_findPage_ad">[参数设定]</a>
 				</label>
-				<a href="#" id="mergeCtl_pageToView_findPage_ad" style="float:right">高级</a>
-				<button id="mergeCtl_pageToView_findPage_btn" style="float:right;margin-top:-3px;">查找网页</button>
-			</div>
-			
-			<div style="display:none;">
+				<div style="display:none;">
 				<label>
-					参数 : <input id="mergeCtl_pageToView_params" type="text" style="width:400px;"/>
+					<strong>参数</strong>
+					<input id="mergeCtl_pageToView_params" type="text" style="width:400px;"/>
 				</label>
+				</div>
 			</div>
 			
-		</div>
 	</div>
 	
 	<div id="mergeCtl_tab_3" class="mergeCtl_tabs"  style="display:none;">
-		<h3>使用模板文件创建并添加视图</h3>
-		<div style="float:left;width:270px;margin-right:30px;">
-			<h4 style="font-weight:normal;">请选择系统中的模板文件</h4>
-			
-			<div id="mergeCtl_templateTree" class='ztree' style="border:1px solid #999;padding:5px;width:260px;height:210px;overflow:auto">
-			
-			</div>
-			
-		</div>
-		<div style="width:215px;float:left;">
-			<div>
-				<label>模板 :<input type="text" id="mergeCtl_tempToView_template" value="还没有选定模板..." style="width:300px;border:0px;"/></label>
-			</div>
-			<div>
-				<label>视图参数 : <input type="text" id="mergeCtl_tempToView_params" style="width:150px;"/></label>
-			</div>
-		</div>
 		
-		<div style="clear:both"></div>
+		<div class="box_st_mb">
+			<h3>使用模板文件创建并添加视图</h3>
+			<div style="float:left;width:47%;">
+				<h4>请选择系统中的模板文件</h4>
+				
+				<div id="mergeCtl_templateTree" class='ztree' style="border:1px solid #e3e3e3;padding:5px;width:260px;height:210px;overflow:auto">
+				
+				</div>
+				
+			</div>
+			<div style="width:50%;float:right; padding-top:10px;">
+					<label>选定模板 <input type="text" id="mergeCtl_tempToView_template"  value="还没有选定模板..." style="width:200px; border:0; color:#999"/></label>
+				
+					<label>视图参数 <input type="text" id="mergeCtl_tempToView_params" style="width:150px; color:#999"/></label>
+			</div>
+			
+			<div style="clear:both"></div>
+		</div>
 	</div>
 </div>
 
-	<div>
-		<a id="mergeCtl_remark_a" href="#" style="float:right">备注</a>
-		<label style="display:none">备注 : <input id="mergeCtl_remark" style="width:431px;"/></label>
-	</div>
-	<div>
-		<button class="mergeCtl_textToView_save_btn" style="float:left;">添加视图</button>
-		<div id="mergeCtl_msgqueue" style="float:left;"></div>
+	<div class="box_st_footer">
+		<label><input id="mergeCtl_remark"/></label>
+		<button class="mergeCtl_textToView_save_btn">添加视图</button>
+		<div id="mergeCtl_msgqueue"></div>
 	</div>
 	
 </div>
-
-
-<div id='mergeCtl_change_panel'><a href="#"  style="color:blue;">编辑</a></div>
 
 
 <div id="mergeCtl_result" style="display:none;padding:10px;">
 
-	<div style="float:right;margin-top:10px;"><label><input id="mergeCtl_result_onlythis" type="checkbox" value=""/>只显示当前网页</label></div>
+	<div class="box_st_edit">
+		<label><input id="mergeCtl_result_onlythis" type="checkbox" value=""/>只显示当前网页</label>
+		<span class="box_button_left">
+			<a id="mergeCtl_pageToView_findPage_btn" href='#' class="box_button_right">返回“添加视图”面板</a>
+		</span>
+	</div>
 	
 	<div id="mergeCtl_result_msgqueue" style="margin-top:30px;"></div>
+	<div class="box_st_edit_body">
 	<ul>
 	<foreach for="$arrMergedControllers" key="sTargetControllerClass" item="arrControllers">
 	<li class="mergeCtl_result_controllers" classname="{=str_replace('\\','.',$sTargetControllerClass)}">
-		<div>
-			控制器类：
+		<div class="box_st_edit_lei">
+			<span></span>控制器类：
 			<a href="?c={=str_replace('\\','.',$sTargetControllerClass)}" target='_blank'>{=$sTargetControllerClass}</a>
 			<!-- <a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx=-1"></a> -->
 		</div>
@@ -368,7 +385,7 @@ jquery(function($){
 								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
 							</div>
 							<if "$arrMerged['mergeType']">
-								<div>生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
+								<div class="box_st_edit_sx">生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
 							</if>
 							<div>{=$arrMerged['comment']}</div>
 						</li>
@@ -409,4 +426,5 @@ jquery(function($){
 	</li>
 </foreach>
 </ul>
+</div>
 </div>

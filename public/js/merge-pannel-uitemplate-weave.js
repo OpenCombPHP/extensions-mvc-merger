@@ -8,26 +8,30 @@ ub = {
 				+ '<div id="ub_tabs">'
 					+ '<ul id="ub_tabs_ul" class="box_bz_top">'
 						+ '<li><a tabid="#tabs-1" class="ub_tabs_select">编织模板</a></li>'
-						+ '<li><a tabid="#tabs-2">补丁设置</a></li>'
+						+ '<li><a tabid="#tabs-2">补丁设置</a><div class="ub_box_num"><span>9</span></div></li>'
+						+ '<li><a tabid="#tabs-3">模板信息</a></li>'
 					+ '</ul>'
 					+ '<div id="tabs-1" class="ub_tabs">'
 						+ '<div id="ub_edit">'
-							+ '<label>在右边的模板结构中选择“编织目标”</label></br>'
-							+ '<label>目标模板:<input id="ub_template" value="" disabled/></label></br>'
-							+ '<label>目标位置:<input id="ub_xpath" value="" disabled/></label></br>'
-							+ '<label>织入方式:<select id="ub_position">'
+							+ '<label>目标模板 <input id="ub_template" value="" disabled/></label></br>'
+							+ '<label>目标位置 <input id="ub_xpath" value="" disabled/></label></br>'
+							+ '<label>织入方式 <select id="ub_position">'
 								+ '<option value="appendBefore">目标前面(appendBefore)</option>'
 								+ '<option value="appendAfter">目标后面(appendAfter)</option>'
 								+ '<option value="insertBefore">目标内部开头(insertBefore)</option>'
 								+ '<option value="insertAfter">目标内部结尾(insertAfter)</option>'
 								+ '<option value="replace">替换目标(replace)</option>'
 							+ '</select></label>'
-							+ '<textarea id="ub_source"></textarea></br>'
+							+ '<textarea id="ub_source"></textarea>'
 							+ '<div id="ub_save_message" href="#"></div>'
 							+ '<button id="ub_savebtn" onclick="ub.saveSetting()">织入代码</button>'
 						+ '</div>'
 					+ '</div>'
 					+ '<div id="tabs-2" class="ub_tabs" style="display:none;">'
+						+ '<div id="ub_merge_list">'
+						+ '</div>'
+					+ '</div>'
+					+ '<div id="tabs-3" class="ub_tabs" style="display:none;">'
 						+ '<div id="ub_merge_list">'
 						+ '</div>'
 					+ '</div>'
@@ -133,7 +137,7 @@ ub = {
 			if( typeof(node.data) != "undefined" && typeof(node.data.patchNum) != "undefined"){
 				if(node.data.patchNum > 0){
 					ub.aRunningZTree.expandNode(node.getParentNode(),true,false);
-					jquery('#'+node.tId).find('a .button').after("<span class='patchNum'>("+node.data.patchNum+")</span>");
+					jquery('#'+node.tId).find('a .button').after("<h6 class='patchNum'><span>"+node.data.patchNum+"</span></h6>");
 				}
 			}
 		},false);
@@ -249,9 +253,8 @@ ub = {
 		);
 		for(var b in json){
 			jQuery('#ub_merge_list').find('ul').first().append(
-						'<li><div style="position:relative;"><h4 style="margin-left:16px;">'+json[b][0]+'</h4>'
-						+'<a class="delPatch" key="'+b+'" style="display:block;position:absolute;top:0;left:0;" href="#"><img src="'+sMvcMergerPublicFolderUrl+'/delete.png"/></a></div>'
-						+'<div>'+ub.html_encode(json[b][1])+'</div></li>'
+						'<li><h4>['+json[b][0]+']</h4><h5>'+ub.html_encode(json[b][1])+'</h5>'
+						+ '<a key="'+b+'" class="delPatch" href="#"></a></li>'
 					);
 		}
 		jQuery('#ub_merge_list').find('.delPatch').click(function(){
