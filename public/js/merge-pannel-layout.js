@@ -1200,7 +1200,8 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	$('#mergepannel-props-class').attr('otherClass',arrToFormInputParams.join(' '));
 	
 	//还原skin列表的值
-	if(mapMVCMergerItemProperties[sId]['skin'] === undefined
+	if( mapMVCMergerItemProperties[sId] === undefined
+		|| mapMVCMergerItemProperties[sId]['skin'] === undefined
 		|| mapMVCMergerItemProperties[sId]['skin'] === ''
 		|| mapMVCMergerItemProperties[sId]['skin'] === '自定义'
 	){
