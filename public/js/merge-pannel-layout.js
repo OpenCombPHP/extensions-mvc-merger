@@ -909,6 +909,14 @@ MergerPannel.Layout.prototype.resizeDialog = function() {
 			- 48  //height of box_bj_right_top_left
 			- ($('.box_bj_right_footer').outerHeight(true)-$('.box_bj_right_footer').height())
 	);
+	
+	
+	/*uiweave*/
+	$('#ub_template_list').height(
+			nHeight
+			- 52  //height of box_bj_right_top_left
+			- ($('#ub_template_list').outerHeight(true)-$('#ub_template_list').height())
+	);
 }
 
 /**

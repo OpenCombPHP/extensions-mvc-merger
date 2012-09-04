@@ -8,7 +8,7 @@ ub = {
 				+ '<div id="ub_tabs">'
 					+ '<ul id="ub_tabs_ul" class="box_bz_top">'
 						+ '<li><a tabid="#tabs-1" class="ub_tabs_select">编织模板</a></li>'
-						+ '<li><a tabid="#tabs-2">补丁设置</a><div class="ub_box_num"><span>9</span></div></li>'
+						+ '<li><a tabid="#tabs-2">补丁设置</a><div class="ub_box_num"><span id="pathNumOnTab">9</span></div></li>'
 						+ '<li><a tabid="#tabs-3">模板信息</a></li>'
 					+ '</ul>'
 					+ '<div id="tabs-1" class="ub_tabs">'
@@ -32,7 +32,7 @@ ub = {
 						+ '</div>'
 					+ '</div>'
 					+ '<div id="tabs-3" class="ub_tabs" style="display:none;">'
-						+ '<div id="ub_merge_list">'
+						+ '<div>'
 						+ '</div>'
 					+ '</div>'
 				+ '</div>'
@@ -138,6 +138,9 @@ ub = {
 				if(node.data.patchNum > 0){
 					ub.aRunningZTree.expandNode(node.getParentNode(),true,false);
 					jquery('#'+node.tId).find('a .button').after("<h6 class='patchNum'><span>"+node.data.patchNum+"</span></h6>");
+					jquery('#pathNumOnTab').text(node.data.patchNum);
+				}else{
+					jquery('#pathNumOnTab').text(0);
 				}
 			}
 		},false);

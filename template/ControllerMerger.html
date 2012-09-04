@@ -35,7 +35,7 @@ jquery(function($){
 		$('#mergeCtl_pageToView_params').parents('div:first').toggle();
 	});
 	
-	$('#mergeCtl_change_panel').find('a').click(function(){
+	$('.mergeCtl_change_panel').find('a').click(function(){
 		$("#mergeCtl_panel").toggle();
 		$("#mergeCtl_result").toggle();
 			
@@ -279,8 +279,8 @@ jquery(function($){
 		<li><a tabid='#mergeCtl_tab_2' href="#mergeCtl_tab_2">网页</a></li>
 		<li><a tabid='#mergeCtl_tab_3' href="#mergeCtl_tab_3">模板</a></li>
 	</ul>
-	<div id='mergeCtl_change_panel'>
-		<span class="box_button_left">
+	<div class='mergeCtl_change_panel'>
+		<span class="box_button_left ">
 			<a href="#" class="box_button_right">编辑添加的视图</a>
 		</span>
 	</div>
@@ -357,7 +357,7 @@ jquery(function($){
 
 	<div class="box_st_edit">
 		<label><input id="mergeCtl_result_onlythis" type="checkbox" value=""/>只显示当前网页</label>
-		<span class="box_button_left">
+		<span class="box_button_left mergeCtl_change_panel">
 			<a id="mergeCtl_pageToView_findPage_btn" href='#' class="box_button_right">返回“添加视图”面板</a>
 		</span>
 	</div>

@@ -68,6 +68,7 @@ button{ cursor:hand}
 .box_bj_right_addframe .addframe{ padding:2px 10px 2px 19px; background:url(../image/box_sc.png) -404px -197px; }
 #mergepannel-props-frame-center-btn{ margin-right:20px;}
 
+#view_select_dom{width:145px;}
 
 .box_bj_right_skin p{ width:45px; text-align:right; padding-right:15px; float:left; margin-top:5px}
 .box_bj_right_skin span{ display:block; width:350px; float:left; margin-top:5px;}
