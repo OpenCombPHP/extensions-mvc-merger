@@ -175,6 +175,9 @@ button{ cursor:hand}
 .box_st_edit_lei span{background:url(../image/box_sc.png) -576px -313px; display:inline-block; width:18px; height:20px;}
 .box_st_edit_lei{ font-weight:700}
 
+.box_st_wyy{background:url(../image/box_sc.png) -358px -320px; padding-left:20px;}
+.box_st_mby{background:url(../image/box_sc.png) -358px -444px; padding-left:20px;}
+.box_st_fwb{background:url(../image/box_sc.png) -358px -382px; padding-left:20px;}
 
 /*********图标*********/
 .box_ico_import{ padding-left:20px;background:url(../image/box_sc.png) -241px -440px; }

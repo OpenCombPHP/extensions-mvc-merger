@@ -380,7 +380,7 @@ jquery(function($){
 					<if '$arrMerged["mergeType"] == "text"'>
 						<li style="text-indent:2em;margin:5px 0">
 							<div class="mergeCtl_result_ajax">
-								[富文本] <span title="{=htmlentities($arrMerged['content'])}">{=htmlentities($arrMerged['content'])}</span>
+								<strong class="box_st_fwb">[富文本]</strong><span title="{=htmlentities($arrMerged['content'])}">{=htmlentities($arrMerged['content'])}</span>
 								<a class='' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
 								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
 							</div>
@@ -393,7 +393,7 @@ jquery(function($){
 					<if '$arrMerged["mergeType"] == "template"'>
 						<li style="text-indent:2em;margin:5px 0">
 							<div class="mergeCtl_result_ajax">
-								[模板] <span>{=$arrMerged['template']}</span>
+								<strong class="box_st_mby">[模板]</strong><span>{=$arrMerged['template']}</span>
 								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
 								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
 							</div>
@@ -406,7 +406,7 @@ jquery(function($){
 					<if '$arrMerged["mergeType"] == "page"'>
 						<li style="text-indent:2em;margin:5px 0">
 							<div class="mergeCtl_result_ajax">
-								[网页]<a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
+								<strong class="box_st_wyy">[网页]</strong><a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
 								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
 								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
 							</div>
