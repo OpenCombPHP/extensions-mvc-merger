@@ -1287,11 +1287,6 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 		//width height 的特殊处理,这里避免框架上出现auto宽度和高度,并计算jc-layout的最小宽高最大宽高
 		case 'mergepannel-props-width' :
 		case 'mergepannel-props-height' :
-			
-			if($("#mergepannel-props-width").val() == ''){
-				console.log(11);
-			}
-			
 			if(typeof mapMVCMergerItemProperties != 'undefined'){
 				var type = event.currentTarget.id.split('-')[2];
 				var oldValue = realthis.getMapMVCMergerItemProperties(realthis.eleSelectedItem.id , type);
