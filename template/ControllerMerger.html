@@ -260,15 +260,14 @@ jquery(function($){
 			<strong class="box_ico_web"></strong>
 			<a id="mergeCtl_modify_target_btn" href='#' class="box_button_right">更改目标网页(高级)</a>
 		</span>
-		<div class="mergeCtl_modify_target_form">
-		<label>控制器类 : 
-			<input id="mergeCtl_modify_target_name" type="text" style="width:60%;" value="{=$sRequestC}"/>
-		</label><select id="mergeCtl_modify_target_saveType">
+		<div class="mergeCtl_modify_target_form box_st_top_kzq">
+			<p><label>控制器类:</label><input id="mergeCtl_modify_target_name" type="text" style="width:60%;" value="{=$sRequestC}"/></p>
+			<p><label></label><select id="mergeCtl_modify_target_saveType">
 			<option value="current">仅当前网页生效</option>
 			<option value="type">对同类网页生效</option>
 			<option value="special">指定条件(高级)</option>
 		</select>
-		<input id="mergeCtl_modify_target_save_params" value="{=$sRequestParams}" style="width:402px;"/>
+		<input id="mergeCtl_modify_target_save_params" value="{=$sRequestParams}" style="width:50%;"/></p>
 	</div>
 
 </div>
@@ -381,42 +380,42 @@ jquery(function($){
 						<li style="text-indent:2em;margin:5px 0">
 							<div class="mergeCtl_result_ajax">
 								<strong class="box_st_fwb">[富文本]</strong><span title="{=htmlentities($arrMerged['content'])}">{=htmlentities($arrMerged['content'])}</span>
-								<a class='' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
-								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
+								<a class='' href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "<span class='box_st_jinyong'>禁用</span>":"<span class='box_st_qiyong'>启用</span>" }</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}"><span class='box_st_shanchu'>删除</span></a>
 							</div>
 							<if "$arrMerged['mergeType']">
 								<div class="box_st_edit_sx">生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
 							</if>
-							<div>{=$arrMerged['comment']}</div>
+							<div class="box_st_edit_bz">{=$arrMerged['comment']}</div>
 						</li>
 					</if>
 					<if '$arrMerged["mergeType"] == "template"'>
 						<li style="text-indent:2em;margin:5px 0">
 							<div class="mergeCtl_result_ajax">
 								<strong class="box_st_mby">[模板]</strong><span>{=$arrMerged['template']}</span>
-								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
-								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "<span class='box_st_jinyong'>禁用</span>":"<span class='box_st_qiyong'>启用</span>" }</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}"><span class='box_st_shanchu'>删除</span></a>
 							</div>
 							<if "$arrMerged['mergeType']">
-								<div>生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
+								<div class="box_st_edit_sx">生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
 							</if>
-							<div>{=$arrMerged['comment']}</div>
+							<div class="box_st_edit_bz">{=$arrMerged['comment']}</div>
 						</li>
 					</if>
 					<if '$arrMerged["mergeType"] == "page"'>
 						<li style="text-indent:2em;margin:5px 0">
 							<div class="mergeCtl_result_ajax">
 								<strong class="box_st_wyy">[网页]</strong><a href="?c={=str_replace('\\','.',$arrMerged['controller'])}" target='_blank'>{=$arrMerged['controller']}</a>
-								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "[禁用]":"[启用]" }</a>
-								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">[删除]</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::disMerge&target={=$sTargetControllerClass}&idx={=$nIdx}">{=$arrMerged['enable'] ? "<span class='box_st_jinyong'>禁用</span>":"<span class='box_st_qiyong'>启用</span>" }</a>
+								<a href="?c=org.opencomb.mvcmerger.merger.ControllerMerger&a[]=/merger.ControllerMerger::removeMerge&target={=$sTargetControllerClass}&idx={=$nIdx}"><span class='box_st_shanchu'>删除</span></a>
 							</div>
 							<if "$arrMerged['params']">
-								<div>参数：{=$arrMerged['params']}</div>
+								<div class="box_st_edit_sx">参数：{=$arrMerged['params']}</div>
 							</if>
 							<if "$arrMerged['mergeType']">
-								<div>生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
+								<div class="box_st_edit_sx">生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
 							</if>
-							<div>{=$arrMerged['comment']}</div>
+							<div class="box_st_edit_bz">{=$arrMerged['comment']}</div>
 						</li>
 					</if>
 				</foreach>

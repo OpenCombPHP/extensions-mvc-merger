@@ -19,9 +19,43 @@
 
 <script>
 __arrSkins = {=$__arrSkins};
+
+// 版式数据
+// dire : 方向，horizontal是水平，vertical是垂直
+var pageLayoutData={
+	'aaa':{
+		'title':'左中右三栏',
+		'dire':'horizontal',
+		'image':'{/mvc-merger:image/view.png}',
+		'subframes':[
+			{
+				'nmax':1,
+				'dire':'vertical',
+				'layout':{
+					'width':200,
+				}
+			},
+			{
+				'dire':'vertical',
+			},
+			{
+				'dire':'vertical',
+				'nmax':2,
+				'layout':{
+					'width':100,
+				},
+			},
+		],
+	},
+	'bbb':{
+		'title':'测试',
+		'image':'{/mvc-merger:image/arrow_down.png}',
+	}
+};
 </script>
 
 <div id='mergepannel-dialog'>
+	<span id="mergepannel-layout-msgqueue"></span>
 	<div id='mergepannel-layout' class="mvcmerger_pages">
 	<!--板式皮肤选择-->
 		<div class="box_bj_top">
@@ -355,13 +389,13 @@ __arrSkins = {=$__arrSkins};
 					<option value="current">仅当前网页生效</option>
 					<option value="special">指定条件(高级)</option>
 				</select>
-				<input type="text" id='mergepannel-layout-save-parmas' style="display:none;width:400px;"/>
+				<input type="text" id='mergepannel-layout-save-parmas' style="display:none;width:200px;"/>
 			</div>
 			<div class="box_bj_footer_right">
-				<span id="mergepannel-layout-msgqueue"></span>
 				<button id="mergepannel-layout-savebtn">保存</button>
 				<button id="mergepannel-layout-cleanbtn" title="清理本页面所有样式">清理</button>
 			</div>
+			
 		</div>
 		
 	</div>
