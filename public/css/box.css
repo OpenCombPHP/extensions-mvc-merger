@@ -78,11 +78,11 @@ button{ cursor:hand}
 #mergepannel-props-borders input{ color:#999}
 
 .box_bj_footer{ width:100%; height:45px; padding-top:15px; background:url(../image/box_footerbg.png); float:left; margin-top:5px;}
-.box_bj_footer_left{ width:200px; float:left; padding-left:30px;}
+.box_bj_footer_left{ width:400px; float:left; padding-left:30px;}
 .box_bj_footer_right{ width:200px; float:right; padding-right:20px; text-align:right}
 #mergepannel-layout-savebtn{ background:url(../image/box_sc.png) -256px -191px; width:101px; height:30px; border:0; display:block; float:right; font-weight:700; color:#3c2200}
 #mergepannel-layout-cleanbtn{background:url(../image/box_sc.png) -145px -191px; width:61px; height:30px; border:0; display:block; float:right; font-weight:700; margin-right:20px;}
-#mergepannel-layout-msgqueue{ position:absolute; left:500px; top:480px; z-index:700}
+#mergepannel-layout-msgqueue{ position:absolute; left:500px; top:440px; z-index:700}
 .box_bj_right_skin select,.box_bj_right_skin span{ color:#999; margin-left:0}
 .box_input1{ background:url(../image/text.png) 5px 3px no-repeat}
 .box_input2{ background:url(../image/text.png) -91px 3px no-repeat}
@@ -137,6 +137,8 @@ button{ cursor:hand}
 .box_bj_left_button_none{ border-bottom:none}
 .mergeCtl_modify_target_form{ margin:10px 0; color:#666}
 .mergeCtl_modify_target_form input,.mergeCtl_modify_target_form select{ color:#999}
+.box_st_top_kzq label{ width:70px; display:inline-block}
+.box_st_top_kzq input{height:20px !important}
 #mergeCtl_tabs_ul{ height:28px; padding-top:15px; padding-left:50px; background:url(../image/sttopbg.png) repeat-x bottom}
 #mergectl_tabs_ul li{ width:80px; height:28px;}
 #mergectl_tabs_ul a{background:none; display:block; width:100%; height:28px; line-height:28px; border:0 }
@@ -153,9 +155,9 @@ button{ cursor:hand}
 .box_st_footer{ margin-top:10px}
 .mergeCtl_textToView_save_btn{background: url(../image/box_sc.png) -256px -191px;width: 101px;height: 30px;border: 0;display: block;float: right;font-weight: 700;color: #3C2200;}
 #mergeCtl_remark{ width:60%; background:url(../image/text.png) 5px -705px no-repeat}
-.jc_message_queue {background: none;border:0;text-align: left;padding:0; margin-top:10px;}
-.jc_message_type_success{ font-weight:700; padding-left:25px;color:#00af13; background:url(../image/box_sc.png) 5px -103px;}
-.jc_message_type_error{ font-weight:700; padding-left:25px;color:#ab0000; background:url(../image/box_sc.png) 5px -52px;}
+.jc_message_queue {border:0;padding:0; margin-top:10px; text-align:left;}
+.jc_message_type_success{ font-weight:700; padding-left:25px;color:#00af13; background:url(../image/box_sc.png) 5px -103px no-repeat; }
+.jc_message_type_error{ font-weight:700; padding-left:25px;color:#ab0000; background:url(../image/box_sc.png) 5px -52px no-repeat;}
 
 .box_st_web_cs{margin:15px 0;}
 #mergeCtl_pageToView_findPage_ad{ padding-left:20px; color:#003; float:right}
@@ -173,11 +175,17 @@ button{ cursor:hand}
 
 .box_st_edit_body{background:#fafafa; border:#e3e3e3 1px solid; padding:10px;}
 .box_st_edit_lei span{background:url(../image/box_sc.png) -576px -313px; display:inline-block; width:18px; height:20px;}
-.box_st_edit_lei{ font-weight:700}
+.box_st_edit_lei{ font-weight:700; margin:15px 0 10px}
 
-.box_st_wyy{background:url(../image/box_sc.png) -358px -318px; padding-left:25px; font-weight:normal; color:#999}
-.box_st_mby{background:url(../image/box_sc.png) -358px -442px; padding-left:25px; font-weight:normal; color:#999}
-.box_st_fwb{background:url(../image/box_sc.png) -358px -380px; padding-left:25px; font-weight:normal; color:#999}
+.box_st_wyy{background:url(../image/box_sc.png) -358px -318px; padding:0 5px 0 22px; font-weight:normal; color:#999;height:24px; line-height:24px;}
+.box_st_mby{background:url(../image/box_sc.png) -358px -442px; padding:0 5px 0 22px; font-weight:normal; color:#999;height:24px; line-height:24px;}
+.box_st_fwb{background:url(../image/box_sc.png) -358px -380px; padding:0 5px 0 22px; font-weight:normal; color:#999;height:24px; line-height:24px;}
+.box_st_edit_sx{ padding-left:22px; color:#999; height:24px; line-height:24px;}
+.box_st_jinyong{ padding:0 5px 0 20px;background:url(../image/box_sc.png) -474px -380px; color:#772525}
+.box_st_qiyong{ padding:0 5px 0 20px;background:url(../image/box_sc.png) -577px -441px; color:#2e5d00}
+.box_st_shanchu{ padding:0 5px 0 20px;background:url(../image/box_sc.png) -474px -441px; color:#772525}
+.box_st_edit_bz{padding-left:22px; color:#999; height:24px; line-height:24px;}
+
 
 /*********图标*********/
 .box_ico_import{ padding-left:20px;background:url(../image/box_sc.png) -241px -440px; }
