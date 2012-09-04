@@ -152,6 +152,16 @@ ub = {
 	
 	//**************选择tag列表中的元素**************
 	selectTag:function(event, treeId, treeNode){
+		var tabs = jquery('#ub_tabs_ul').find('li');
+		if(!treeNode.getParentNode()){
+			jquery('a[tabid="#tabs-3"]').click();
+			jquery(tabs[0]).hide();
+			jquery(tabs[1]).hide();
+			return;
+		}else{
+			jquery(tabs[0]).show();
+			jquery(tabs[1]).show();
+		}
 		ub.setTagPatchsInfoToEditForm(treeNode);
 		ub.sentTagInfoToEditForm(treeNode);
 		event.stopPropagation();
@@ -184,16 +194,6 @@ ub = {
 		var parentNode = ub.getTopNode(treeNode);
 		var templateNamespace = parentNode.templateNameAndNameSpace;
 		var uixpath = treeNode.data.uixpath;
-		
-		if(!parentNode){
-			var tabs = jquery('#ub_tabs_ul').find('li');
-			tabs[0].hide();
-			tabs[1].hide();
-		}else{
-			var tabs = jquery('#ub_tabs_ul').find('li');
-			tabs[0].show();
-			tabs[1].show();
-		}
 		
 		jquery('#pathNumOnTab').text(treeNode.data.patchNum);
 		
@@ -264,7 +264,7 @@ ub = {
 			if(!confirm('删除这个编织节点吗?')){
 				return false;
 			}
-			var position = jQuery(this).prev().text();
+			var position = jQuery(this).prev().prev().text().split('[')[1].split(']')[0];
 			var key = jQuery(this).attr('key');
 			//删除编织节点
 			jQuery.ajax( {
