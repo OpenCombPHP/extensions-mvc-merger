@@ -167,7 +167,7 @@ class MvcMerger extends Extension
 		
 		if($aController->params()->bool('mvcmerger_browser'))
 		{
-			$this->printBrowserCode($aController);
+			self::printBrowserCode($aController);
 		}
 	}
 	
