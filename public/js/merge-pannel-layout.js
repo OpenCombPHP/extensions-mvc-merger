@@ -328,9 +328,9 @@ MergerPannel.Layout.prototype._initUi = function() {
 		var container = box.find('.frame_selecter_item_container');
 		var items = container.find('.box_frame_img');
 		if(to=="left"){
-			items.first().insertBefore(container.find('.clr'));
-		}else{
 			items.last().prependTo(container);
+		}else{
+			items.first().insertBefore(container.find('.clr'));
 		}
 	});
 	
