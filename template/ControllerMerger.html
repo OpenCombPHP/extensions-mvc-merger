@@ -35,15 +35,11 @@ jquery(function($){
 		$('#mergeCtl_pageToView_params').parents('div:first').toggle();
 	});
 	
-	$('.mergeCtl_change_panel').find('a').click(function(){
+	$('.mergeCtl_change_panel').find('a').live('click',function(){
 		$("#mergeCtl_panel").toggle();
 		$("#mergeCtl_result").toggle();
 			
-		if( $("#mergeCtl_panel:visible").length == 0 ){
-			$(this).text('返回“添加视图”面板');
-		}else{
-			$(this).text('编辑添加的视图');
-		}
+		return false;
 	});
 	
 	$('.mergeCtl_result_ajax').find('a').live('click',function(){
@@ -386,7 +382,9 @@ jquery(function($){
 							<if "$arrMerged['mergeType']">
 								<div class="box_st_edit_sx">生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
 							</if>
-							<div class="box_st_edit_bz">{=$arrMerged['comment']}</div>
+							<if "$arrMerged['comment']">
+								<div class="box_st_edit_bz">备注:{=$arrMerged['comment']}</div>
+							</if>
 						</li>
 					</if>
 					<if '$arrMerged["mergeType"] == "template"'>
@@ -399,7 +397,9 @@ jquery(function($){
 							<if "$arrMerged['mergeType']">
 								<div class="box_st_edit_sx">生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
 							</if>
-							<div class="box_st_edit_bz">{=$arrMerged['comment']}</div>
+							<if "$arrMerged['comment']">
+								<div class="box_st_edit_bz">备注:{=$arrMerged['comment']}</div>
+							</if>
 						</li>
 					</if>
 					<if '$arrMerged["mergeType"] == "page"'>
@@ -415,7 +415,9 @@ jquery(function($){
 							<if "$arrMerged['mergeType']">
 								<div class="box_st_edit_sx">生效条件：{= $sMergeType=='type'? '<所有>': $sMergeType}</div>
 							</if>
-							<div class="box_st_edit_bz">{=$arrMerged['comment']}</div>
+							<if "$arrMerged['comment']">
+								<div class="box_st_edit_bz">备注:{=$arrMerged['comment']}</div>
+							</if>
 						</li>
 					</if>
 				</foreach>

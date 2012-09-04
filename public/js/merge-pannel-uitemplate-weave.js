@@ -8,7 +8,7 @@ ub = {
 				+ '<div id="ub_tabs">'
 					+ '<ul id="ub_tabs_ul" class="box_bz_top">'
 						+ '<li><a tabid="#tabs-1" class="ub_tabs_select">编织模板</a></li>'
-						+ '<li><a tabid="#tabs-2">补丁设置</a><div class="ub_box_num"><span id="pathNumOnTab">9</span></div></li>'
+						+ '<li><a tabid="#tabs-2">补丁设置</a><div class="ub_box_num"><span id="pathNumOnTab">0</span></div></li>'
 						+ '<li><a tabid="#tabs-3">模板信息</a></li>'
 					+ '</ul>'
 					+ '<div id="tabs-1" class="ub_tabs">'
@@ -32,7 +32,11 @@ ub = {
 						+ '</div>'
 					+ '</div>'
 					+ '<div id="tabs-3" class="ub_tabs" style="display:none;">'
-						+ '<div>'
+						+ '<div id="ub_warning" style="width:100%;height:20px;padding:5px 0;">'
+							+ '<div>所属扩展:</div>'
+							+ '<div>命名空间:</div>'
+							+ '<div>文件名:</div>'
+							+ '<div>路径:</div>'
 						+ '</div>'
 					+ '</div>'
 				+ '</div>'
@@ -58,18 +62,6 @@ ub = {
 		ub.openDialog();
 		ub.initTagList();
 		ub.bindEvent();
-		
-		//隐藏右侧
-		jquery('#ub_tabs').hide();
-		jquery('#ub_right').append(
-				  '<div id="ub_warning" style="width:100%;height:20px;padding:5px 0;">'
-					+ '<div>所属扩展:</div>'
-					+ '<div>命名空间:</div>'
-					+ '<div>文件名:</div>'
-					+ '<div>路径:</div>'
-				+ '</div>'
-				);
-		
 	},
 	//获得模板结构信息
 	getUiTemplates:function(){
@@ -120,14 +112,14 @@ ub = {
 				expandSpeed : 0
 			},
 			callback: {
-				beforeClick : function(treeId,treeNode){
-					if(!treeNode.getParentNode()){
-						jquery('#mergepannel-dialog #ub_tabs').hide();
-						jquery('#mergepannel-dialog #ub_warning').show();
-						return false;
-					}
-				}
-				, onClick: ub.selectTag
+//				beforeClick : function(treeId,treeNode){
+//					if(!treeNode.getParentNode()){
+//						jquery('#mergepannel-dialog #ub_tabs').hide();
+//						jquery('#mergepannel-dialog #ub_warning').show();
+//						return false;
+//					}
+//				}
+				onClick: ub.selectTag
 			}
 		}, arrZtreeData);
 		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("ub_template_list");
@@ -138,9 +130,6 @@ ub = {
 				if(node.data.patchNum > 0){
 					ub.aRunningZTree.expandNode(node.getParentNode(),true,false);
 					jquery('#'+node.tId).find('a .button').after("<h6 class='patchNum'><span>"+node.data.patchNum+"</span></h6>");
-					jquery('#pathNumOnTab').text(node.data.patchNum);
-				}else{
-					jquery('#pathNumOnTab').text(0);
 				}
 			}
 		},false);
@@ -163,8 +152,6 @@ ub = {
 	
 	//**************选择tag列表中的元素**************
 	selectTag:function(event, treeId, treeNode){
-		jquery('#ub_tabs').show();
-		jquery('#ub_warning').hide();
 		ub.setTagPatchsInfoToEditForm(treeNode);
 		ub.sentTagInfoToEditForm(treeNode);
 		event.stopPropagation();
@@ -197,6 +184,19 @@ ub = {
 		var parentNode = ub.getTopNode(treeNode);
 		var templateNamespace = parentNode.templateNameAndNameSpace;
 		var uixpath = treeNode.data.uixpath;
+		
+		if(!parentNode){
+			var tabs = jquery('#ub_tabs_ul').find('li');
+			tabs[0].hide();
+			tabs[1].hide();
+		}else{
+			var tabs = jquery('#ub_tabs_ul').find('li');
+			tabs[0].show();
+			tabs[1].show();
+		}
+		
+		jquery('#pathNumOnTab').text(treeNode.data.patchNum);
+		
 		//个tab页面填充信息
 		jQuery.ajax( {
 			url: '?c=org.opencomb.mvcmerger.merger.TemplateWeaveList&rspn=msgqueue&a[]=/merger.TemplateWeaveList::doList'
