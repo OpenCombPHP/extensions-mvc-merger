@@ -1,14 +1,33 @@
 jQuery(function(){
 	var i;
+	var frame_selecter_item_container =
+		jQuery('#frame_selecter')
+		.find('.frame_selecter_item_container');
+	var frame_selecter_item_list = 
+		jQuery('#frame_selecter')
+		.find('.frame_selecter_item_container > .box_frame_img')
+		;
+	var frame_selecter_item_insertBefore = 
+		frame_selecter_item_container
+		.find('.clr');
 	for(i in pageLayoutData){
-		jQuery('#pageLayoutList').append(
-			'<li plid="'+i+'">'+pageLayoutData[i].title+'</li>'
-		);
+		var newFrameSelecterItem = jQuery(frame_selecter_item_list[0]).clone();
+		// plid
+		newFrameSelecterItem.find('a').attr('plid',i);
+		// image
+		newFrameSelecterItem.find('img').attr('src',pageLayoutData[i].image);
+		// title
+		newFrameSelecterItem.find('span').empty();
+		newFrameSelecterItem.find('span').append(pageLayoutData[i].title);
+		// onclick
+		newFrameSelecterItem.find('a').bind('click',function(){
+			var plid = jQuery(this).attr("plid");
+			changePageLayout(plid);
+			return false;
+		});
+		frame_selecter_item_insertBefore.before(newFrameSelecterItem);
 	}
-	jQuery('#pageLayoutList').find('li').bind('click',function(){
-		var plid = jQuery(this).attr("plid");
-		changePageLayout(plid);
-	});
+	frame_selecter_item_list.remove();
 });
 
 function getCustomFrameNodeList(){

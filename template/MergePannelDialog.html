@@ -19,6 +19,39 @@
 
 <script>
 __arrSkins = {=$__arrSkins};
+
+// 版式数据
+// dire : 方向，horizontal是水平，vertical是垂直
+var pageLayoutData={
+	'aaa':{
+		'title':'左中右三栏',
+		'dire':'horizontal',
+		'image':'{/mvc-merger:image/view.png}',
+		'subframes':[
+			{
+				'nmax':1,
+				'dire':'vertical',
+				'layout':{
+					'width':200,
+				}
+			},
+			{
+				'dire':'vertical',
+			},
+			{
+				'dire':'vertical',
+				'nmax':2,
+				'layout':{
+					'width':100,
+				},
+			},
+		],
+	},
+	'bbb':{
+		'title':'测试',
+		'image':'{/mvc-merger:image/arrow_down.png}',
+	}
+};
 </script>
 
 <div id='mergepannel-dialog'>
