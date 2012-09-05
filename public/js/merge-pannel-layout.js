@@ -270,20 +270,6 @@ MergerPannel.Layout.prototype._initUi = function() {
 		}
 	});
 	
-	//隐藏高级的css设置
-	var dls = $('#mergepannel-showmore').parents('dl:first').nextAll('dl').hide();
-	$('#mergepannel-showmore').toggle(function(){
-		dls.show();
-		$('#mergepannel-showmore')
-			.removeClass("mergepannel-showmore-left")
-			.addClass("mergepannel-showmore-down");
-	},function(){
-		dls.hide();
-		$('#mergepannel-showmore')
-			.removeClass("mergepannel-showmore-down")
-			.addClass("mergepannel-showmore-left");
-	});
-	
 	//自定义宽高的元素treenode上显示标记
 	$(".jc-layout").each(function(v,b){
 		realThis.changedSpaceTreeNode($('#'+b.id));
