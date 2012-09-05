@@ -255,10 +255,14 @@ ub = {
 			'<ul></ul>'
 		);
 		for(var b in json){
-			jQuery('#ub_merge_list').find('ul').first().append(
-						'<li><h4>['+json[b][0]+']</h4><h5>'+ub.html_encode(json[b][1])+'</h5>'
-						+ '<a key="'+b+'" class="delPatch" href="#"></a></li>'
-					);
+			var contentString = ub.html_encode(json[b][1]);
+			contentString = contentString.substr(0, 28);
+			if(contentString.length == 28){
+				contentString+= '...';
+			}
+			var alist = jQuery('<li><h4>['+json[b][0]+']</h4><h5>'+contentString+'</h5>'
+					+ '<a key="'+b+'" class="delPatch" href="#"></a></li>');
+			jQuery('#ub_merge_list').find('ul').first().append( alist );
 		}
 		jQuery('#ub_merge_list').find('.delPatch').click(function(){
 			if(!confirm('删除这个编织节点吗?')){

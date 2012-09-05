@@ -592,8 +592,7 @@ MergerPannel.Layout.prototype.scanFrameViewStruct = function() {
 			.each(
 					function() {
 						var inframe = $(this.parentNode).hasClass('jc-frame');
-						var sType = $(this).hasClass('jc-view') ? 'view'
-								: 'frame';
+						var sType = $(this).hasClass('jc-view') ? 'view' : 'frame';
 
 						var sName = '';
 						
@@ -1298,15 +1297,21 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 				
 				if(type == 'width'){
 					var newWidth = $('#'+realthis.mapPropertyNames[type]).val()
-						- ($(realthis.eleSelectedItem).outerWidth(true) - $(realthis.eleSelectedItem).width());
-					if(newWidth && newWidth > 0){
+									- ($(realthis.eleSelectedItem).outerWidth(true) 
+									- $(realthis.eleSelectedItem).width());
+					if(newWidth && newWidth >= 0){
 						$(realthis.eleSelectedItem).width( newWidth );
+					}else{
+						$(realthis.eleSelectedItem).width( 'auto' );
 					}
 				}else{
 					var newHeight = $('#'+realthis.mapPropertyNames[type]).val()
-					- ($(realthis.eleSelectedItem).outerHeight(true) - $(realthis.eleSelectedItem).height());
-					if(newHeight && newHeight > 0){
+									- ($(realthis.eleSelectedItem).outerHeight(true) 
+									- $(realthis.eleSelectedItem).height());
+					if(newHeight && newHeight >= 0){
 						$(realthis.eleSelectedItem).height(newHeight);
+					}else{
+						$(realthis.eleSelectedItem).height( 'auto' );
 					}
 				}
 				
