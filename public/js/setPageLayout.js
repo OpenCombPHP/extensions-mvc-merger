@@ -32,7 +32,7 @@ jQuery(function(){
 
 function getCustomFrameNodeList(){
 	var customFrameNodeList =
-	realThis.aZtree.getNodesByFilter(function(node){
+	MergerPannel.instance.layout.aZtree.getNodesByFilter(function(node){
 		if( jQuery('#'+node.id).hasClass('cusframe') ){
 			return true;
 		}else{
@@ -44,7 +44,7 @@ function getCustomFrameNodeList(){
 
 function getViewContainerNode(){
 	var viewContainerNode =
-	realThis.aZtree.getNodesByFilter(function(node){
+	MergerPannel.instance.layout.aZtree.getNodesByFilter(function(node){
 		if( __assembledParentId == node.id ){
 			return true;
 		}else{
@@ -68,7 +68,7 @@ function getViewNodeList(){
 	var viewContainerNode = getViewContainerNode();
 	var vcParentNodeList = getParentNodeList(viewContainerNode);
 	var viewNodeList = 
-	realThis.aZtree.getNodesByFilter(function(node){
+	MergerPannel.instance.layout.aZtree.getNodesByFilter(function(node){
 		if( node.type=='view' && vcParentNodeList.indexOf(node) == -1 ){
 			return true;
 		}else{
@@ -85,7 +85,7 @@ function recAddFrameByData(ele,node,data,parentData){
 		parentData = {} ;
 	}
 	
-	var newframe = realThis.addChildFrame( ele , node )[0];
+	var newframe = MergerPannel.instance.layout.addChildFrame( ele , node )[0];
 	
 	var emptyFrameList = [] ;
 	if( typeof( data['subframes'] ) != 'undefined' ){
@@ -109,10 +109,10 @@ function recAddFrameByData(ele,node,data,parentData){
 		var eleNewf = document.getElementById( newframe.id );
 		switch(data['dire']){
 		case 'horizontal':
-			realThis.setFrameLayout( eleNewf , 'h' );
+			MergerPannel.instance.layout.setFrameLayout( eleNewf , 'h' );
 			break;
 		case 'vertical':
-			realThis.setFrameLayout( eleNewf , 'v' );
+			MergerPannel.instance.layout.setFrameLayout( eleNewf , 'v' );
 			break;
 		}
 	}
@@ -125,7 +125,7 @@ function recAddFrameByData(ele,node,data,parentData){
 	for( i in data.layout ){
 		aLayout[i] = data.layout[i] ;
 	}
-	realThis.setItemLayout( newframe , aLayout );
+	MergerPannel.instance.layout.setItemLayout( newframe , aLayout );
 	
 	return emptyFrameList ;
 }
@@ -171,9 +171,10 @@ function changePageLayout(plid){
 		newFrameList[ bssetMap[j] ].num ++ ;
 		
 		var eleView = document.getElementById(viewNodeList[i].id) ;
-		realThis.aZtree.moveNode( newframe , viewNodeList[i] , 'inner' );
-		realThis.updateLayout();
-		realThis.moveIn( eleView , eleNewf );
+		MergerPannel.instance.layout.aZtree.moveNode( newframe , viewNodeList[i] , 'inner' );
+		MergerPannel.instance.layout.updateLayout();
+		MergerPannel.instance.layout.moveIn( eleView , eleNewf );
+		MergerPannel.instance.layout.updateLayout();
 		
 		j++ ;
 		if( j >= newFrameList.length ){
@@ -185,9 +186,9 @@ function changePageLayout(plid){
 		var cfn = customFrameNodeList[i];
 		var ecf = document.getElementById(cfn.id);
 		
-		realThis.deleteFrame(ecf, cfn);
+		MergerPannel.instance.layout.deleteFrame(ecf, cfn);
 		//重新计算布局
-		realThis.updateLayout();
+		MergerPannel.instance.layout.updateLayout();
 	}
 }
 
