@@ -486,35 +486,45 @@ MergerPannel.Layout.prototype._initZtree = function() {
 							beforeDrop : function(treeId, treeNodes,targetNode, moveType) {
 								// 移动到目标的 前/后，需要判断目标的上级是否是一个 frame
 								if (moveType == 'prev' || moveType == 'next') {
-									return targetNode.inframe;
+									if( ! targetNode.inframe ){
+										return false;
+									}
 								}
 								// 移动到目标的内部，判断目标本身是否是一个 frame
 								else if (moveType == 'inner') {
-									return targetNode.type !== 'view';
+									if( targetNode.type === 'view' ){
+										return false;
+									}
 								} else {
 									// what wrong !?
 								}
-								return false;
-							}
-
-							// 放置事件
-							,
-							onDrop : function(event, treeId, treeNodes, targetNode, moveType) {
+								
+								var updateLayoutResult = true;
 								for ( var i in treeNodes) {
 									var eleView = document.getElementById(treeNodes[i].id);
 									var eleTargetItem = document.getElementById(targetNode.id);
-
+									
 									if (moveType == 'prev') {
 										realThis.moveBefore(eleView, eleTargetItem);
 									} else if (moveType == 'next') {
 										realThis.moveAfter(eleView, eleTargetItem);
 									} else if (moveType == 'inner') {
+										var parent = jQuery(eleView).parent();
+										var parentLayout = parent.closest('.jc-layout').get(0);
 										realThis.moveIn(eleView, eleTargetItem);
+										realThis.updateLayout(
+											function(){
+												updateLayoutResult = false;
+												realThis.moveIn( eleView , parentLayout );
+												realThis.updateLayout();
+											}
+										);
 									}
 								}
-								//重新计算布局
-								realThis.updateLayout();
-							}
+								return updateLayoutResult;
+							},
+							// 放置事件
+							onDrop : function(event, treeId, treeNodes, targetNode, moveType) {}
 
 							// 点击 frame/view ，打开旁边的属性界面
 							,
@@ -1684,6 +1694,8 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 			}
 		});
 	}catch(e){
+		console.log(e);
+		console.log(e.stack);
 		realthis.log(e.message);
 		//回滚
 		if( typeof resetFun == "function" ){
@@ -1879,6 +1891,10 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 	if( bSameSpace )
 	{
 		children.each(function(key,item){
+			var minValue = parseInt(jQuery(item).data(minKey));
+			if( assignable < minValue ){
+				throw new Error( "无法为layout item:"+$(item).attr('id')+"分配空间：item 要求的最小值("+$(item).data(minKey)+")超出了可以分配的空间("+assignable+")" ) ;
+			}
 			realthis.applySpace(item,assignable,flag,bChildSpaceAuto) ;
 		}) ;
 	}
