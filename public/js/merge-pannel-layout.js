@@ -2015,10 +2015,3 @@ MergerPannel.Layout.prototype.getMapMVCMergerItemProperties = function(id,proper
 	}
 	return mapMVCMergerItemProperties[id][propertyName];
 }
-
-
-/*版式和皮肤*/
-
-/*end 版式和皮肤*/
-
-

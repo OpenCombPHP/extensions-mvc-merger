@@ -1,7 +1,7 @@
 <lib name="jquery.ui" />
 <lib name="jquery.ztree" />
 <lib name="jquery.tip" />
-<lib name='jquery.farbtastic'/>
+<lib name='jquery.simplecolor' />
 <lib name='jquery.json'/>
 <lib name='ckeditor'/>
 
@@ -464,9 +464,12 @@ jquery(document).ready(function(){
 		}
 	});
 	
+	/*
 	jquery('#mergepannel-props-color-selecter').farbtastic(function(color){
 		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color).change();
 	});
+	*/
+	
 	
 	jquery('#mergepannel-props-background-color').focusin(function(){
 		jquery('#mergepannel-props-color-selecter')
