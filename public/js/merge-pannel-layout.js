@@ -1694,8 +1694,6 @@ MergerPannel.Layout.prototype.updateLayout = function(resetFun)
 			}
 		});
 	}catch(e){
-		console.log(e);
-		console.log(e.stack);
 		realthis.log(e.message);
 		//回滚
 		if( typeof resetFun == "function" ){
@@ -1789,7 +1787,6 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 		{
 			var nChildMinWidth = parseInt($(child).data('min-width')) ;
 			var nChildMinHeight = parseInt($(child).data('min-height')) ;
-//			console.log($(child) ,$(child).data('min-height') );
 			
 			realthis.log("child id："+child.id+": "+nChildMinWidth+"x"+nChildMinHeight) ;
 			
@@ -1838,6 +1835,16 @@ MergerPannel.Layout.prototype.calculateMinMax = function(item,flag) {
 			this.log("最小高小于成员最小高之和："+childrenMinHeight) ;
 			item.data('min-height' , childrenMinHeight );
 		}
+	}
+	if( item.data('max-width') > 0 && item.data('min-width') > item.data('max-width') ){
+		throw new Error(
+			"无法为layout item:"
+			+$(item).attr('id')
+			+"计算最大最小值：item 要求的最小值："
+			+$(item).data('min-width')
+			+" 最大值："
+			+$(item).data('max-width')
+		);
 	}
 	if(flag&MergerPannel.Layout.flag_width)
 	{
