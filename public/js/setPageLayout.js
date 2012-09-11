@@ -166,20 +166,38 @@ function changePageLayout(plid){
 			}
 		}
 		
-		var newframe = newFrameList[ bssetMap[j] ].node;
-		var eleNewf = document.getElementById( newframe.id );
-		newFrameList[ bssetMap[j] ].num ++ ;
-		
 		var eleView = document.getElementById(viewNodeList[i].id) ;
-		MergerPannel.instance.layout.aZtree.moveNode( newframe , viewNodeList[i] , 'inner' );
-		MergerPannel.instance.layout.updateLayout();
-		MergerPannel.instance.layout.moveIn( eleView , eleNewf );
-		MergerPannel.instance.layout.updateLayout();
-		
-		j++ ;
-		if( j >= newFrameList.length ){
-			j = 0;
-		}
+		var startJ = j;
+		do{
+			var newframe = newFrameList[ bssetMap[j] ].node;
+			var eleNewf = document.getElementById( newframe.id );
+			newFrameList[ bssetMap[j] ].num ++ ;
+			
+			var updateLayoutResult = true;
+			var parent = jQuery(eleView).parent();
+			var parentLayout = parent.closest('.jc-layout').get(0);
+			realThis.moveIn(eleView, eleNewf);
+			realThis.updateLayout(
+				function(){
+					updateLayoutResult = false;
+					realThis.moveIn( eleView , parentLayout );
+					realThis.updateLayout();
+				}
+			);
+			if( updateLayoutResult ){
+				MergerPannel.instance.layout.aZtree.moveNode( newframe , viewNodeList[i] , 'inner' );
+				MergerPannel.instance.layout.updateLayout();
+			}
+			
+			j++ ;
+			if( j >= newFrameList.length ){
+				j = 0;
+			}
+			
+			if( startJ - j == 0){
+				break;
+			}
+		}while(false == updateLayoutResult);
 	}
 	
 	for( i in customFrameNodeList ){
