@@ -393,9 +393,21 @@ color: #EB8F00;
 	line-height:16px;
 	margin:2px;
 }
-#mergepannel-props-color-selecter{
+.mergepannel-props-color-selecter{
 	position:absolute;
+	z-index:60000;
 	display:none;
+	width:155px;
+	padding:4px;
+	background:#FFF;
+	border:1px solid #999;
+}
+
+.color-selecter-cell{
+    float:left;
+    width:12px;
+    height:12px;
+    margin:0 5px 5px 0 ;
 }
 
 /* 添加视图 */

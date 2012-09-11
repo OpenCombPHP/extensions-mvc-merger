@@ -11,6 +11,7 @@
 <script src="mvc-merger:js/merge-pannel.js" />
 <script src="mvc-merger:js/merge-pannel-layout.js" />
 <script src="mvc-merger:js/setPageLayout.js" />
+<script src="mvc-merger:js/colorPicker.js" />
 
 <css src="mvc-merger:css/merge-pannel.css" />
 <css src="mvc-merger:css/jquery.wijmo-open.2.1.4.css" />
@@ -161,7 +162,7 @@ var pageLayoutData={
 					</div>
 					<div class="box_bj_right_top_right">
 						<span class="box_button_left">
-							<a href="#" class="box_button_right">高级模式</a>
+							<a href="#" class="box_button_right">高级</a>
 						</span>
 					</div>
 				</div>
@@ -198,8 +199,8 @@ var pageLayoutData={
 						<div>
 							<p>背景</p>
 							<span>
-							<input style="width: 55px" id="mergepannel-props-background-color" class="box_input3" />
-							<div id="mergepannel-props-color-selecter"></div>
+							<input style="width: 55px" id="mergepannel-props-background-color" class="box_input3" colorSelecter="1"/>
+							<div class="mergepannel-props-color-selecter"></div>
 							<input style="width: 80px" id="mergepannel-props-background-image" class="box_input4" />
 							<input style="width: 50px" id="mergepannel-props-background-position" class="box_input5" />
 							<select id="mergepannel-props-background-repeat">
@@ -235,7 +236,8 @@ var pageLayoutData={
 							<p>边框</p>
 							<span>
 								
-										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-color" type="text"/>
+										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-color" colorSelecter="1" type="text"/>
+										<div class="mergepannel-props-color-selecter"></div>
 										<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-width" type="text"/>
 										<select id="mergepannel-props-border-style" class="mergepannel-border" style='width:80px;display:inline;'>
 											<option value="none">无</option>
@@ -252,12 +254,13 @@ var pageLayoutData={
 							</span>
 							<div class="clr"></div>
 						</div>
-						<div id='mergepannel-props-borders'>
+						<div id='mergepannel-props-borders' style="position: relative;z-index:40000" >
 						<div>
 							<p>&nbsp;</p>
 							<span>
 							<h6>上</h6>
-											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-top-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-top-color" colorSelecter="1" type="text"/>
+												<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-top-width" type="text"/>
 											<select id="mergepannel-props-border-top-style" class="mergepannel-border" style='width:80px;'>
 												<option value="none">无</option>
@@ -277,7 +280,8 @@ var pageLayoutData={
 							<p>&nbsp;</p>
 							<span>
 								<h6>右</h6>
-											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-right-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-right-color" colorSelecter="1" type="text"/>
+											<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-right-width" type="text"/>
 											<select id="mergepannel-props-border-right-style" class="mergepannel-border" style='width:80px;'>
 												<option value="none">无</option>
@@ -297,7 +301,8 @@ var pageLayoutData={
 							<p>&nbsp;</p>
 							<span>
 								<h6>下</h6>
-											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-bottom-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-bottom-color" colorSelecter="1" type="text"/>
+											<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-bottom-width" type="text"/>
 											<select id="mergepannel-props-border-bottom-style" class="mergepannel-border" style='width:80px;'>
 												<option value="none">无</option>
@@ -317,7 +322,8 @@ var pageLayoutData={
 							<p>&nbsp;</p>
 							<span>
 								<h6>左</h6>
-											<input style="width: 50px" id="mergepannel-props-border-left-color" class="mergepannel-border box_input11" type="text"/>
+											<input style="width: 50px" id="mergepannel-props-border-left-color" class="mergepannel-border box_input11" colorSelecter="1" type="text"/>
+											<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" id="mergepannel-props-border-left-width" class="mergepannel-border box_input12" type="text"/>
 											<select id="mergepannel-props-border-left-style" style='width:80px;'  class="mergepannel-border">
 												<option value="none">无</option>
@@ -453,34 +459,6 @@ jquery(document).ready(function(){
 	MergerPannel.instance = new MergerPannel() ;
 	MergerPannel.instance.init() ;
 	
-	//颜色选择器
-	if(jquery('#mergepannel-props-background-color').val() != ''){
-		jquery('#mergepannel-props-background-color').css('background-color' , jquery('#mergepannel-props-background-color').val());
-	}
 	
-	jquery('#mergepannel-props-background-color').change(function(){
-		if(jquery(this).val() == ''){
-			jquery(this).css('background-color' ,'');
-		}
-	});
-	
-	/*
-	jquery('#mergepannel-props-color-selecter').farbtastic(function(color){
-		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color).change();
-	});
-	*/
-	
-	
-	jquery('#mergepannel-props-background-color').focusin(function(){
-		jquery('#mergepannel-props-color-selecter')
-		.css({
-			'top':jquery(this).position().top - 200,
-			'left':0
-		})
-		.show();
-	});
-	jquery('#mergepannel-props-background-color').focusout(function(){
-		jquery('#mergepannel-props-color-selecter').hide();
-	});
 }) ;
 </script>

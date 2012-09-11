@@ -149,14 +149,10 @@ MergerPannel.Layout.prototype._initUi = function() {
 		if($(this).attr( 'saveClass' ) !== '' && $(this).attr( 'saveClass' ) !== undefined){
 			return ;
 		}
-		var classes = $(this).attr('class');
-		if(!classes){
-			classes = [];
-		}else{
-			classes = classes.split(' ');
-		}
+		var classes = $(this).get(0).classList;
+		
 		var arrSaveClass = [];
-		for(var i in classes){
+		for(var i=0 ; i< classes.length ; i++){
 			if(classes[i].indexOf('box_input') === 0){
 				arrSaveClass.push(classes[i]);
 			}
@@ -341,21 +337,21 @@ MergerPannel.Layout.prototype._initUi = function() {
 	});
 	
 	//导出删除按钮
-	$('.box_frame_img').hover(function(){
-		$(this).find('strong').show();
-		$(this).find('p').show();
+    $('.box_frame_img').hover(function(){
+	$(this).find('strong').show();
+	    $(this).find('p').show();
 	},function(){
-		$(this).find('strong').hide();
-		$(this).find('p').hide();
+	    $(this).find('strong').hide();
+	    $(this).find('p').hide();
 	});
 	
 	//高级模式
 	$('.box_bj_right_top_right .box_button_right').toggle(function(){
-		$('.mergepannel-props-ad').show();
-		$(this).text('精简模式');
+	    $('.mergepannel-props-ad').show();
+	    $(this).text('精简');
 	},function(){
-		$('.mergepannel-props-ad').hide();
-		$(this).text('高级模式');
+	    $('.mergepannel-props-ad').hide();
+	    $(this).text('高级');
 	});
 
 };
@@ -1600,13 +1596,12 @@ MergerPannel.Layout.prototype.checkInputForTitle = function(){
 	var $ = jquery;
 	$('#mergepannel-props-common input , #mergepannel-props-common textarea').each(function(v,b){
 		if($(b).val() !== ''){
-//			if($(b).attr( 'saveClass' ) !== '' && $(b).attr( 'saveClass' ) !== undefined){
 			if($(b).attr( 'class' ) === '' || $(b).attr( 'class' ) === undefined){
 				return ;
 			}
-			var classes = $(b).attr('class').split(' ');
+			var classes = $(b).get(0).classList;
 			var arrSaveClass = [];
-			for(var i in classes){
+			for(var i=0; i<classes.length;++i){
 				if(classes[i].indexOf('box_input') === 0){
 					arrSaveClass.push(classes[i]);
 				}
