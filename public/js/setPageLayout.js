@@ -127,6 +127,12 @@ function recAddFrameByData(ele,node,data,parentData){
 	}
 	MergerPannel.instance.layout.setItemLayout( newframe , aLayout );
 	
+	if( typeof( data['skin'] ) != 'undefined' ){
+		var skinName = data['skin'] ;
+		MergerPannel.instance.layout.applySkin( skinName );
+		jQuery("#mergepannel-props-skin").val(skinName).change();
+	}
+	
 	return emptyFrameList ;
 }
 

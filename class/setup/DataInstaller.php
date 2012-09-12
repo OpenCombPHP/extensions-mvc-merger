@@ -31,7 +31,7 @@ class DataInstaller implements IExtensionDataInstaller
 		$aSetting = $aExtension->setting() ;
 			
 				
-		$aSetting->setItem('/merge/layout/org.opencomb.opencms.index.Index/','*',array (
+		$aSetting->setValue('/merge/layout/org.opencomb.opencms.index.Index/',array (
   'assemble' => 
   array (
     'frame-0' => 
@@ -462,7 +462,7 @@ class DataInstaller implements IExtensionDataInstaller
 		$aMessageQueue->create(Message::success,'保存配置：%s',"/merge/layout/org.opencomb.opencms.index.Index/");
 			
 				
-		$aSetting->setItem('/merge/layout/org.opencomb.opencms.article.ArticleContent/','*',array (
+		$aSetting->setValue('/merge/layout/org.opencomb.opencms.article.ArticleContent/',array (
   'assemble' => 
   array (
     'frame-0' => 
@@ -750,7 +750,7 @@ class DataInstaller implements IExtensionDataInstaller
 		$aMessageQueue->create(Message::success,'保存配置：%s',"/merge/layout/org.opencomb.opencms.article.ArticleContent/");
 			
 				
-		$aSetting->setItem('/merge/layout/org.opencomb.opencms.article.ArticleList/','*',array (
+		$aSetting->setValue('/merge/layout/org.opencomb.opencms.article.ArticleList/',array (
   'assemble' => 
   array (
     'frame-0' => 
@@ -920,15 +920,15 @@ class DataInstaller implements IExtensionDataInstaller
 		$aMessageQueue->create(Message::success,'保存配置：%s',"/merge/layout/org.opencomb.opencms.article.ArticleList/");
 			
 				
-		$aSetting->setItem('/merge/controller/','controllers',array (
+		$aSetting->setValue('/merge/controller/controllers',array (
 ));
 				
-		$aSetting->setItem('/merge/controller/','num',4);
+		$aSetting->setValue('/merge/controller/num',4);
 				
 		$aMessageQueue->create(Message::success,'保存配置：%s',"/merge/controller/");
 			
 				
-		$aSetting->setItem('/','data-version','0.2.0');
+		$aSetting->setValue('/data-version','0.2.0');
 				
 		$aMessageQueue->create(Message::success,'保存配置：%s',"/");
 			

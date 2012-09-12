@@ -103,7 +103,9 @@ class PostViewLayoutSetting extends ControlPanel
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
 		
 		// 保存设定
-		$aSetting->setItem('/merge/skin', $this->params['title'] ,  $this->params['properties'] ) ;
+		$arrSkins = $aSetting->value('/merge/skin',array());
+		$arrSkins[ $this->params['title'] ] = $this->params['properties'];
+		$aSetting->setValue('/merge/skin',$arrSkins);
 		
 		$this->createMessage(Message::success,"皮肤配置已经保存。") ;
 	}
