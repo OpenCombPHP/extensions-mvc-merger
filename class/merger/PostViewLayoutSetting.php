@@ -79,10 +79,8 @@ class PostViewLayoutSetting extends ControlPanel
 		}
 		
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		
 		// 保存设定
-		$aSetting->setItem('/merge/layout/'.$sClassName , $sParams , $arrSetting) ;
-		
+		$aSetting->setValue('/merge/layout/'.$sClassName . '/' .$sParams , $arrSetting) ;
 		$this->createMessage(Message::success,"视图布局配置已经保存。") ;
 	}
 	

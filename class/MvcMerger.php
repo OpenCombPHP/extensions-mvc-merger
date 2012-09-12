@@ -315,6 +315,9 @@ CODE;
 			}
 			natsort($arrParmas);
 			$sParams = implode('&', $arrParmas);
+			if($sParams === ''){
+				$sParams = '*';
+			}
 			
 			$sClassName = str_replace('\\','.',get_class($aController)) ;
 			$aSetting = Extension::flyweight('mvc-merger')->setting() ;
@@ -331,7 +334,8 @@ CODE;
 			$aView->variables()->set('sImageFolder',$sImageFolder) ;
 			$aView->variables()->set('sControllerClass',$sClassName) ;
 			$aView->variables()->set('log',Request::singleton()->bool('log')) ;
-			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;			$aView->removeWrapperClasses('jc-layout') ;
+			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;
+			$aView->removeWrapperClasses('jc-layout') ;
 			
 			$arrSkins = array();
 			$arrSkins = $aSetting->value('/merge/skin',array());

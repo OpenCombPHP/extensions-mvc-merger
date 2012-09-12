@@ -1106,7 +1106,7 @@ MergerPannel.Layout.prototype.openProperty = function(itemData, itemEle) {
 
 	this.updateProperties();
 	
-	realThis.checkInputForTitle();
+	this.checkInputForTitle();
 }
 
 /**
@@ -1127,8 +1127,14 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 				$(this.eleSelectedItem).data( 'min-' + sPropName , mapMVCMergerItemProperties[sId][sPropName]);
 				$(this.eleSelectedItem).data( 'max-' + sPropName , mapMVCMergerItemProperties[sId][sPropName]);
 			}
+			if(sPropName=='background-color'){
+				$('#' + sInputId).css({'background-color':mapMVCMergerItemProperties[sId][sPropName]});
+			}
 		} else {
 			$('#' + sInputId).val('');
+			if(sPropName=='background-color'){
+				$('#' + sInputId).css({'background-color':''});
+			}
 		}
 	}
 	
@@ -1182,10 +1188,10 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	}
 
 	//保留class的保存,防止用户指定class时勿删
-	var arrClasses = $(this.eleSelectedItem).attr('class').split(' ');
+	var arrClasses = this.eleSelectedItem.classList;
 	var arrToFormInput = [];
 	var arrToFormInputParams = [];
-	for ( var nClass in arrClasses) {
+	for ( var nClass = 0 ; nClass < arrClasses.length ; ++nClass) {
 		//是用户指定的class? 如果是放入表单,不是就放入表单备用值中
 		if( $.inArray( arrClasses[nClass] , realThis.keepClassNames) === -1 ){
 			arrToFormInput.push( arrClasses[nClass] );
@@ -1199,6 +1205,7 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	$('#mergepannel-props-class').attr('otherClass',arrToFormInputParams.join(' '));
 	
 	//还原skin列表的值
+	$skinName = "自定义";
 	if( mapMVCMergerItemProperties[sId] === undefined
 		|| mapMVCMergerItemProperties[sId]['skin'] === undefined
 		|| mapMVCMergerItemProperties[sId]['skin'] === ''
@@ -1206,11 +1213,12 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	){
 		//do nothing
 	}else{
-		$('#skin_selecter .box_frame_img').removeClass('box_frame_img_v');
-		$(".box_frame_skinName:contains('"+mapMVCMergerItemProperties[sId]['skin']+"')")
-			.parents('.box_frame_img:first')
-			.addClass('box_frame_img_v');
+		$skinName = mapMVCMergerItemProperties[sId]['skin'];
 	}
+	$('#skin_selecter .box_frame_img').removeClass('box_frame_img_v');
+	$(".box_frame_skinName:contains('"+$skinName+"')")
+		.parents('.box_frame_img:first')
+		.addClass('box_frame_img_v');
 }
 
 /*
