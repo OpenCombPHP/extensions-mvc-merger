@@ -19,23 +19,26 @@ MergerPannel.prototype.init = function()
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
-		, beforeClose: function(event, ui) {
-			//退出编辑模式
-			if(confirm('是否退出编辑模式?')){
-			    var href = location.href.split('mvcmerger=1');
-			    if(href[0].substr(-1) == '?'
-			      || href[0].substr(-1) == "&"){
-				href[0] = href[0].substr(0,href[0].length-1);
-			    }
-			    location.href = href.join("");
-			}
-			return false;
-		},
-		captionButtons: {
+//		, beforeClose: function(event, ui) {
+//		}
+		, captionButtons: {
             pin: { visible: false },
             refresh: { visible: false },
 		}
 	}) ;
+	
+	//退出编辑模式
+	$('#body_top_pin_exit').click(function(){
+		if(confirm('是否退出编辑模式?')){
+		    var href = location.href.split('mvcmerger=1');
+		    if(href[0].substr(-1) == '?'
+		      || href[0].substr(-1) == "&"){
+			href[0] = href[0].substr(0,href[0].length-1);
+		    }
+	    	location.href = href.join("");
+		}
+		return false;
+	});
 	
 	var dialogOuter = ui_dialog.parents('.ui-dialog:first');
 	dialogOuter.find('.ui-icon-carat-1-n').attr('title','折叠');

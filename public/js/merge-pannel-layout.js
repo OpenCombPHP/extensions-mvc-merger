@@ -146,23 +146,32 @@ MergerPannel.Layout.prototype._initUi = function() {
 	//输入框默认值
 	$('#mergepannel-props-common input , #mergepannel-props-common textarea')
 	.focusin(function(event) {
-		if($(this).attr( 'saveClass' ) !== '' && $(this).attr( 'saveClass' ) !== undefined){
+		var classes = this.classList;
+		if(classes.length === 0){
 			return ;
 		}
-		var classes = $(this).get(0).classList;
-		
 		var arrSaveClass = [];
-		for(var i=0 ; i< classes.length ; i++){
+		var arrNotSaveClass = [];
+		for(var i=0; i<classes.length;++i){
 			if(classes[i].indexOf('box_input') === 0){
 				arrSaveClass.push(classes[i]);
+			}else{
+				arrNotSaveClass.push(classes[i]);
 			}
 		}
-		$(this).attr( 'saveClass', arrSaveClass.join(' ') ).attr('class','');
-	}).focusout(function(event) {
+		if(!$(this).attr( 'saveClass')){
+			$(this).attr( 'saveClass', arrSaveClass.join(' ') );
+		}
+		$(this).attr( 'class',arrNotSaveClass.join(' ') );
+	}).change(function(event) {
 		if( $(this).val() !== '' ){
 			return;
 		}
-		$(this).attr('class' , $(this).attr( 'saveClass' ) );
+		var newClasses= $(this).attr( 'class' ) ;
+		if($(this).attr( 'saveClass' )){
+			newClasses += " " + $(this).attr( 'saveClass' );
+		}
+		$(this).attr('class' ,  newClasses );
 		$(this).removeAttr( 'saveClass' );
 	});
 
@@ -321,6 +330,16 @@ MergerPannel.Layout.prototype._initUi = function() {
 		var skinName = $(this).find('.box_frame_skinName').text();
 		if(skinName != '自定义'){
 			realThis.applySkin( skinName );
+		}
+		if(skinName === '取消皮肤'){
+			if(!confirm('确定要取消正在使用的皮肤吗?')){
+				//do nothing
+			}else{
+				mapMVCMergerItemProperties[realThis.eleSelectedItem.id] = {"width":"","height":""};
+				realThis.updateProperties();
+			}
+			$('#cusSkin').click();
+			return false;
 		}
 		$("#skin_selecter").find('.box_frame_img').removeClass('box_frame_img_v');
 		$(this).addClass('box_frame_img_v');
@@ -1604,22 +1623,32 @@ MergerPannel.Layout.prototype.checkInputForTitle = function(){
 	var $ = jquery;
 	$('#mergepannel-props-common input , #mergepannel-props-common textarea').each(function(v,b){
 		if($(b).val() !== ''){
-			if($(b).attr( 'class' ) === '' || $(b).attr( 'class' ) === undefined){
+			var classes = $(b).get(0).classList;
+			if(classes.length === 0){
 				return ;
 			}
-			var classes = $(b).get(0).classList;
 			var arrSaveClass = [];
+			var arrNotSaveClass = [];
 			for(var i=0; i<classes.length;++i){
 				if(classes[i].indexOf('box_input') === 0){
 					arrSaveClass.push(classes[i]);
+				}else{
+					arrNotSaveClass.push(classes[i]);
 				}
 			}
-			$(b).attr( 'saveClass', arrSaveClass.join(' ') ).attr('class','');
+			if(!$(b).attr( 'saveClass')){
+				$(b).attr( 'saveClass', arrSaveClass.join(' ') );
+			}
+			$(b).attr( 'class',arrNotSaveClass.join(' ') );
 		}else{
 			if( $(b).val() !== '' ){
 				return;
 			}
-			$(b).attr('class' , $(b).attr( 'saveClass' ) );
+			var newClasses= $(b).attr( 'class' ) ;
+			if($(b).attr( 'saveClass' )){
+				newClasses += " " + $(b).attr( 'saveClass' );
+			}
+			$(b).attr('class' ,  newClasses );
 			$(b).removeAttr( 'saveClass' );
 		}
 	});
