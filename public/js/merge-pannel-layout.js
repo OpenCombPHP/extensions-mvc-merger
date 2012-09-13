@@ -332,13 +332,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 			realThis.applySkin( skinName );
 		}
 		if(skinName === '取消皮肤'){
-			if(!confirm('确定要取消正在使用的皮肤吗?')){
-				//do nothing
-			}else{
-				mapMVCMergerItemProperties[realThis.eleSelectedItem.id] = {"width":"","height":""};
-				realThis.updateProperties();
-				realThis.checkInputForTitle();
-			}
+			realThis.cleanCurrentStyles();
 			$('#cusSkin').click();
 			return false;
 		}
@@ -347,6 +341,8 @@ MergerPannel.Layout.prototype._initUi = function() {
 		$("#mergepannel-props-skin").val(skinName).change();
 		return false;
 	});
+	
+	$("#mergepannel-props-clean").click(realThis.cleanCurrentStyles);
 	
 	//皮肤删除按钮
 	$("#skin_selecter").find('.box_frame_img').find('.box_frame_deleteSkin').click(function(){
@@ -366,7 +362,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 	});
 	
 	//高级模式
-	$('.box_bj_right_top_right .box_button_right').toggle(function(){
+	$('#mergepannel-props-ad-btn').toggle(function(){
 	    $('.mergepannel-props-ad').show();
 	    $(this).text('精简');
 	},function(){
@@ -1245,6 +1241,20 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	$(".box_frame_skinName:contains('"+$skinName+"')")
 		.parents('.box_frame_img:first')
 		.addClass('box_frame_img_v');
+}
+
+/*
+ * 清理皮肤,清理样式
+ */
+MergerPannel.Layout.prototype.cleanCurrentStyles= function() {
+	var $ = jquery;
+	if(!confirm('确定要清除已填写的样式吗?')){
+		//do nothing
+	}else{
+		mapMVCMergerItemProperties[realThis.eleSelectedItem.id] = {"width":"","height":""};
+		realThis.updateProperties();
+		realThis.checkInputForTitle();
+	}
 }
 
 /*
