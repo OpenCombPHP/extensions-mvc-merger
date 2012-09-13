@@ -337,6 +337,7 @@ MergerPannel.Layout.prototype._initUi = function() {
 			}else{
 				mapMVCMergerItemProperties[realThis.eleSelectedItem.id] = {"width":"","height":""};
 				realThis.updateProperties();
+				realThis.checkInputForTitle();
 			}
 			$('#cusSkin').click();
 			return false;
@@ -972,12 +973,18 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 	var aNode = this.getDataByEleId(frame.id);
 	var oldLayout = aNode.layout;
 	aNode.layout = sType;
+	
+	if(sType === 'h'){
+		aNode.name = "布局框架:横";
+	}else{
+		aNode.name = "布局框架:竖";
+	}
 
 	this.layoutFrame(frame, aNode);
 	
 	//因为改变了元素的class,这里重新获取表单,以保持class表单内容的同步
 	$('#'+aNode.tId+ " >a").click();
-
+	
 	this.updateLayout(function(){
 		realthis.setFrameLayout(frame,oldLayout);
 		this.updateLayout();

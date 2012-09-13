@@ -38,7 +38,7 @@ class PostViewLayoutSetting extends ControlPanel
 		
 		$sClassName = str_replace('\\','.',$this->params['controller']);
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		$aSetting->deleteItem('/merge/layout/'.$sClassName , $sParams) ;
+		$aSetting->deleteKey('/merge/layout/'.$sClassName . '/' . $sParams) ;
 						
 		$this->createMessage(Message::success,"视图设置已经清空。刷新页面查看更改。") ;
 	}

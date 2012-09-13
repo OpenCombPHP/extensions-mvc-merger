@@ -340,14 +340,6 @@ CODE;
 			$arrSkins = array();
 			$arrSkins = $aSetting->value('/merge/skin',array());
 			
-// 			aSkinsItemIterator = $aSkinsKey->itemIterator();
-				
-// 			while( $aSkinsItemIterator->valid() )
-// 			{
-// 				$arrSkins[$aSkinsItemIterator->current()] = $aSkinsKey->item( $aSkinsItemIterator->current() );
-// 				$aSkinsItemIterator->next();
-// 			}
-			
 			$aView->variables()->set('__arrSkins',json_encode($arrSkins) );
 			$aView->variables()->set('arrSkins',$arrSkins);
 			
@@ -369,6 +361,9 @@ CODE;
 		}
 		natsort($arrParmas);
 		$sParams = implode('&', $arrParmas);
+		if($sParams === ''){
+			$sParams = '*';
+		}
 		
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
 		
@@ -376,14 +371,15 @@ CODE;
 		if(!$arrLayout){
 			$arrLayout = $aSetting->value('/merge/layout/'.$sClassName ,null) ;
 		}
+		
 		if(! isset($arrLayout['assemble']) || $arrLayout['assemble'] == array() )
 		{
 			return;
 		}
 		
 		$arrViewsInStore = array();
-		foreach ( $arrLayout['assemble'] as $value){
-			self::assembleViewAndFrame($aController , $value , null, & $arrViewsInStore);
+		foreach ( $arrLayout['assemble'] as $assemble){
+			self::assembleViewAndFrame($aController , $assemble , null, & $arrViewsInStore);
 		}
 	}
 	
