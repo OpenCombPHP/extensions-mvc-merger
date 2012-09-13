@@ -983,7 +983,7 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 	
 	this.updateLayout(function(){
 		realthis.setFrameLayout(frame,oldLayout);
-		this.updateLayout();
+		realthis.updateLayout();
 	});
 	
 	// 这里有一个 bug ，在 ie下，一定要执行两遍 updateLayout() ， 否则计算错误导致成员的宽度超出 横向frame的宽度，出现挤换行
@@ -1119,6 +1119,13 @@ MergerPannel.Layout.prototype.openProperty = function(itemData, itemEle) {
 
 		$('#mergepannel-props-frame-delete-btn').attr('disabled',
 				$(itemEle).hasClass('cusframe') ? false : true);
+		
+		if( itemData.layout == 'h' ){
+			$('.mergepannel-tippalbe-element').find('span').text('自动高度');
+		}else{
+			$('.mergepannel-tippalbe-element').find('span').text('自动宽度');
+		}
+		
 	} else {
 //		$('#mergepannel-props-type').html('视图');
 		$('.box_bj_right_addframe').hide();
@@ -1910,6 +1917,16 @@ MergerPannel.Layout.prototype.assignSpace = function(container,flag)
 		var bExpandable = false ;											// 不允许扩张
 		var bTottingup = container.hasClass('jc-frame-horizontal') ;		// 是否累加成员的空间
 		var bChildSpaceAuto = !container.hasClass('jc-frame-horizontal') ;	// 允许使用 auto
+//		if(this.isAutoFill(container))
+//		{
+//			var bChildSpaceAuto = false ;	// 允许使用 auto	
+//			var bSameSpace = container.hasClass('jc-frame-vertical') ;		
+//		}
+//		else
+//		{
+//			var bChildSpaceAuto = true ;	// 允许使用 auto	
+//			var bSameSpace = false ;
+//		}
 	}
 	else
 	{
