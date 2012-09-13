@@ -230,8 +230,10 @@ var pageLayoutData={
 						<span class="box_ico_mk"></span><span>国际 opencms_TopList_html</span>
 					</div>
 					<div class="box_bj_right_top_right">
-						<span class="box_button_left">
+						<span class="box_button_left" style=" float:right; margin-right:5px">
 							<a href="#" id="mergepannel-props-clean" class="box_button_right">清除样式</a>
+						</span>
+						<span class="box_button_left" style=" float:right; margin-right:5px">
 							<a href="#" id="mergepannel-props-ad-btn" class="box_button_right">高级</a>
 						</span>
 					</div>
@@ -262,7 +264,7 @@ var pageLayoutData={
 						<div>
 							<p>宽高</p>
 							<span>
-							<input class="mergepannel-tippalbe-element box_input1" id="mergepannel-props-width" style="width: 50px" title="设置视图或布局框架的宽度,可以使用百分比或单位,默认的单位是px" value="" />px	<input value="" style="width: 50px" id="mergepannel-props-height" class="mergepannel-tippalbe-element box_input2" title="设置视图或布局框架的高度,可以使用百分比或单位,默认的单位是px"  />px
+							<input class="mergepannel-tippalbe-element box_input1" id="mergepannel-props-width" style="width: 50px" title="设置视图或布局框架的宽度,可以使用百分比或单位,默认的单位是px" value="" />	<input value="" style="width: 50px" id="mergepannel-props-height" class="mergepannel-tippalbe-element box_input2" title="设置视图或布局框架的高度,可以使用百分比或单位,默认的单位是px"  />
 							</span>
 							<div class="clr"></div>
 						</div>
@@ -294,11 +296,11 @@ var pageLayoutData={
 									<option value="absolute">绝对</option>
 									<option value="fixed">窗口绝对</option>
 								</select>
-								<input style="width: 50px" class="box_input6" id="mergepannel-props-zindex" type="text"/>
-								<input style="width: 28px" class="box_input7" id="mergepannel-props-top" type="text"/>px
-								<input style="width: 28px" class="box_input8" id="mergepannel-props-left" type="text"/>px
-								<input style="width: 28px" class="box_input9" id="mergepannel-props-bottom" type="text"/>px
-								<input style="width: 28px" class="box_input10" id="mergepannel-props-right" type="text"/>px
+								<input style="width: 70px" class="box_input6" id="mergepannel-props-zindex" type="text"/>
+								<input style="width: 28px" class="box_input7" id="mergepannel-props-top" type="text"/>
+								<input style="width: 28px" class="box_input8" id="mergepannel-props-left" type="text"/>
+								<input style="width: 28px" class="box_input9" id="mergepannel-props-bottom" type="text"/>
+								<input style="width: 28px" class="box_input10" id="mergepannel-props-right" type="text"/>
 							</span>
 							<div class="clr"></div>
 						</div>
@@ -320,8 +322,11 @@ var pageLayoutData={
 											<option value="inset">3D 内部</option>
 											<option value="outset">3D 外部</option>
 										</select>
-										<a id="mergepannel-props-borders-showmore" href="#" title="详细设定">分别设置</a>
+										<strong class="box_button_left" style=" width:70px; display:inline-block; font-weight:normal">
+												<a id="mergepannel-props-borders-showmore" href="#" title="详细设定" class="box_button_right" style="width:auto; padding-left:0">分别设置</a>
+										</strong>
 							</span>
+										
 							<div class="clr"></div>
 						</div>
 						<div id='mergepannel-props-borders' style="position: relative;z-index:40000" >
@@ -489,9 +494,9 @@ var pageLayoutData={
 		<a href="#" title="视图布局" class="body_top_bj" tab="mergepannel-layout">视图布局</a>
 		<a href="#" title="添加视图" class="body_top_st" tab="mergepannel-controllermerger">添加视图</a>
 		<a href="#" title="模板编织" class="body_top_bz" tab="ub_dialog">模板编织</a>
-		<a href="#" id="body_top_pin_exit" title="退出编辑" class="">退出编辑</a>
-		<a href="#" title="导航锁定" class="body_top_pin body_top_pin_selected">导航锁定</a>
-		<a href="#" title="导航悬浮" class="body_top_pinnow">导航悬浮</a>
+		<a href="#" id="body_top_pin_exit" title="退出编辑" class="body_top_out">&nbsp;</a>
+		<a href="#" title="导航锁定" class="body_top_pin body_top_pin_selected">&nbsp;</a>
+		<a href="#" title="导航悬浮" class="body_top_pinnow">&nbsp;</a>
 	</div>
 </div>
 <div class="body_top_down">
