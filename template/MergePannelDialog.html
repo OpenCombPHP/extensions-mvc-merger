@@ -1,7 +1,6 @@
 <lib name="jquery.ui" />
 <lib name="jquery.ztree" />
 <lib name="jquery.tip" />
-<lib name='jquery.farbtastic'/>
 <lib name='jquery.json'/>
 <lib name='ckeditor'/>
 
@@ -11,6 +10,7 @@
 <script src="mvc-merger:js/merge-pannel.js" />
 <script src="mvc-merger:js/merge-pannel-layout.js" />
 <script src="mvc-merger:js/setPageLayout.js" />
+<script src="mvc-merger:js/colorPicker.js" />
 
 <css src="mvc-merger:css/merge-pannel.css" />
 <css src="mvc-merger:css/jquery.wijmo-open.2.1.4.css" />
@@ -50,6 +50,72 @@ var pageLayoutData={
 	'bbb':{
 		'title':'测试',
 		'image':'{/mvc-merger:image/arrow_down.png}',
+	},
+	'zy1':{
+		'title':'zy',
+		'image':'{/mvc-merger:image/information-button.png}',
+		'dire':'vertical',
+		'subframes':[
+			// 1
+			{
+				'dire':'horizontal',
+				'subframes':[
+					// 1.1
+					{
+						'nmax':1
+					},
+					// 1.2
+					{
+						'dire':'vertical',
+						'nmax':2,
+						'layout':{
+							'width':291,
+							'skin':'red',
+						}
+					},
+				],
+			},
+			// 2
+			{
+				'nmax':1,
+			},
+			// 3
+			{
+				'dire':'horizontal',
+				'subframes':[
+					// 3.1
+					{
+						'nmax':1
+					},
+					// 3.2
+					{
+						'dire':'vertical',
+						'nmax':2,
+						'layout':{
+							'width':291,
+						}
+					},
+				],
+			},
+			// 4
+			{
+				'nmax':1,
+			},
+			// 5
+			{
+				'dire':'horizontal',
+				'subframes':[
+					// 5.1
+					{
+						'dire':'vertical',
+					},
+					// 5.2
+					{
+						'dire':'vertical',
+					},
+				],
+			}
+		],
 	}
 };
 </script>
@@ -109,6 +175,10 @@ var pageLayoutData={
 						<a href="#" title="上一个"></a>
 					</div>
 					<div class="frame_selecter_item_container">
+							<div id="noSkin" class="box_frame_img">
+								<a href="#" title="#"><img src='{/mvc-merger:image/frame1.png}' alt="#" /></a>
+								<span class="box_frame_skinName">取消皮肤</span>
+							</div>
 							<div id="cusSkin" class="box_frame_img box_frame_img_v">
 								<a href="#" title="#"><img src='{/mvc-merger:image/frame1.png}' alt="#" /></a>
 								<span class="box_frame_skinName">自定义</span>
@@ -161,7 +231,8 @@ var pageLayoutData={
 					</div>
 					<div class="box_bj_right_top_right">
 						<span class="box_button_left">
-							<a href="#" class="box_button_right">高级模式</a>
+							<a href="#" id="mergepannel-props-clean" class="box_button_right">清除样式</a>
+							<a href="#" id="mergepannel-props-ad-btn" class="box_button_right">高级</a>
 						</span>
 					</div>
 				</div>
@@ -198,8 +269,8 @@ var pageLayoutData={
 						<div>
 							<p>背景</p>
 							<span>
-							<input style="width: 55px" id="mergepannel-props-background-color" class="box_input3" />
-							<div id="mergepannel-props-color-selecter"></div>
+							<input style="width: 55px" id="mergepannel-props-background-color" class="box_input3" colorSelecter="1"/>
+							<div class="mergepannel-props-color-selecter"></div>
 							<input style="width: 80px" id="mergepannel-props-background-image" class="box_input4" />
 							<input style="width: 50px" id="mergepannel-props-background-position" class="box_input5" />
 							<select id="mergepannel-props-background-repeat">
@@ -235,7 +306,8 @@ var pageLayoutData={
 							<p>边框</p>
 							<span>
 								
-										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-color" type="text"/>
+										<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-color" colorSelecter="1" type="text"/>
+										<div class="mergepannel-props-color-selecter"></div>
 										<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-width" type="text"/>
 										<select id="mergepannel-props-border-style" class="mergepannel-border" style='width:80px;display:inline;'>
 											<option value="none">无</option>
@@ -252,12 +324,13 @@ var pageLayoutData={
 							</span>
 							<div class="clr"></div>
 						</div>
-						<div id='mergepannel-props-borders'>
+						<div id='mergepannel-props-borders' style="position: relative;z-index:40000" >
 						<div>
 							<p>&nbsp;</p>
 							<span>
 							<h6>上</h6>
-											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-top-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-top-color" colorSelecter="1" type="text"/>
+												<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-top-width" type="text"/>
 											<select id="mergepannel-props-border-top-style" class="mergepannel-border" style='width:80px;'>
 												<option value="none">无</option>
@@ -277,7 +350,8 @@ var pageLayoutData={
 							<p>&nbsp;</p>
 							<span>
 								<h6>右</h6>
-											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-right-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-right-color" colorSelecter="1" type="text"/>
+											<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-right-width" type="text"/>
 											<select id="mergepannel-props-border-right-style" class="mergepannel-border" style='width:80px;'>
 												<option value="none">无</option>
@@ -297,7 +371,8 @@ var pageLayoutData={
 							<p>&nbsp;</p>
 							<span>
 								<h6>下</h6>
-											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-bottom-color" type="text"/>
+											<input style="width: 50px" class="mergepannel-border box_input11" id="mergepannel-props-border-bottom-color" colorSelecter="1" type="text"/>
+											<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" class="mergepannel-border box_input12" id="mergepannel-props-border-bottom-width" type="text"/>
 											<select id="mergepannel-props-border-bottom-style" class="mergepannel-border" style='width:80px;'>
 												<option value="none">无</option>
@@ -317,7 +392,8 @@ var pageLayoutData={
 							<p>&nbsp;</p>
 							<span>
 								<h6>左</h6>
-											<input style="width: 50px" id="mergepannel-props-border-left-color" class="mergepannel-border box_input11" type="text"/>
+											<input style="width: 50px" id="mergepannel-props-border-left-color" class="mergepannel-border box_input11" colorSelecter="1" type="text"/>
+											<div class="mergepannel-props-color-selecter"></div>
 											<input style="width: 50px" id="mergepannel-props-border-left-width" class="mergepannel-border box_input12" type="text"/>
 											<select id="mergepannel-props-border-left-style" style='width:80px;'  class="mergepannel-border">
 												<option value="none">无</option>
@@ -355,14 +431,14 @@ var pageLayoutData={
 							<div class="clr"></div>
 						</div>
 						<div>
-							<p>自定义</p>
+							<p>CSS</p>
 							<span>
 								<textarea id="mergepannel-props-style" style="width:260px;height:100px; border:#c4c5ca 1px solid;" class="box_input13"></textarea>
 							</span>
 							<div class="clr"></div>
 						</div>
 						<div>
-							<p>皮肤名</p>
+							<p> </p>
 							<span>
 							<input id="mergepannel-props-skin" type="hidden"/>
 							<button id="mergepannel-layout-saveToSkinBtn" title="将当前样式保存成皮肤">保存皮肤</button>
@@ -413,8 +489,9 @@ var pageLayoutData={
 		<a href="#" title="视图布局" class="body_top_bj" tab="mergepannel-layout">视图布局</a>
 		<a href="#" title="添加视图" class="body_top_st" tab="mergepannel-controllermerger">添加视图</a>
 		<a href="#" title="模板编织" class="body_top_bz" tab="ub_dialog">模板编织</a>
-		<a href="#" title="" class="body_top_pin body_top_pin_selected">导航锁定</a>
-		<a href="#" title="" class="body_top_pinnow">导航悬浮</a>
+		<a href="#" id="body_top_pin_exit" title="退出编辑" class="">退出编辑</a>
+		<a href="#" title="导航锁定" class="body_top_pin body_top_pin_selected">导航锁定</a>
+		<a href="#" title="导航悬浮" class="body_top_pinnow">导航悬浮</a>
 	</div>
 </div>
 <div class="body_top_down">
@@ -453,31 +530,6 @@ jquery(document).ready(function(){
 	MergerPannel.instance = new MergerPannel() ;
 	MergerPannel.instance.init() ;
 	
-	//颜色选择器
-	if(jquery('#mergepannel-props-background-color').val() != ''){
-		jquery('#mergepannel-props-background-color').css('background-color' , jquery('#mergepannel-props-background-color').val());
-	}
 	
-	jquery('#mergepannel-props-background-color').change(function(){
-		if(jquery(this).val() == ''){
-			jquery(this).css('background-color' ,'');
-		}
-	});
-	
-	jquery('#mergepannel-props-color-selecter').farbtastic(function(color){
-		jquery('#mergepannel-props-background-color').val(color).css('background-color' , color).change();
-	});
-	
-	jquery('#mergepannel-props-background-color').focusin(function(){
-		jquery('#mergepannel-props-color-selecter')
-		.css({
-			'top':jquery(this).position().top - 200,
-			'left':0
-		})
-		.show();
-	});
-	jquery('#mergepannel-props-background-color').focusout(function(){
-		jquery('#mergepannel-props-color-selecter').hide();
-	});
 }) ;
 </script>

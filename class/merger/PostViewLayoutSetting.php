@@ -38,7 +38,7 @@ class PostViewLayoutSetting extends ControlPanel
 		
 		$sClassName = str_replace('\\','.',$this->params['controller']);
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		$aSetting->deleteItem('/merge/layout/'.$sClassName , $sParams) ;
+		$aSetting->deleteKey('/merge/layout/'.$sClassName . '/' . $sParams) ;
 						
 		$this->createMessage(Message::success,"视图设置已经清空。刷新页面查看更改。") ;
 	}
@@ -79,10 +79,8 @@ class PostViewLayoutSetting extends ControlPanel
 		}
 		
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-		
 		// 保存设定
-		$aSetting->setItem('/merge/layout/'.$sClassName , $sParams , $arrSetting) ;
-		
+		$aSetting->setValue('/merge/layout/'.$sClassName . '/' .$sParams , $arrSetting) ;
 		$this->createMessage(Message::success,"视图布局配置已经保存。") ;
 	}
 	
@@ -103,7 +101,9 @@ class PostViewLayoutSetting extends ControlPanel
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
 		
 		// 保存设定
-		$aSetting->setItem('/merge/skin', $this->params['title'] ,  $this->params['properties'] ) ;
+		$arrSkins = $aSetting->value('/merge/skin',array());
+		$arrSkins[ $this->params['title'] ] = $this->params['properties'];
+		$aSetting->setValue('/merge/skin',$arrSkins);
 		
 		$this->createMessage(Message::success,"皮肤配置已经保存。") ;
 	}

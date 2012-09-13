@@ -64,7 +64,7 @@ class MvcMerger extends Extension
 		// 扩展 mvc-merger 的 Setting对象
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
 		// 取得 item 数据
-		$arrMergeSetting = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrMergeSetting = $aSetting->value('/merge/controller/controllers',array()) ;
 		$arrControllerClasses = array_keys($arrMergeSetting) ;
 		
 		foreach($arrControllerClasses as $sControllerClass)
@@ -89,7 +89,7 @@ class MvcMerger extends Extension
 		$aSetting = \org\opencomb\platform\ext\Extension::flyweight('mvc-merger')->setting() ;
 	
 		// for 控制器融合
-		$arrControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrControllers = $aSetting->value('/merge/controller/controllers',array()) ;
 		if( !empty($arrControllers[$sClassName]) )
 		{
 			$nNum = 0; //命名计数
@@ -315,12 +315,15 @@ CODE;
 			}
 			natsort($arrParmas);
 			$sParams = implode('&', $arrParmas);
+			if($sParams === ''){
+				$sParams = '*';
+			}
 			
 			$sClassName = str_replace('\\','.',get_class($aController)) ;
 			$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-			$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, $sParams ,null) ;
+			$arrProperties = $aSetting->value('/merge/layout/'.$sClassName.'/'.$sParams ,null) ;
 			if(!$arrProperties){
-				$arrProperties = $aSetting->item('/merge/layout/'.$sClassName, '*' ,null) ;
+				$arrProperties = $aSetting->value('/merge/layout/'.$sClassName ,null) ;
 			}
 			if(!isset($arrProperties['properties'])){
 				$arrProperties['properties'] = array();
@@ -331,23 +334,11 @@ CODE;
 			$aView->variables()->set('sImageFolder',$sImageFolder) ;
 			$aView->variables()->set('sControllerClass',$sClassName) ;
 			$aView->variables()->set('log',Request::singleton()->bool('log')) ;
-			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;			$aView->removeWrapperClasses('jc-layout') ;
+			$aView->variables()->set('arrLayoutProperties', $arrProperties['properties'] ? json_encode($arrProperties['properties']) : '{}') ;
+			$aView->removeWrapperClasses('jc-layout') ;
 			
 			$arrSkins = array();
-			$aSkinsKey = $aSetting->key('/merge/skin',null);
-			if($aSkinsKey){
-				foreach( $aSkinsKey->itemIterator() as $sSkin){
-					$arrSkins[$sSkin] = $aSkinsKey->item($sSkin);
-				}
-			}
-			
-// 			aSkinsItemIterator = $aSkinsKey->itemIterator();
-				
-// 			while( $aSkinsItemIterator->valid() )
-// 			{
-// 				$arrSkins[$aSkinsItemIterator->current()] = $aSkinsKey->item( $aSkinsItemIterator->current() );
-// 				$aSkinsItemIterator->next();
-// 			}
+			$arrSkins = $aSetting->value('/merge/skin',array());
 			
 			$aView->variables()->set('__arrSkins',json_encode($arrSkins) );
 			$aView->variables()->set('arrSkins',$arrSkins);
@@ -370,21 +361,25 @@ CODE;
 		}
 		natsort($arrParmas);
 		$sParams = implode('&', $arrParmas);
+		if($sParams === ''){
+			$sParams = '*';
+		}
 		
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
 		
-		$arrLayout=$aSetting->item('/merge/layout/'.$sClassName, $sParams ,null);
+		$arrLayout=$aSetting->value('/merge/layout/'.$sClassName.'/'. $sParams ,null);
 		if(!$arrLayout){
-			$arrLayout = $aSetting->item('/merge/layout/'.$sClassName, '*' ,null) ;
+			$arrLayout = $aSetting->value('/merge/layout/'.$sClassName ,null) ;
 		}
+		
 		if(! isset($arrLayout['assemble']) || $arrLayout['assemble'] == array() )
 		{
 			return;
 		}
 		
 		$arrViewsInStore = array();
-		foreach ( $arrLayout['assemble'] as $value){
-			self::assembleViewAndFrame($aController , $value , null, & $arrViewsInStore);
+		foreach ( $arrLayout['assemble'] as $assemble){
+			self::assembleViewAndFrame($aController , $assemble , null, & $arrViewsInStore);
 		}
 	}
 	
@@ -473,7 +468,7 @@ CODE;
 	
 		// -------------------------------------------------
 		// 根据 setting 中保存的信息，应用模板补丁
-		foreach($this->setting()->key("/merge/uiweave",true)->keyIterator() as $aNsKey)
+		foreach($this->setting()->value("/merge/uiweave",array()) as $aNsKey)
 		{
 			$sNamespace = $aNsKey->name() ;
 			foreach($aNsKey->keyIterator() as $aTemplateKey)

@@ -67,12 +67,9 @@ class UIObjectBrowserInfo implements IInterpreter
 			//计算补丁个数
 			$nPatchNum = 0 ;
 			$aSetting = ExtensionManager::singleton()->extension('mvc-merger')->setting() ;
-			$aKey = $aSetting->key("/merge/uiweave/" . $sExtensionName . '/' . $sTemplateName ,false);
-			if($aKey){
-				$arrPatchs = $aKey->item("arrPatchs");
-				if(isset($arrPatchs[$sXPath])){
-					$nPatchNum = count($arrPatchs[$sXPath]);
-				}
+			$arrPatchs = $aSetting->value("/merge/uiweave/" . $sExtensionName . '/' . $sTemplateName . 'arrPatchs' ,false);
+			if(isset($arrPatchs[$sXPath])){
+				$nPatchNum = count($arrPatchs[$sXPath]);
 			}
 			
 			$aObject->attributes()->add( AttributeValue::createInstance('uixpath',$sXPath) ) ;

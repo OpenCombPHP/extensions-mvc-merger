@@ -32,7 +32,7 @@ jQuery(function(){
 
 function getCustomFrameNodeList(){
 	var customFrameNodeList =
-	realThis.aZtree.getNodesByFilter(function(node){
+	MergerPannel.instance.layout.aZtree.getNodesByFilter(function(node){
 		if( jQuery('#'+node.id).hasClass('cusframe') ){
 			return true;
 		}else{
@@ -44,7 +44,7 @@ function getCustomFrameNodeList(){
 
 function getViewContainerNode(){
 	var viewContainerNode =
-	realThis.aZtree.getNodesByFilter(function(node){
+	MergerPannel.instance.layout.aZtree.getNodesByFilter(function(node){
 		if( __assembledParentId == node.id ){
 			return true;
 		}else{
@@ -68,7 +68,7 @@ function getViewNodeList(){
 	var viewContainerNode = getViewContainerNode();
 	var vcParentNodeList = getParentNodeList(viewContainerNode);
 	var viewNodeList = 
-	realThis.aZtree.getNodesByFilter(function(node){
+	MergerPannel.instance.layout.aZtree.getNodesByFilter(function(node){
 		if( node.type=='view' && vcParentNodeList.indexOf(node) == -1 ){
 			return true;
 		}else{
@@ -85,7 +85,7 @@ function recAddFrameByData(ele,node,data,parentData){
 		parentData = {} ;
 	}
 	
-	var newframe = realThis.addChildFrame( ele , node )[0];
+	var newframe = MergerPannel.instance.layout.addChildFrame( ele , node )[0];
 	
 	var emptyFrameList = [] ;
 	if( typeof( data['subframes'] ) != 'undefined' ){
@@ -109,10 +109,10 @@ function recAddFrameByData(ele,node,data,parentData){
 		var eleNewf = document.getElementById( newframe.id );
 		switch(data['dire']){
 		case 'horizontal':
-			realThis.setFrameLayout( eleNewf , 'h' );
+			MergerPannel.instance.layout.setFrameLayout( eleNewf , 'h' );
 			break;
 		case 'vertical':
-			realThis.setFrameLayout( eleNewf , 'v' );
+			MergerPannel.instance.layout.setFrameLayout( eleNewf , 'v' );
 			break;
 		}
 	}
@@ -125,7 +125,13 @@ function recAddFrameByData(ele,node,data,parentData){
 	for( i in data.layout ){
 		aLayout[i] = data.layout[i] ;
 	}
-	realThis.setItemLayout( newframe , aLayout );
+	MergerPannel.instance.layout.setItemLayout( newframe , aLayout );
+	
+	if( typeof( data['skin'] ) != 'undefined' ){
+		var skinName = data['skin'] ;
+		MergerPannel.instance.layout.applySkin( skinName );
+		jQuery("#mergepannel-props-skin").val(skinName).change();
+	}
 	
 	return emptyFrameList ;
 }
@@ -166,28 +172,47 @@ function changePageLayout(plid){
 			}
 		}
 		
-		var newframe = newFrameList[ bssetMap[j] ].node;
-		var eleNewf = document.getElementById( newframe.id );
-		newFrameList[ bssetMap[j] ].num ++ ;
-		
 		var eleView = document.getElementById(viewNodeList[i].id) ;
-		realThis.aZtree.moveNode( newframe , viewNodeList[i] , 'inner' );
-		realThis.updateLayout();
-		realThis.moveIn( eleView , eleNewf );
-		
-		j++ ;
-		if( j >= newFrameList.length ){
-			j = 0;
-		}
+		var startJ = j;
+		do{
+			var newframe = newFrameList[ bssetMap[j] ].node;
+			var eleNewf = document.getElementById( newframe.id );
+			newFrameList[ bssetMap[j] ].num ++ ;
+			
+			var updateLayoutResult = true;
+			var parent = jQuery(eleView).parent();
+			var parentLayout = parent.closest('.jc-layout').get(0);
+			realThis.moveIn(eleView, eleNewf);
+			realThis.updateLayout(
+				function(){
+					updateLayoutResult = false;
+					realThis.moveIn( eleView , parentLayout );
+					realThis.updateLayout();
+				}
+			);
+			if( updateLayoutResult ){
+				MergerPannel.instance.layout.aZtree.moveNode( newframe , viewNodeList[i] , 'inner' );
+				MergerPannel.instance.layout.updateLayout();
+			}
+			
+			j++ ;
+			if( j >= newFrameList.length ){
+				j = 0;
+			}
+			
+			if( startJ - j == 0){
+				break;
+			}
+		}while(false == updateLayoutResult);
 	}
 	
 	for( i in customFrameNodeList ){
 		var cfn = customFrameNodeList[i];
 		var ecf = document.getElementById(cfn.id);
 		
-		realThis.deleteFrame(ecf, cfn);
+		MergerPannel.instance.layout.deleteFrame(ecf, cfn);
 		//重新计算布局
-		realThis.updateLayout();
+		MergerPannel.instance.layout.updateLayout();
 	}
 }
 

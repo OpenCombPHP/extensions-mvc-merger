@@ -19,23 +19,26 @@ MergerPannel.prototype.init = function()
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
-		, beforeClose: function(event, ui) {
-			//退出编辑模式
-			if(confirm('是否退出编辑模式?')){
-			    var href = location.href.split('mvcmerger=1');
-			    if(href[0].substr(-1) == '?'
-			      || href[0].substr(-1) == "&"){
-				href[0] = href[0].substr(0,href[0].length-1);
-			    }
-			    location.href = href.join("");
-			}
-			return false;
-		},
-		captionButtons: {
+//		, beforeClose: function(event, ui) {
+//		}
+		, captionButtons: {
             pin: { visible: false },
             refresh: { visible: false },
 		}
 	}) ;
+	
+	//退出编辑模式
+	$('#body_top_pin_exit').click(function(){
+		if(confirm('是否退出编辑模式?')){
+		    var href = location.href.split('mvcmerger=1');
+		    if(href[0].substr(-1) == '?'
+		      || href[0].substr(-1) == "&"){
+			href[0] = href[0].substr(0,href[0].length-1);
+		    }
+	    	location.href = href.join("");
+		}
+		return false;
+	});
 	
 	var dialogOuter = ui_dialog.parents('.ui-dialog:first');
 	dialogOuter.find('.ui-icon-carat-1-n').attr('title','折叠');
@@ -83,24 +86,30 @@ MergerPannel.prototype.init = function()
 		return false;
 	});
 	
+	
+	$('body').css({'margin-top':'50px'});
 	//body_top动态效果
 	$('.body_top_down').hover(function(){
 		$(".body_top").stop(false,true).slideDown();
+		$('body').animate({'margin-top':'50px'},'normal');
 	});
 	$(".body_top").mouseleave(function(){
 		if($('.body_top_pin_selected').hasClass('body_top_pin')){
 			return;
 		}
 		$(".body_top").stop(false,true).slideUp();
+		$('body').animate({'margin-top':'0px'},'normal');
 	});
 	
 	$('.body_top_pin').click(function(){
 		$('.body_top_pinnow').show().addClass('body_top_pin_selected');
 		$(this).hide().removeClass('body_top_pin_selected');
+		return false;
 	});
 	$('.body_top_pinnow').click(function(){
 		$('.body_top_pin').show().addClass('body_top_pin_selected');
 		$(this).hide().removeClass('body_top_pin_selected');
+		return false;
 	});
 	
 	clearJCLayout();
