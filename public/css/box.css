@@ -3,22 +3,25 @@ a:link,a:visited,a:hover,a:active {text-decoration: none;}
 button{ cursor:hand} 
 
 
-/*****框架******
+/*****框架******/
 
-.ui-widget-header{background:url(../image/box_titlebg.png) repeat-x 0 0; height:39px; color:#7e7e7e; font-weight: bold;text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);}
+.ui-widget-header{background:url(../image/boxtopbg.png) repeat-x 0 0; height:39px; color:#7e7e7e; font-weight: bold;text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);}
 #ui-dialog-title-mergepannel-dialog a{ display:none;}
-#ui-dialog-title-mergepannel-dialog .selected_mvcmerger{  display:block; height:33px; background:url(../image/box_titleico.png) no-repeat 0 -6px; line-height:28px; color:#7e7e7e; display:inline; text-decoration:none; padding-left:35px}
-********/
+#ui-dialog-title-mergepannel-dialog .selected_mvcmerger{display:block; height:33px; line-height:28px; color:#7e7e7e; display:inline; text-decoration:none; padding-left:35px}
+#ui-dialog-title-mergepannel-dialog .box_title_bjico{ background:url(../image/box_titleico.png) no-repeat 0 -6px;}
+#ui-dialog-title-mergepannel-dialog .box_title_stico{ background:url(../image/box_titleico.png) no-repeat 0 -86px;}
+#ui-dialog-title-mergepannel-dialog .box_title_mbico{ background:url(../image/box_titleico.png) no-repeat 0 -166px;}
+/********/
 /****顶部****/
 .body_top{ width:100%; height:39px; padding-top:10px; background:url(../image/topbg.png) repeat-x; position:absolute; z-index:700; top:0; left:0}
 .body_top_menu{ width:950px; margin:auto;}
 .body_top_menu a{ padding-left:35px; width:60px; line-height:25px; color:#7e7e7e; text-shadow:0 1px 0px rgba(255, 255, 255, 0.7);}
-.body_top_menu .body_top_bj{height:25px; background:url(../image/top_button_hover.png) 0 -152px; display:block; float:left; margin-right:45px;}
-.body_top_menu .body_top_bj:hover{background:url(../image/top_button_hover.png) 0 0px;}
+.body_top_menu .body_top_bj{height:25px; background:url(../image/top_button_hover.png) 0 -254px; display:block; float:left; margin-right:45px;}
+.body_top_menu .body_top_bj:hover{background:url(../image/top_button_hover.png) 0 -102px;}
 .body_top_menu .body_top_st{ height:25px; background:url(../image/top_button_hover.png) 0 -203px; display:block; float:left; margin-right:45px;}
 .body_top_menu .body_top_st:hover{background:url(../image/top_button_hover.png) 0 -51px;}
-.body_top_menu .body_top_bz{ height:25px; background:url(../image/top_button_hover.png) 0 -254px; display:block; float:left; margin-right:45px;}
-.body_top_menu .body_top_bz:hover{background:url(../image/top_button_hover.png) 0 -102px;}
+.body_top_menu .body_top_bz{ height:25px; background:url(../image/top_button_hover.png) 0 -152px; display:block; float:left; margin-right:45px;}
+.body_top_menu .body_top_bz:hover{background:url(../image/top_button_hover.png) 0 0px; }
 .body_top_menu .body_top_pin{ padding-left:24px;height:25px; width:57px; background:url(../image/loc.png) 0 0px; display:block; float:right;}
 /*.body_top_menu .body_top_pin:hover{background:url(../image/loc.png) -130px 0; padding-right:24px; padding-left:0; text-align:right }*/
 .body_top_menu .body_top_pinnow{display:none;background:url(../image/loc.png) -130px 0 no-repeat;width:57px; padding-left:0; text-align:right; padding-right:24px; float:right;}

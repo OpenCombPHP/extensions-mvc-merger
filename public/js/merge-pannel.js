@@ -7,7 +7,7 @@ MergerPannel.prototype.init = function()
 	var $ = jquery ;
 	var thisMergerPannel = this ;
 	
-	var sTitle = "<a class='selected_mvcmerger' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a href='javascript:;' tab='mergepannel-controllermerger'>添加视图</a><a href='javascript:;' tab='ub_dialog'>模板编织</a>" ;
+	var sTitle = "<a class='selected_mvcmerger box_title_bjico' href='javascript:;' tab='mergepannel-layout'>视图布局</a><a class='box_title_stico' href='javascript:;' tab='mergepannel-controllermerger'>添加视图</a><a class='box_title_mbico' href='javascript:;' tab='ub_dialog'>模板编织</a>" ;
 	if(bMvcMergerLog)
 	{
 		sTitle+= "	<a href='javascript:;' tab='mergepannel-log'>log</a>" ;
