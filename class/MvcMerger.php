@@ -402,8 +402,6 @@ CODE;
 					$aView->setFrameType('jc-frame-horizontal');
 				}
 				$aView->addWrapperClasses('cusframe');
-				
-				$aView->setId($arrView['id']);
 				$aParentView = View::findXPath( $aRootView , dirname($arrView['xpath']));
 				$aParentView->addView($arrView['id'], $aView);
 			}else{
@@ -411,6 +409,8 @@ CODE;
 				return;
 			}
 		}
+		
+		$aView->setId($arrView['id']);
 		
 		$arrViewsInStore[$arrView['xpath']] = $aView;
 
