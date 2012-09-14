@@ -453,3 +453,7 @@ color: #EB8F00;
 	font-weight:bold;
 	line-height:20px;
 }
+
+#skin_import_box{display: none;}
+
+#skin_export_box{display: none;}

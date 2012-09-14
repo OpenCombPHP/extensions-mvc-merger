@@ -19,11 +19,16 @@ MergerPannel.prototype.init = function()
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
-//		, beforeClose: function(event, ui) {
-//		}
+		, beforeClose: function(event, ui) {
+			$('#mergepannel-dialog').parents(".ui-dialog:first").hide();
+			return false;
+		}
 		, captionButtons: {
             pin: { visible: false },
             refresh: { visible: false },
+            toggle: { visible: false },
+            maximize: { visible: false },
+            minimize: {  visible: false }//iconClassOn: 'ui-icon-close' }
 		}
 	}) ;
 	
@@ -71,11 +76,13 @@ MergerPannel.prototype.init = function()
 	//tab页面
 	$('div.body_top_menu').find('a[tab]').click(function(){
 		var showPage = $("#"+$(this).attr('tab'));
+		$('#mergepannel-dialog').parents(".ui-dialog:first").show();
 		if(showPage.length > 0){
 			$('.mvcmerger_pages').hide();
 			showPage.show();
-//			$('.selected_mvcmerger').removeClass("selected_mvcmerger");
-//			$(this).addClass("selected_mvcmerger");
+			
+			$('.selected_mvcmerger').removeClass("selected_mvcmerger");
+			$('#ui-dialog-title-mergepannel-dialog a[tab='+$(this).attr('tab')+']').addClass("selected_mvcmerger");
 			
 			if($(this).attr('tab') == 'mergepannel-controllermerger' 
 				&& $("#mergepannel-dialog #mergeCtl_result:visible").length == 1
@@ -91,14 +98,14 @@ MergerPannel.prototype.init = function()
 	//body_top动态效果
 	$('.body_top_down').hover(function(){
 		$(".body_top").stop(false,true).slideDown();
-		$('body').animate({'margin-top':'50px'},'normal');
+		$('body').stop(false,true).animate({'margin-top':'50px'},'normal');
 	});
 	$(".body_top").mouseleave(function(){
 		if($('.body_top_pin_selected').hasClass('body_top_pin')){
 			return;
 		}
 		$(".body_top").stop(false,true).slideUp();
-		$('body').animate({'margin-top':'0px'},'normal');
+		$('body').stop(false,true).animate({'margin-top':'0px'},'normal');
 	});
 	
 	$('.body_top_pin').click(function(){

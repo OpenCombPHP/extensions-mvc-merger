@@ -117,13 +117,10 @@ class PostViewLayoutSetting extends ControlPanel
 		}
 	
 		$aSetting = Extension::flyweight('mvc-merger')->setting() ;
-	
 		// 保存设定
-		$aSetting->deleteItem('/merge/skin', $this->params['title'] ) ;
-	
-// 		$this->createMessage(Message::success,"皮肤已经删除。") ;
-
-		
+		$arrSkins = $aSetting->value('/merge/skin',array());
+		unset($arrSkins[$this->params['title']]);
+		$aSetting->setValue('/merge/skin',$arrSkins);
 	}
 	
 	static public function unserializeParams($sParams){

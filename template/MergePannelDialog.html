@@ -129,7 +129,7 @@ var pageLayoutData={
 				<p class="box_tab_v" tab="frame_selecter">板式选择</p>
 				<p  tab="skin_selecter">皮肤选择</p>
 				<span class="box_button_left">
-					<a href="#" class="box_button_right">导入皮肤</a>
+					<a href="#" id="skin_import_btn" class="box_button_right">导入皮肤</a>
 				</span>
 			</div>
 			<div id="frame_container">
@@ -193,7 +193,7 @@ var pageLayoutData={
 								</a>
 								<span class="box_frame_skinName">{=$sSkinName}</span>
 								<strong><a class="box_frame_deleteSkin" href="#" title="删除皮肤"></a></strong>
-								<p><a href="#" title="导出皮肤"></a></p>
+								<p><a class="export_skins_btn" href="#" title="导出皮肤"></a></p>
 							</div>
 						</foreach>
 						</if>
@@ -323,7 +323,7 @@ var pageLayoutData={
 											<option value="outset">3D 外部</option>
 										</select>
 										<strong class="box_button_left" style=" width:70px; display:inline-block; font-weight:normal">
-												<a id="mergepannel-props-borders-showmore" href="#" title="详细设定" class="box_button_right" style="width:auto; padding-left:0">分别设置</a>
+												<a id="mergepannel-props-borders-showmore" href="#" title="详细设定" class="box_button_right" style="width:auto; padding-left:0">展开</a>
 										</strong>
 							</span>
 										
@@ -503,7 +503,7 @@ var pageLayoutData={
 	<p></p>
 </div>
 
-<div class="box_export displaynone">
+<div id="skin_export_box" class="box_export">
 	<div class="box_exportimport_title">导出皮肤样式</div>
 	<div class="box_exportimport_closs"></div>
 	<div class="box_export_info">
@@ -511,7 +511,7 @@ var pageLayoutData={
 	</div>
 	<div class="box_export_text"><span></span>请将上方代码复制到本地保存</div>
 </div>
-<div class="box_import displaynone">
+<div id="skin_import_box" class="box_import">
 	<div class="box_exportimport_title">导入皮肤样式</div>
 	<div class="box_exportimport_closs"></div>
 	<div class="box_import_info">
@@ -519,8 +519,9 @@ var pageLayoutData={
 	</div>
 	<div class="clr"></div>
 	<div class="box_import_text"><span></span>请将皮肤样式粘贴在上方输入框中</div>
+	<div id="box_import_message"></div>
 	<div class="box_import_button">
-		<button class="box_import_button_skin">导入皮肤</button>
+		<button id="skin_import_save_btn" class="box_import_button_skin">导入皮肤</button>
 	</div>
 </div>
 

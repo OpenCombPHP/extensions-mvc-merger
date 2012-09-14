@@ -309,6 +309,51 @@ MergerPannel.Layout.prototype._initUi = function() {
 			$('#box_frameskin_foot_btn').click();
 		}
 	});
+
+	//import 皮肤
+	$("#skin_import_btn").click(function(){
+		$("#skin_import_box").show();
+		return false;
+	});
+	$('.box_exportimport_closs').click(function(){
+		$("#skin_import_box").hide();
+		return false;
+	});
+	$('#skin_import_save_btn').click(function(){
+		var skinData = realThis.importSkin($('#skin_import_box').find('textarea').val());
+		if(!skinData || !skinData['name'] || !skinData['css']){
+			$('#box_import_message').html( '<span style="display:block;position:absolute;left:100px;top:232px;">'
+											+'<ul class="jc_message_queue">'
+												+'<li class="jc_message_type_error">皮肤保存失败,请检查皮肤信息是否有效</li>'
+											+'</ul>'
+											+'</span>' );
+			setTimeout(function(){$('#box_import_message').html('')} , 3000);
+			return false;
+		}
+		realThis.saveSkin(skinData['name'] ,skinData['css'] , function(req) {
+			// 显示操作结果消息队列
+			$('#box_import_message').html( '<span style="display:block;position:absolute;left:100px;top:232px;">'
+											+'<ul class="jc_message_queue">'
+												+'<li class="jc_message_type_success">皮肤保存成功</li>'
+											+'</ul>'
+											+'</span>' );
+			setTimeout(function(){$('#box_import_message').html('')} , 3000);
+		});
+		return false;
+	});
+	
+
+	//export 导出皮肤
+	$(".export_skins_btn").click(function(){
+		var skinTextarea = $("#skin_export_box").show().find('textarea').val('');
+		var skinName = $(this).parents('.box_frame_img:first').find('.box_frame_skinName').text();
+		skinTextarea.val( realThis.exportSkin(skinName) );
+		return false;
+	});
+	$('.box_exportimport_closs').click(function(){
+		$("#skin_export_box").hide();
+		return false;
+	});
 	
 	//皮肤版式选择
 	$('.box_top_left , .box_top_right').click(function(){
@@ -705,21 +750,28 @@ MergerPannel.Layout.prototype.saveLayoutToSkin = function() {
 		setTimeout(function(){$('#mergepannel-skin-msgqueue').html('')} , 3000);
 		return;
 	}
-
-	$.ajax({
-		type : "POST",
-		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=noframe&a[]=/merger.PostViewLayoutSetting::saveToSkin',
-		data : {
-			title        : skinName
-			, properties : mapMVCMergerItemProperties[selectEle.id]
-		},
-		complete : function(req) {
+	realThis.saveSkin(skinName , mapMVCMergerItemProperties[selectEle.id] , function(req) {
 			// 显示操作结果消息队列
 			$('#mergepannel-skin-msgqueue').html(req.responseText);
 			setTimeout(function(){$('#mergepannel-skin-msgqueue').html('')} , 3000);
 			// 重新计算ui布局(消息队列可能影响ui界面)
 			realThis.resizeDialog();
-		}
+		});
+}
+
+/**
+ * save皮肤
+ */
+MergerPannel.Layout.prototype.saveSkin = function(sSkinName , sSkinData , callBack) {
+	var $ = jquery;
+	$.ajax({
+		type : "POST",
+		url : '?c=org.opencomb.mvcmerger.merger.PostViewLayoutSetting&rspn=noframe&a[]=/merger.PostViewLayoutSetting::saveToSkin',
+		data : {
+			title        : sSkinName
+			, properties : sSkinData
+		},
+		complete : callBack
 	});
 }
 /**
