@@ -1,4 +1,6 @@
-//uibrowser
+/*uibrowser
+此处数据来源于uiobjectBrowserinfo.php文件提供的__uitemplates变量
+*/
 ub = {
 	aRunningZTree:null,
 	aTemplates:null,
@@ -33,10 +35,10 @@ ub = {
 					+ '</div>'
 					+ '<div id="tabs-3" class="ub_tabs" style="display:none;">'
 						+ '<div id="ub_warning" style="width:100%;height:20px;padding:5px 0;">'
-							+ '<div>所属扩展:</div>'
-							+ '<div>命名空间:</div>'
-							+ '<div>文件名:</div>'
-							+ '<div>路径:</div>'
+							+ '<div class="ub_extension_name">所属扩展:</div>'
+							// + '<div>命名空间:</div>'
+							+ '<div class="ub_template_name">文件名:</div>'
+							// + '<div>路径:</div>'
 						+ '</div>'
 					+ '</div>'
 				+ '</div>'
@@ -99,7 +101,15 @@ ub = {
 			if(arrKeys.length == 2){
 				templateName = "模板：" + arrKeys[1] + "(" + arrKeys[0] + ")" ;
 			}
-			var aTreeTop = {name: templateName, children: [] , icon : sMvcMergerPublicFolderUrl+"/template.png"};
+
+			var aTreeTop = {
+				name: templateName
+				, children: [] 
+				, icon : sMvcMergerPublicFolderUrl+"/template.png"
+				, extensionName : arrKeys[0]
+				, templateName : arrKeys[1]
+			};
+
 			arrZtreeData.push(aTreeTop);
 			aTreeTop['children'] = ub.initChildrenTagList(aTemplate['children']) ;
 			aTreeTop['templateNameAndNameSpace'] = sKey ;
@@ -123,7 +133,11 @@ ub = {
 			}
 		}, arrZtreeData);
 		ub.aRunningZTree = jQuery.fn.zTree.getZTreeObj("ub_template_list");
+
+		//select first template node 
+		jquery("#ub_template_list").find('.level0:first>a').click();
 		
+
 		//添加补丁个数显示
 		var arrNodes = ub.aRunningZTree.getNodesByFilter(function(node){
 			if( typeof(node.data) != "undefined" && typeof(node.data.patchNum) != "undefined"){
@@ -153,15 +167,25 @@ ub = {
 	//**************选择tag列表中的元素**************
 	selectTag:function(event, treeId, treeNode){
 		var tabs = jquery('#ub_tabs_ul').find('li');
+		var topNode = null;
 		if(!treeNode.getParentNode()){
 			jquery('a[tabid="#tabs-3"]').click();
 			jquery(tabs[0]).hide();
 			jquery(tabs[1]).hide();
-			return;
+			topNode = treeNode;
 		}else{
 			jquery(tabs[0]).show();
 			jquery(tabs[1]).show();
+			topNode = ub.getTopNode(treeNode);
 		}
+
+		jquery("#ub_warning").find('.ub_extension_name').text("所属扩展:"+topNode.extensionName) ; 
+		jquery("#ub_warning").find('.ub_template_name').text("文件名:"+topNode.templateName) ; 
+
+		if(!treeNode.getParentNode()){	
+			return;
+		}
+		
 		ub.setTagPatchsInfoToEditForm(treeNode);
 		ub.sentTagInfoToEditForm(treeNode);
 		event.stopPropagation();

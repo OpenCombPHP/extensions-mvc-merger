@@ -1021,13 +1021,17 @@ MergerPannel.Layout.prototype.setFrameLayout = function(frame, sType) {
 	var aNode = this.getDataByEleId(frame.id);
 	var oldLayout = aNode.layout;
 	aNode.layout = sType;
-	
 	if(sType === 'h'){
 		aNode.name = "布局框架:横";
+		var iconString = aNode.icon.split('/');
+		iconString[iconString.length -1] = 'frame.png';
+		$("#"+aNode.tId+"_ico").css({'background':"url("+iconString.join('/')+") 0 0 no-repeat"});
 	}else{
 		aNode.name = "布局框架:竖";
+		var iconString = aNode.icon.split('/');
+		iconString[iconString.length -1] = 'framel.png';
+		$("#"+aNode.tId+"_ico").css({'background':"url("+iconString.join('/')+") 0 0 no-repeat"});
 	}
-
 	this.layoutFrame(frame, aNode);
 	
 	//因为改变了元素的class,这里重新获取表单,以保持class表单内容的同步

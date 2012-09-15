@@ -57,8 +57,8 @@ class UIObjectBrowserInfo implements IInterpreter
 		$sIndent = str_repeat("\t",$nIndent) ;
 		$sStructJson = "{\r\n" ;
  		$sStructJson.= "{$sIndent} className:'".str_replace('\\','\\\\',get_class($aObject))."'\r\n" ;
-//  		$sStructJson.= "{$sIndent} , ExtensionName:'".$sExtensionName."'\r\n" ;
-//  		$sStructJson.= "{$sIndent} , sTemplateName:'".$sTemplateName."'\r\n" ;
+ 		$sStructJson.= "{$sIndent} , ExtensionName:'".$sExtensionName."'\r\n" ;
+ 		$sStructJson.= "{$sIndent} , sTemplateName:'".$sTemplateName."'\r\n" ;
 
 		if( $aObject instanceof Node )
 		{

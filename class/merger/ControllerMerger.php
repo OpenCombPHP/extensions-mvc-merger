@@ -35,7 +35,7 @@ class ControllerMerger extends ControlPanel
 		$this->doActions() ;
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrMergedControllers = $aSetting->value('/merge/controller/controllers',array()) ;
 		$this->view->variables()->set('arrMergedControllers',$arrMergedControllers) ;
 		//表单默认值
 		$sRequestC ='';
@@ -141,8 +141,8 @@ class ControllerMerger extends ControlPanel
 	protected function form()
 	{
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
-		$nNum = $aSetting->item('/merge/controller','num',0) ; //命名计数
+		$arrMergedControllers = $aSetting->value('/merge/controller/controllers',array()) ;
+		$nNum = $aSetting->value('/merge/controller/num',0) ; //命名计数
 		
 		//目标信息防御
 		if( empty($this->params['target']) )
@@ -244,8 +244,8 @@ class ControllerMerger extends ControlPanel
  			//其他可能?
  		}
  		
- 		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
- 		$aSetting->setItem('/merge/controller','num',$nNum+1) ;
+ 		$aSetting->setValue('/merge/controller/controllers',$arrMergedControllers) ;
+ 		$aSetting->setValue('/merge/controller/num',$nNum+1) ;
 		
 		// 清理类编译缓存
 		MvcMerger::clearClassCompiled($this->params['target_controller_class']) ;
@@ -265,7 +265,7 @@ class ControllerMerger extends ControlPanel
 		}
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrMergedControllers = $aSetting->value('/merge/controller/controllers',array()) ;
 		if( $arrMergedControllers[$this->params['target']] === null)
 		{
 			$this->view->createMessage(Message::error,"target参数无效") ;
@@ -279,7 +279,7 @@ class ControllerMerger extends ControlPanel
 		{
 			unset($arrMergedControllers[$this->params['target']]) ;
 			
-			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
+			$aSetting->setValue('/merge/controller/controllers',$arrMergedControllers) ;
 			$this->view->createMessage(Message::success,"清除了控制器 %s 的所有融合设置,刷新页面可查看改动",array($this->params['target'])) ;
 		}
 		// 删除指定的融合
@@ -309,7 +309,7 @@ class ControllerMerger extends ControlPanel
 				unset($arrMergedControllers[$this->params['target']]) ;
 			}
 			
-			$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
+			$aSetting->setValue('/merge/controller/controllers',$arrMergedControllers) ;
 			
 			$this->view->createMessage(Message::success,"删除了控制器 %s 的指定融合设置,刷新页面可查看改动",array($this->params['target'])) ;
 		}
@@ -331,7 +331,7 @@ class ControllerMerger extends ControlPanel
 		}
 		
 		$aSetting = Application::singleton()->extensions()->extension('mvc-merger')->setting() ;
-		$arrMergedControllers = $aSetting->item('/merge/controller','controllers',array()) ;
+		$arrMergedControllers = $aSetting->value('/merge/controller/controllers',array()) ;
 		if( $arrMergedControllers[$this->params['target']] === null)
 		{
 			$this->view->createMessage(Message::error,"target参数无效") ;
@@ -349,7 +349,7 @@ class ControllerMerger extends ControlPanel
 			}
 		}
 		
-		$aSetting->setItem('/merge/controller','controllers',$arrMergedControllers) ;
+		$aSetting->setValue('/merge/controller/controllers',$arrMergedControllers) ;
 		
 		$this->view->createMessage(Message::success,"修改控制器 %s 的指定融合设置,刷新页面可查看改动",array($this->params['target'])) ;
 			
