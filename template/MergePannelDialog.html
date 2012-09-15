@@ -251,17 +251,7 @@ var pageLayoutData={
 						<label  class="mergepannel-tippalbe-element" title='把这个容器变成可填充容器,里面的子元素自动填充这个容器的空闲高度'><input id="mergepannel-frame-autoFill"  type="checkbox"/><span>自动高度</span></label>
 					</div>
 					<div id="mergepannel-props-common" class="box_bj_right_skin">
-						<div>
-							<p>显示</p>
-							<span>
-								<select id='mergepannel-props-display' >
-									<option value="block">显示框架</option>
-									<option value="none">隐藏框架</option>
-								</select>
-								<strong class="box_info"></strong>
-							</span>
-							<div class="clr"></div>
-						</div>
+
 						<div>
 							<p>宽高</p>
 							<span>
@@ -282,6 +272,18 @@ var pageLayoutData={
 								<option value='repeat-x'>横向重复</option>
 								<option value='repeat-y'>纵向重复</option>
 							</select>
+							</span>
+							<div class="clr"></div>
+						</div>
+						<div>
+							<p> </p>
+							<span>
+								<label><input type="checkbox"  id='mergepannel-props-display-checkbox' />隐藏</label>
+								<select id='mergepannel-props-display' style="display:none">
+									<option value="block">显示框架</option>
+									<option value="none">隐藏框架</option>
+								</select>
+								<strong class="box_info"></strong>
 							</span>
 							<div class="clr"></div>
 						</div>

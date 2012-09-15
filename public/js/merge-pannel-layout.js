@@ -415,6 +415,24 @@ MergerPannel.Layout.prototype._initUi = function() {
 	    $(this).text('高级');
 	});
 
+
+	//display checkbox
+	$("#mergepannel-props-display-checkbox").click(function(){
+		if(this.checked){
+			$("#mergepannel-props-display").val('none').change();
+		}else{
+			$("#mergepannel-props-display").val('display').change();
+		}
+	});
+	$("#mergepannel-props-display").change(function(){
+		var checked = false;
+		if ( $(this).val() === 'none'){
+			checked = true;
+		}else{
+			checked = false;
+		}
+		$("#mergepannel-props-display-checkbox").get(0).checked = checked;
+	});
 };
 
 MergerPannel.Layout.prototype.openSelectDomMode = function(){
@@ -1222,7 +1240,13 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 			}
 		}
 	}
-	
+
+	//display
+	$("#mergepannel-props-display-checkbox").get(0).checked = false;
+	if(typeof (mapMVCMergerItemProperties[sId]) != 'undefined'
+		&& typeof (mapMVCMergerItemProperties[sId]['display']) != 'undefined'){
+		$("#mergepannel-props-display-checkbox").attr('checked',mapMVCMergerItemProperties[sId]['display']==='none');
+	}
 	//autoFill  自动填充frame
 	$("#mergepannel-frame-autoFill").get(0).checked = false;
 	if(typeof (mapMVCMergerItemProperties[sId]) != 'undefined'
