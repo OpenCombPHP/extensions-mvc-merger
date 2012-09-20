@@ -369,7 +369,7 @@ CODE;
 		
 		$arrLayout=$aSetting->value('/merge/layout/'.$sClassName.'/'. $sParams ,null);
 		if(!$arrLayout){
-			$arrLayout = $aSetting->value('/merge/layout/'.$sClassName ,null) ;
+			$arrLayout = $aSetting->value('/merge/layout/'.$sClassName.'/*' ,null) ;
 		}
 		
 		if(! isset($arrLayout['assemble']) || $arrLayout['assemble'] == array() )
