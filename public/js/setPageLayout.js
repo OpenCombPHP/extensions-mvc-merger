@@ -206,7 +206,7 @@ function changePageLayout(plid){
 		}while(false == updateLayoutResult);
 	}
 	
-	for( i in customFrameNodeList ){
+	for( i = customFrameNodeList.length -1 ; i>=0 ; --i ){
 		var cfn = customFrameNodeList[i];
 		var ecf = document.getElementById(cfn.id);
 		
