@@ -16,6 +16,7 @@ MergerPannel.prototype.init = function()
 	var ui_dialog = $('#mergepannel-dialog').wijdialog({
 		width: 700
 		, height: 570
+		// , position: [400,50]
 		, title: sTitle
 		, resize: function(){ thisMergerPannel.resizeDialog() }
 		, zIndex:500
@@ -31,6 +32,8 @@ MergerPannel.prototype.init = function()
             minimize: {  visible: false }//iconClassOn: 'ui-icon-close' }
 		}
 	}) ;
+	$('#mergepannel-dialog').parents('.ui-dialog:first').css({'top':'50px' , "position":"fixed"});
+
 	
 	//退出编辑模式
 	$('#body_top_pin_exit').click(function(){
