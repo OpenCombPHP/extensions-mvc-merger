@@ -1585,8 +1585,8 @@ MergerPannel.Layout.prototype.applyProperties = function(event) {
 	var skinName = selectedSkin.find('.box_frame_skinName').text();
 	var bIsSelectedSkin = true;
 	for(var i in __arrSkins[skinName]){
-		if(i == 'skin'){
-			//排除skin干扰
+		if(i == 'skin' ||i == 'class' ){
+			//排除skin干扰,不对比skin和class是否一致
 			continue;
 		}
 		if ( __arrSkins[skinName][i] !== mapMVCMergerItemProperties[realthis.eleSelectedItem.id][i] ){
