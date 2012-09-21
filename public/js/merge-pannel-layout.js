@@ -386,6 +386,12 @@ MergerPannel.Layout.prototype._initUi = function() {
 		$("#mergepannel-props-skin").val(skinName).change();
 		return false;
 	});
+
+	$("#skin_no_btn").click(function(){
+		realThis.cleanCurrentStyles();
+		$('#cusSkin').click();
+		return false;
+	});
 	
 	$("#mergepannel-props-clean").click(realThis.cleanCurrentStyles);
 	
@@ -1258,19 +1264,19 @@ MergerPannel.Layout.prototype.updateProperties = function() {
 	}
 	
 	//border , 从元素中提取样式
-	$('.mergepannel-border').each(function(v,b){
-		if(b.nodeName == 'INPUT'){
-			$(b).val('');
-		}else{
-			$(b).val('none');
-		}
-	});
-	var arrPositons = ['top','bottom','left','right'];
-	for(var nPKey in arrPositons){
-		$('#mergepannel-props-border-'+arrPositons[nPKey]+'-width').val( $('#'+sId).css('border-'+arrPositons[nPKey]+'-width').split('px')[0] );
-		$('#mergepannel-props-border-'+arrPositons[nPKey]+'-color').val( colorRGBToHex($('#'+sId).css('border-'+arrPositons[nPKey]+'-color')) );
-		$('#mergepannel-props-border-'+arrPositons[nPKey]+'-style').val( $('#'+sId).css('border-'+arrPositons[nPKey]+'-style') );
-	}
+	// $('.mergepannel-border').each(function(v,b){
+	// 	if(b.nodeName == 'INPUT'){
+	// 		$(b).val('');
+	// 	}else{
+	// 		$(b).val('none');
+	// 	}
+	// });
+	// var arrPositons = ['top','bottom','left','right'];
+	// for(var nPKey in arrPositons){
+	// 	$('#mergepannel-props-border-'+arrPositons[nPKey]+'-width').val( $('#'+sId).css('border-'+arrPositons[nPKey]+'-width').split('px')[0] );
+	// 	$('#mergepannel-props-border-'+arrPositons[nPKey]+'-color').val( colorRGBToHex($('#'+sId).css('border-'+arrPositons[nPKey]+'-color')) );
+	// 	$('#mergepannel-props-border-'+arrPositons[nPKey]+'-style').val( $('#'+sId).css('border-'+arrPositons[nPKey]+'-style') );
+	// }
 	
 	function colorRGBToHex(color){
 	　　var regexpRGB=/^(rgb|RGB)\([0-9]{1,3},\s?[0-9]{1,3},\s?[0-9]{1,3}\)/;//RGB
@@ -1335,12 +1341,23 @@ MergerPannel.Layout.prototype.updateProperties = function() {
  */
 MergerPannel.Layout.prototype.cleanCurrentStyles= function() {
 	var $ = jquery;
-	if(!confirm('确定要清除已填写的样式吗?')){
-		//do nothing
-	}else{
+	if(confirm('确定要清除已填写的样式吗?')){
+		var styles = mapMVCMergerItemProperties[realThis.eleSelectedItem.id]['style'];
 		mapMVCMergerItemProperties[realThis.eleSelectedItem.id] = {"width":"","height":""};
+
 		realThis.updateProperties();
+		for ( var sPropName in realThis.mapPropertyNames) {
+			$("#"+realThis.mapPropertyNames[sPropName]).change();
+		}
 		realThis.checkInputForTitle();
+
+		$("#"+realThis.eleSelectedItem.id).removeAttr('style');
+		// styles = styles.split(';');
+		// for(var i =0;i<styles.length ; i++){
+		// 	var style = styles[i].split(':');
+		// 	$("#"+realThis.eleSelectedItem.id).css(style[0] ,0);
+		// 	console.log(style);
+		// }
 	}
 }
 
