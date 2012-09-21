@@ -31,13 +31,13 @@ class DataInstaller implements IExtensionDataInstaller
 		$aSetting = $aExtension->setting() ;
 			
 				
-		$aSetting->setItem('/merge/controller/','controllers',array (
+		$aSetting->setValue('/merge/controller/controllers',array (
 ));
 				
 		$aMessageQueue->create(Message::success,'保存配置：%s',"/merge/controller/");
 			
 				
-		$aSetting->setItem('/merge/','skin',array (
+		$aSetting->setValue('/merge/skin',array (
   '蜂巢默认皮肤' => 
   array (
     'width' => '',
