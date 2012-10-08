@@ -465,25 +465,25 @@ CODE;
 		// 将 mvc-merger 扩展提供的模板文件 merger/MergeIconMenu.html 做为补丁，应用到  coresystem 扩展的模板 FrontFrame.html 中的第一个<div>下的第一个<p> 内部的末尾
 		$aWeaveManager->registerTemplate( 'coresystem:FrontFrame.html', "/div@0/p@0", 'mvc-merger:merger/MergeIconMenu.html', Patch::insertAfter ) ;
 	
-	
 		// -------------------------------------------------
 		// 根据 setting 中保存的信息，应用模板补丁
-		foreach($this->setting()->value("/merge/uiweave",array()) as $sNamespace => $aNsKey)
-		{
-			//$sNamespace = $aNsKey->name() ;
-			foreach($aNsKey as $sTemplate => $aTemplateKey)
+		$arrKeyList = $this->setting()->keyList('/merge/uiweave');
+		foreach( $arrKeyList as $sSettingPath){
+			$arrUiweave = $this->setting()->value( '/merge/uiweave/' . $sSettingPath , array() );
+
+			if(!$arrUiweave){
+				continue;
+			}
+
+			$arrPaths = explode('/', $sSettingPath);
+			$sNamespace = $arrPaths[0];
+			$sTemplate = $arrPaths[1];
+
+			foreach($arrUiweave as $sXPath => $arrPatchList)
 			{
-				//$sTemplate = $aTemplateKey->name() ;
-				$arrAllPatchs = $aTemplateKey['arrPatchs'];
-				if( ! is_array($arrAllPatchs)){
-					continue;
-				}
-				foreach($arrAllPatchs as $sXPath=>$arrPatchList)
+				foreach($arrPatchList as $arrPatch)
 				{
-					foreach($arrPatchList as $arrPatch)
-					{
-						$aWeaveManager->registerCode( $sNamespace.':'.$sTemplate, $sXPath, $arrPatch[1], $arrPatch[0] ) ;
-					}
+					$aWeaveManager->registerCode( $sNamespace.':'.$sTemplate, $sXPath, $arrPatch[1], $arrPatch[0] ) ;
 				}
 			}
 		}

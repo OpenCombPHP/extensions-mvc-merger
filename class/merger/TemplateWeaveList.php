@@ -26,8 +26,7 @@ class TemplateWeaveList extends ControlPanel
 		$sXpath = $this->params->get('xpath');
 		
 		// 提取配置
-		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
-		$arrPatchs = $aKey->item('arrPatchs',array()) ;
+		$arrPatchs = Extension::flyweight('mvc-merger')->setting()->value("/merge/uiweave/{$sNamespace}/{$sTemplate}/arrPatchs",array()) ;
 		if(!array_key_exists($sXpath,$arrPatchs)){
 			return;
 		}else{
@@ -48,8 +47,7 @@ class TemplateWeaveList extends ControlPanel
 		$sPostion =  $this->params->get('position');
 		$sKey =  $this->params->get('key');
 		// 在setting中搜寻配置
-		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
-		$arrPatchs = $aKey->item('arrPatchs',array()) ;
+		$arrPatchs = Extension::flyweight('mvc-merger')->setting()->value("/merge/uiweave/{$sNamespace}/{$sTemplate}/arrPatchs",array()) ;
 		
 		if(!array_key_exists($sXpath,$arrPatchs)){
 			return;
@@ -65,10 +63,10 @@ class TemplateWeaveList extends ControlPanel
 			if(count($arrPatchs[$sXpath])==0){
 				unset($arrPatchs[$sXpath]);
 				if(count($arrPatchs)==0){
-					Extension::flyweight('mvc-merger')->setting()->deleteKey("/merge/uiweave/{$sNamespace}/{$sTemplate}") ;
+					Extension::flyweight('mvc-merger')->setting()->deleteValue("/merge/uiweave/{$sNamespace}/{$sTemplate}/arrPatchs") ;
 				}
 			}else{
-				$aKey['arrPatchs'] = $arrPatchs ;
+				Extension::flyweight('mvc-merger')->setting()->setValue("/merge/uiweave/{$sNamespace}/{$sTemplate}/arrPatchs",$arrPatchs) ;
 			}
 			
 			//清理系统缓存

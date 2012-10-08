@@ -50,22 +50,23 @@ class PostTemplateWeave extends ControlPanel
 			$this->createMessage(Message::error,"参数 position 格式错误") ;
 			return ;
 		}
-		
+
 		// 保存配置
-		$arrKey = Extension::flyweight('mvc-merger')->setting()->value("/merge/uiweave/{$sNamespace}/{$sTemplate}",array()) ;
-		$arrPatchs = isset($arrKey['arrPatchs']) ? $arrKey['arrPatchs'] : array();
+		$aSetting =  Extension::flyweight('mvc-merger')->setting();
+		$arrPatchs = $aSetting->value("/merge/uiweave/{$sNamespace}/{$sTemplate}/arrPatchs",array());
 		$arrPatchs[$this->params['xpath']][] = array(
-				$this->params['position'] , 
-				$this->params['source'] , 
+				$this->params['position'] ,
+				$this->params['source'] ,
 		) ;
-		$arrKey['arrPatchs'] = $arrPatchs ;
-		
-		$this->createMessage(Message::success,"配置已经保存。") ;
+
+		$aSetting->setValue("/merge/uiweave/{$sNamespace}/{$sTemplate}/arrPatchs",$arrPatchs);
 		
 		// 清理系统缓存
 		ServiceSerializer::singleton()->clearRestoreCache(Service::singleton()) ;
 		// 清理模板编译缓存
 		MvcMerger::clearTemplateCompiled($sTemplate,$sNamespace) ;
+
+		$this->createMessage(Message::success,"配置已经保存。") ;
 	}
 	
 	protected function doList()
@@ -90,8 +91,7 @@ class PostTemplateWeave extends ControlPanel
 		$sTemplate = trim($this->params['template']) ;
 		$xpath = trim($this->params['xpath']) ;
 		
-		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
-		$arrPatchs = $aKey->item('arrPatchs',array()) ;
+		$arrPatchs = Extension::flyweight('mvc-merger')->setting()->value("/merge/uiweave/{$sNamespace}/{$sTemplate}/arrPatchs",array()) ;
 		
 		$this->mainView()->display() ;
 		$this->response()->output( isset($arrPatchs[$xpath])? json_encode($arrPatchs[$xpath]): '{}' ) ;
