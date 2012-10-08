@@ -468,13 +468,16 @@ CODE;
 	
 		// -------------------------------------------------
 		// 根据 setting 中保存的信息，应用模板补丁
-		foreach($this->setting()->value("/merge/uiweave",array()) as $aNsKey)
+		foreach($this->setting()->value("/merge/uiweave",array()) as $sNamespace => $aNsKey)
 		{
-			$sNamespace = $aNsKey->name() ;
-			foreach($aNsKey->keyIterator() as $aTemplateKey)
+			//$sNamespace = $aNsKey->name() ;
+			foreach($aNsKey as $sTemplate => $aTemplateKey)
 			{
-				$sTemplate = $aTemplateKey->name() ;
-				$arrAllPatchs = $aTemplateKey->item('arrPatchs',array()) ;
+				//$sTemplate = $aTemplateKey->name() ;
+				$arrAllPatchs = $aTemplateKey['arrPatchs'];
+				if( ! is_array($arrAllPatchs)){
+					continue;
+				}
 				foreach($arrAllPatchs as $sXPath=>$arrPatchList)
 				{
 					foreach($arrPatchList as $arrPatch)

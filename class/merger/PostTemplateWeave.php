@@ -52,13 +52,13 @@ class PostTemplateWeave extends ControlPanel
 		}
 		
 		// 保存配置
-		$aKey = Extension::flyweight('mvc-merger')->setting()->key("/merge/uiweave/{$sNamespace}/{$sTemplate}",true) ;
-		$arrPatchs = $aKey->item('arrPatchs',array()) ;
+		$arrKey = Extension::flyweight('mvc-merger')->setting()->value("/merge/uiweave/{$sNamespace}/{$sTemplate}",array()) ;
+		$arrPatchs = isset($arrKey['arrPatchs']) ? $arrKey['arrPatchs'] : array();
 		$arrPatchs[$this->params['xpath']][] = array(
 				$this->params['position'] , 
 				$this->params['source'] , 
 		) ;
-		$aKey['arrPatchs'] = $arrPatchs ;
+		$arrKey['arrPatchs'] = $arrPatchs ;
 		
 		$this->createMessage(Message::success,"配置已经保存。") ;
 		
