@@ -12,7 +12,6 @@ use org\opencomb\coresystem\mvc\controller\ControlPanel;
 
 class PostTemplateWeave extends ControlPanel
 {
-	
 	public function process(){
 		//权限
 		$this->requirePurview(Id::PLATFORM_ADMIN,'coresystem',PurviewQuery::ignore,'您没有权限执行正在请求的操作。');

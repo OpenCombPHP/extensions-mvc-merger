@@ -436,17 +436,11 @@ ub = {
 				, source: jquery('#ub_source').val()
 			}
 			, type: 'POST'
-			, complete: function(jqXHR, textStatus){
-				if(textStatus=='success')
-				{
-					jquery('#ub_save_message').html(jqXHR.responseText) ;
-				}
-				else
-				{
-					jquery('#ub_save_message').html('保存操作遇到网络错误。') ;
-				}
+			, dataType: 'html'
+			, success: function(msg){
+				jquery('#ub_save_message').html(msg) ;
 			}
-		} ) ;
+		}) ;
 	},
 	//*********end 选择tag按钮**********
 	
